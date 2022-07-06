@@ -15,34 +15,35 @@
           animated
           swipeable
           vertical
-          transition-prev="slide-down"
-          transition-next="slide-up"
+          transition-prev="jump-up"
+          transition-next="jump-up"
         >
           <q-tab-panel name="mails">
-            <div class="row q-gutter-y-lg">
+            <div class="row">
               <div
-                class="col-2 q-px-sm"
+                class="col-2 q-px-md q-my-sm"
                 v-for="score in scores"
                 :key="score.url"
               >
-                <q-card class="my-card">
+                <!-- <q-item clickable tag="a"> -->
+
+                <q-card class="my-card position-relative" v-ripple>
                   <img :src="score.cover" class="white--text align-end" />
 
                   <q-card-section>
-                    <div class="text-h7 ellipsis">{{ score.title }}</div>
-                    <div class="text-subtitle2 ellipsis">
-                      {{ score.author }}
-                    </div>
+                    <div class="text-h7">{{ score.title }}</div>
+                    <div class="text-subtitle2">{{ score.author }}</div>
                   </q-card-section>
                 </q-card>
+                <!-- </q-item> -->
               </div>
             </div>
           </q-tab-panel>
 
           <q-tab-panel name="alarms">
-            <div class="row q-gutter-y-lg">
+            <div class="row justify-around">
               <div
-                class="col-2 q-px-sm"
+                class="col-2 q-mx-md q-my-sm"
                 v-for="score in scores"
                 :key="score.url"
               >
@@ -50,10 +51,8 @@
                   <img :src="score.cover" class="white--text align-end" />
 
                   <q-card-section>
-                    <div class="text-h7 ellipsis">{{ score.title }}</div>
-                    <div class="text-subtitle2 ellipsis">
-                      {{ score.author }}
-                    </div>
+                    <div class="text-h7">{{ score.title }}</div>
+                    <div class="text-subtitle2">{{ score.author }}</div>
                   </q-card-section>
                 </q-card>
               </div>
@@ -61,9 +60,9 @@
           </q-tab-panel>
 
           <q-tab-panel name="movies">
-            <div class="row q-gutter-y-lg">
+            <div class="row justify-around">
               <div
-                class="col-2 q-px-sm"
+                class="col-2 q-mx-md q-my-sm"
                 v-for="score in scores"
                 :key="score.url"
               >
@@ -71,10 +70,8 @@
                   <img :src="score.cover" class="white--text align-end" />
 
                   <q-card-section>
-                    <div class="text-h7 ellipsis">{{ score.title }}</div>
-                    <div class="text-subtitle2 ellipsis">
-                      {{ score.author }}
-                    </div>
+                    <div class="text-h7">{{ score.title }}</div>
+                    <div class="text-subtitle2">{{ score.author }}</div>
                   </q-card-section>
                 </q-card>
               </div>
