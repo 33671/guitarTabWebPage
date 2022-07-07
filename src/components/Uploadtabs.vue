@@ -1,5 +1,5 @@
 <template>
-  <q-card>
+  <q-card style="border-radius: 30px">
     <q-card-section>
       <div class="flex justify-center q-my-lg">
         <q-uploader
@@ -11,7 +11,7 @@
           @rejected="onRejected"
         />
       </div>
-      <q-card class="q-my-lg">
+      <q-card class="q-my-lg" flat>
         <q-card-section>
           <div>
             <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
