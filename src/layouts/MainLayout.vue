@@ -83,6 +83,7 @@ export default {
     return {
       naviItem,
       leftDrawerOpen,
+      text:ref(""),
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
