@@ -180,14 +180,19 @@
         tracksStatusTrack.forEach((x) => {
           x.isMute = false;
           if (x === selectTrackStatus) {
+            console.log();
             return;
           } else {
             x.isSolo = false;
           }
         });
-        api.changeTrackSolo(tracks, false);
-        api.changeTrackMute(tracks, false);
-        api.changeTrackSolo([track], true);
+        if (selectTrackStatus.isSolo) {
+          api.changeTrackSolo(tracks, false);
+          api.changeTrackMute(tracks, false);
+          api.changeTrackSolo([track], true);
+        } else {
+          api.changeTrackSolo([track], false);
+        }
         refreshTrackUI();
       }
       // track selector
