@@ -27,9 +27,13 @@
               <div class="col-2" v-for="score in scores" :key="score.url">
                 <q-card class="my-card position-relative" v-ripple>
                   <img :src="score.cover" class="white--text align-end" />
-
                   <q-card-section>
-                    <div class="text-h7 ellipsis">{{ score.title }}</div>
+                    <router-link
+                      class="text-h7 ellipsis"
+                      :to="'/tabs/' + score.title + '.gp'"
+                      >{{ score.title }}</router-link
+                    >
+                    <!-- <div class="text-h7 ellipsis">{{ score.title }}</div> -->
                     <div class="text-subtitle2 ellipsis">
                       {{ score.author }}
                     </div>
@@ -53,10 +57,9 @@ export default {
     let scores = ref([]);
     const res = await axios.get("a.json");
     scores.value = res.data.tab;
-    console.log(scores.value);
-    console.log(res);
-    console.log(res.data.tab);
-
+    // console.log(scores.value);
+    // console.log(res);
+    // console.log(res.data.tab);
     // var score = this.axios.get("a.json");
     // this.scores = tab.data.score;
     // this.fetchTabReady = true;

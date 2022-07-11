@@ -1,8 +1,17 @@
+const tabs = {
+  props: ["id"],
+  template: "<div>tabs {{ id }}</div>",
+};
 const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
+      {
+        path: "/tabs/:id",
+        component: (tabs) => import("pages/TabTest.vue"),
+        props: true,
+      },
       { path: "home", component: () => import("pages/Index.vue") },
       { path: "publish", component: () => import("pages/PublishScore.vue") },
       { path: "", redirect: "/home" },
