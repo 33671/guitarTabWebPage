@@ -1,20 +1,15 @@
 <template>
-  <div class="row">
-    <div class="col-2"></div>
+  <div class="row justify-center">
     <div class="col-8">
-      <q-card class="my-card rounded-borders q-mt-xl">
-        <q-card-section>
-          <iframe
-            src="./alphaTab"
-            frameborder="0"
-            width="100%"
-            height="1000px"
-            scrolling="no"
-          ></iframe>
-        </q-card-section>
-      </q-card>
+      <iframe
+        class="rounded-borders bg-white q-mt-sm"
+        src="./alphaTab"
+        frameborder="0"
+        id="tab-iframe"
+        width="100%"
+        scrolling="no"
+      ></iframe>
     </div>
-    <div class="col-2"></div>
   </div>
 </template>
 
@@ -24,9 +19,27 @@ import { onMounted } from "@vue/runtime-core";
 export default {
   props: ["id"],
   setup(props) {
+    let TabLocation = "./tabs/" + props.id;
+    localStorage.setItem("file", TabLocation);
     onMounted(() => {
-      let TabLocation = "./tabs/" + props.id;
-      localStorage.setItem("file", TabLocation);
+      // function setIframeHeight(iframe) {
+      //   if (iframe) {
+      //     var iframeWin =
+      //       iframe.contentWindow || iframe.contentDocument.parentWindow;
+      //     if (iframeWin.document.body) {
+      //       iframe.height =
+      //         iframeWin.document.documentElement.scrollHeight ||
+      //         iframeWin.document.body.scrollHeight;
+      //     }
+      //   }
+      // }
+      document.getElementById("tab-iframe").onload = function () {
+        this.style.height = 90 + "vh";
+      };
+
+      // window.onload = function () {
+      //   setIframeHeight();
+      // };
     });
     return {};
   },
