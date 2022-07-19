@@ -1,6 +1,7 @@
 <template>
   <body>
-    <canvas></canvas>
+    <canvas> </canvas>
+
     <div class="login-register fixed-center">
       <div class="contain">
         <div class="big-box" :class="{ active: isLogin }">
@@ -171,9 +172,9 @@ export default {
 
     window.onresize = resize;
     canvas.onmousemove = onMouseMove;
+    canvas.onmouseleave = onMouseLeave;
     canvas.ontouchmove = onTouchMove;
     canvas.ontouchend = onMouseLeave;
-    document.onmouseleave = onMouseLeave;
 
     function generate() {
       for (let i = 0; i < STAR_COUNT; i++) {
@@ -333,6 +334,7 @@ export default {
     }
 
     function onMouseLeave() {
+      console.log("1");
       pointerX = null;
       pointerY = null;
     }
@@ -370,6 +372,8 @@ a:hover {
   color: #fff;
 }
 .login-register {
+  opacity: 0.9;
+
   width: 60vw;
   height: 60vh;
   box-sizing: border-box;
