@@ -1,23 +1,47 @@
 <template>
   <body>
-    <canvas> </canvas>
-
-    <div class="login-register fixed-center">
-      <div class="contain">
-        <div class="big-box" :class="{ active: isLogin }">
+    <!-- <canvas> </canvas> -->
+    <div class="login-register">
+      <div class="contain row">
+        <div class="small-box col-4" :class="{ active: isLogin }">
+          <div class="small-contain" v-if="isLogin">
+            <div class="stitle">你好，朋友!</div>
+            <p class="scontent">开始注册，和我们一起旅行</p>
+            <button class="sbutton" @click="changeType">注册</button>
+          </div>
+          <div class="small-contain" v-else>
+            <div class="stitle">欢迎回来!</div>
+            <p class="scontent">与我们保持联系，请登录你的账户</p>
+            <button class="sbutton" @click="changeType">登录</button>
+          </div>
+        </div>
+        <div class="big-box col-8" :class="{ active: isLogin }">
           <div class="big-contain" v-if="isLogin">
             <div class="btitle">账户登录</div>
             <div class="bform">
               <input type="email" placeholder="邮箱" v-model="form.useremail" />
-              <span class="errTips" v-if="emailError">* 邮箱填写错误 *</span>
+              <!-- <span class="errTips" v-if="emailError">* 邮箱填写错误 *</span> -->
               <input
                 type="password"
                 placeholder="密码"
                 v-model="form.userpwd"
               />
-              <span class="errTips" v-if="emailError">* 密码填写错误 *</span>
+              <div
+                class="row flex items-center justify-between"
+                style="width: 50%"
+              >
+                <input
+                  type="Captcha"
+                  placeholder="验证码"
+                  v-model="form.captcha"
+                />
+
+                <img style="max-width: 120px" src="/api/captcha/" alt="" />
+              </div>
+              <!-- <span class="errTips" v-if="emailError">* 密码填写错误 *</span> -->
             </div>
-            <button class="bbutton" @click="login">登录</button>
+
+            <button class="bbutton" @click="reglog">登录</button>
           </div>
           <div class="big-contain" v-else>
             <div class="btitle">创建账户</div>
@@ -30,20 +54,20 @@
                 placeholder="密码"
                 v-model="form.userpwd"
               />
+              <div
+                class="row flex items-center justify-between"
+                style="width: 50%"
+              >
+                <input
+                  type="Captcha"
+                  placeholder="验证码"
+                  v-model="form.captcha"
+                />
+
+                <img style="max-width: 120px" src="/api/captcha/" alt="" />
+              </div>
             </div>
-            <button class="bbutton" @click="register">注册</button>
-          </div>
-        </div>
-        <div class="small-box" :class="{ active: isLogin }">
-          <div class="small-contain" v-if="isLogin">
-            <div class="stitle">你好，朋友!</div>
-            <p class="scontent">开始注册，和我们一起旅行</p>
-            <button class="sbutton" @click="changeType">注册</button>
-          </div>
-          <div class="small-contain" v-else>
-            <div class="stitle">欢迎回来!</div>
-            <p class="scontent">与我们保持联系，请登录你的账户</p>
-            <button class="sbutton" @click="changeType">登录</button>
+            <button class="bbutton" @click="reglog">注册</button>
           </div>
         </div>
       </div>
@@ -52,300 +76,396 @@
   </body>
 </template>
 
-<script>
-export default {
-  name: "Login",
-  data() {
-    return {
-      dialog3: false,
-      isLogin: false,
-      emailError: false,
-      passwordError: false,
-      existed: false,
-      form: {
-        username: "",
-        useremail: "",
-        userpwd: "",
-      },
-    };
-  },
-  methods: {
-    changeType() {
-      this.isLogin = !this.isLogin;
-      this.form.username = "";
-      this.form.useremail = "";
-      this.form.userpwd = "";
-    },
-    login() {
-      const self = this;
-      if (self.form.useremail != "" && self.form.userpwd != "") {
-        self
-          .$axios({
-            method: "post",
-            url: "http://127.0.0.1:10520/api/user/login",
-            data: {
-              email: self.form.useremail,
-              password: self.form.userpwd,
-            },
-          })
-          .then((res) => {
-            switch (res.data) {
-              case 0:
-                alert("登陆成功！");
-                break;
-              case -1:
-                this.emailError = true;
-                break;
-              case 1:
-                this.passwordError = true;
-                break;
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        alert("填写不能为空！");
-      }
-    },
-    register() {
-      const self = this;
-      if (
-        self.form.username != "" &&
-        self.form.useremail != "" &&
-        self.form.userpwd != ""
-      ) {
-        self
-          .$axios({
-            method: "post",
-            url: "http://127.0.0.1:10520/api/user/add",
-            data: {
-              username: self.form.username,
-              email: self.form.useremail,
-              password: self.form.userpwd,
-            },
-          })
-          .then((res) => {
-            switch (res.data) {
-              case 0:
-                alert("注册成功！");
-                this.login();
-                break;
-              case -1:
-                this.existed = true;
-                break;
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        alert("填写不能为空！");
-      }
-    },
-  },
-  mounted() {
-    const STAR_COLOR = "#000000";
-    const STAR_SIZE = 3;
-    const STAR_MIN_SCALE = 0.2;
-    const OVERFLOW_THRESHOLD = 50;
-    const STAR_COUNT = (window.innerWidth + window.innerHeight) / 8;
+<script setup>
+import { onMounted, ref } from "vue";
+import { axios } from "boot/axios";
+import { useQuasar } from "quasar";
 
-    const canvas = document.querySelector("canvas"),
-      context = canvas.getContext("2d");
+const $q = useQuasar();
+//dialog插件，提示用户登录成功与否
+function reglog() {
+  $q.dialog({
+    title: `<img src="/api/captcha/" alt="" />`,
+    message: "Some message",
+    html: true,
+  })
+    .onOk(() => {
+      // console.log('OK')
+    })
+    .onCancel(() => {
+      // console.log('Cancel')
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    });
+}
+onMounted(() => {});
+function login() {
+  getCaptcha();
+}
+const dialog3 = ref(false);
+const isLogin = ref(false);
+const emailError = ref(false);
+const passwordError = ref(false);
+const existed = ref(false);
+const form = ref({
+  username: "",
+  useremail: "",
+  userpwd: "",
+});
+function changeType() {
+  isLogin.value = !isLogin.value;
+  form.value.username = "";
+  form.value.useremail = "";
+  form.value.userpwd = "";
+}
+async function getCaptcha() {
+  const captcha = await axios.get("/api/captcha/");
+  console.log(captcha.data);
+}
+async function toDataURL(url, callback) {
+  var reader = new FileReader();
+  return;
+  reader.onloadend = function () {
+    callback(reader.result);
+  };
+  reader.readAsDataURL(xhr.response);
+}
 
-    let scale = 1, // device pixel ratio
-      width,
-      height;
+// mounted() {
+//   const STAR_COLOR = "#000000";
+//   const STAR_SIZE = 3;
+//   const STAR_MIN_SCALE = 0.2;
+//   const OVERFLOW_THRESHOLD = 50;
+//   const STAR_COUNT = (window.innerWidth + window.innerHeight) / 8;
 
-    let stars = [];
+//   const canvas = document.querySelector("canvas"),
+//     context = canvas.getContext("2d");
 
-    let pointerX, pointerY;
+//   let scale = 1, // device pixel ratio
+//     width,
+//     height;
 
-    let velocity = { x: 0, y: 0, tx: 0, ty: 0, z: 0.0005 };
+//   let stars = [];
 
-    let touchInput = false;
+//   let pointerX, pointerY;
 
-    generate();
-    resize();
-    step();
+//   let velocity = { x: 0, y: 0, tx: 0, ty: 0, z: 0.0005 };
 
-    window.onresize = resize;
-    canvas.onmousemove = onMouseMove;
-    canvas.onmouseleave = onMouseLeave;
-    canvas.ontouchmove = onTouchMove;
-    canvas.ontouchend = onMouseLeave;
+//   let touchInput = false;
 
-    function generate() {
-      for (let i = 0; i < STAR_COUNT; i++) {
-        stars.push({
-          x: 0,
-          y: 0,
-          z: STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE),
-        });
-      }
-    }
+//   generate();
+//   resize();
+//   step();
 
-    function placeStar(star) {
-      star.x = Math.random() * width;
-      star.y = Math.random() * height;
-    }
+//   window.onresize = resize;
+//   canvas.onmousemove = onMouseMove;
+//   canvas.onmouseleave = onMouseLeave;
+//   canvas.ontouchmove = onTouchMove;
+//   canvas.ontouchend = onMouseLeave;
 
-    function recycleStar(star) {
-      let direction = "z";
+//   function generate() {
+//     for (let i = 0; i < STAR_COUNT; i++) {
+//       stars.push({
+//         x: 0,
+//         y: 0,
+//         z: STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE),
+//       });
+//     }
+//   }
 
-      let vx = Math.abs(velocity.x),
-        vy = Math.abs(velocity.y);
+//   function placeStar(star) {
+//     star.x = Math.random() * width;
+//     star.y = Math.random() * height;
+//   }
 
-      if (vx > 1 || vy > 1) {
-        let axis;
+//   function recycleStar(star) {
+//     let direction = "z";
 
-        if (vx > vy) {
-          axis = Math.random() < vx / (vx + vy) ? "h" : "v";
-        } else {
-          axis = Math.random() < vy / (vx + vy) ? "v" : "h";
-        }
+//     let vx = Math.abs(velocity.x),
+//       vy = Math.abs(velocity.y);
 
-        if (axis === "h") {
-          direction = velocity.x > 0 ? "l" : "r";
-        } else {
-          direction = velocity.y > 0 ? "t" : "b";
-        }
-      }
+//     if (vx > 1 || vy > 1) {
+//       let axis;
 
-      star.z = STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE);
+//       if (vx > vy) {
+//         axis = Math.random() < vx / (vx + vy) ? "h" : "v";
+//       } else {
+//         axis = Math.random() < vy / (vx + vy) ? "v" : "h";
+//       }
 
-      if (direction === "z") {
-        star.z = 0.1;
-        star.x = Math.random() * width;
-        star.y = Math.random() * height;
-      } else if (direction === "l") {
-        star.x = -OVERFLOW_THRESHOLD;
-        star.y = height * Math.random();
-      } else if (direction === "r") {
-        star.x = width + OVERFLOW_THRESHOLD;
-        star.y = height * Math.random();
-      } else if (direction === "t") {
-        star.x = width * Math.random();
-        star.y = -OVERFLOW_THRESHOLD;
-      } else if (direction === "b") {
-        star.x = width * Math.random();
-        star.y = height + OVERFLOW_THRESHOLD;
-      }
-    }
+//       if (axis === "h") {
+//         direction = velocity.x > 0 ? "l" : "r";
+//       } else {
+//         direction = velocity.y > 0 ? "t" : "b";
+//       }
+//     }
 
-    function resize() {
-      scale = window.devicePixelRatio || 1;
+//     star.z = STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE);
 
-      width = window.innerWidth * scale;
-      height = window.innerHeight * scale;
+//     if (direction === "z") {
+//       star.z = 0.1;
+//       star.x = Math.random() * width;
+//       star.y = Math.random() * height;
+//     } else if (direction === "l") {
+//       star.x = -OVERFLOW_THRESHOLD;
+//       star.y = height * Math.random();
+//     } else if (direction === "r") {
+//       star.x = width + OVERFLOW_THRESHOLD;
+//       star.y = height * Math.random();
+//     } else if (direction === "t") {
+//       star.x = width * Math.random();
+//       star.y = -OVERFLOW_THRESHOLD;
+//     } else if (direction === "b") {
+//       star.x = width * Math.random();
+//       star.y = height + OVERFLOW_THRESHOLD;
+//     }
+//   }
 
-      canvas.width = width;
-      canvas.height = height;
+//   function resize() {
+//     scale = window.devicePixelRatio || 1;
 
-      stars.forEach(placeStar);
-    }
+//     width = window.innerWidth * scale;
+//     height = window.innerHeight * scale;
 
-    function step() {
-      context.clearRect(0, 0, width, height);
+//     canvas.width = width;
+//     canvas.height = height;
 
-      update();
-      render();
+//     stars.forEach(placeStar);
+//   }
 
-      requestAnimationFrame(step);
-    }
+//   function step() {
+//     context.clearRect(0, 0, width, height);
 
-    function update() {
-      velocity.tx *= 0.96;
-      velocity.ty *= 0.96;
+//     update();
+//     render();
 
-      velocity.x += (velocity.tx - velocity.x) * 0.8;
-      velocity.y += (velocity.ty - velocity.y) * 0.8;
+//     requestAnimationFrame(step);
+//   }
 
-      stars.forEach((star) => {
-        star.x += velocity.x * star.z;
-        star.y += velocity.y * star.z;
+//   function update() {
+//     velocity.tx *= 0.96;
+//     velocity.ty *= 0.96;
 
-        star.x += (star.x - width / 2) * velocity.z * star.z;
-        star.y += (star.y - height / 2) * velocity.z * star.z;
-        star.z += velocity.z;
+//     velocity.x += (velocity.tx - velocity.x) * 0.8;
+//     velocity.y += (velocity.ty - velocity.y) * 0.8;
 
-        // recycle when out of bounds
-        if (
-          star.x < -OVERFLOW_THRESHOLD ||
-          star.x > width + OVERFLOW_THRESHOLD ||
-          star.y < -OVERFLOW_THRESHOLD ||
-          star.y > height + OVERFLOW_THRESHOLD
-        ) {
-          recycleStar(star);
-        }
-      });
-    }
+//     stars.forEach((star) => {
+//       star.x += velocity.x * star.z;
+//       star.y += velocity.y * star.z;
 
-    function render() {
-      stars.forEach((star) => {
-        context.beginPath();
-        context.lineCap = "round";
-        context.lineWidth = STAR_SIZE * star.z * scale;
-        context.globalAlpha = 0.5 + 0.5 * Math.random();
-        context.strokeStyle = STAR_COLOR;
+//       star.x += (star.x - width / 2) * velocity.z * star.z;
+//       star.y += (star.y - height / 2) * velocity.z * star.z;
+//       star.z += velocity.z;
 
-        context.beginPath();
-        context.moveTo(star.x, star.y);
+//       // recycle when out of bounds
+//       if (
+//         star.x < -OVERFLOW_THRESHOLD ||
+//         star.x > width + OVERFLOW_THRESHOLD ||
+//         star.y < -OVERFLOW_THRESHOLD ||
+//         star.y > height + OVERFLOW_THRESHOLD
+//       ) {
+//         recycleStar(star);
+//       }
+//     });
+//   }
 
-        var tailX = velocity.x * 2,
-          tailY = velocity.y * 2;
+//   function render() {
+//     stars.forEach((star) => {
+//       context.beginPath();
+//       context.lineCap = "round";
+//       context.lineWidth = STAR_SIZE * star.z * scale;
+//       context.globalAlpha = 0.5 + 0.5 * Math.random();
+//       context.strokeStyle = STAR_COLOR;
 
-        // stroke() wont work on an invisible line
-        if (Math.abs(tailX) < 0.1) tailX = 0.5;
-        if (Math.abs(tailY) < 0.1) tailY = 0.5;
+//       context.beginPath();
+//       context.moveTo(star.x, star.y);
 
-        context.lineTo(star.x + tailX, star.y + tailY);
+//       var tailX = velocity.x * 2,
+//         tailY = velocity.y * 2;
 
-        context.stroke();
-      });
-    }
+//       // stroke() wont work on an invisible line
+//       if (Math.abs(tailX) < 0.1) tailX = 0.5;
+//       if (Math.abs(tailY) < 0.1) tailY = 0.5;
 
-    function movePointer(x, y) {
-      if (typeof pointerX === "number" && typeof pointerY === "number") {
-        let ox = x - pointerX,
-          oy = y - pointerY;
+//       context.lineTo(star.x + tailX, star.y + tailY);
 
-        velocity.tx = velocity.tx + (ox / 8) * scale * (touchInput ? 1 : -1);
-        velocity.ty = velocity.ty + (oy / 8) * scale * (touchInput ? 1 : -1);
-      }
+//       context.stroke();
+//     });
+//   }
 
-      pointerX = x;
-      pointerY = y;
-    }
+//   function movePointer(x, y) {
+//     if (typeof pointerX === "number" && typeof pointerY === "number") {
+//       let ox = x - pointerX,
+//         oy = y - pointerY;
 
-    function onMouseMove(event) {
-      touchInput = false;
+//       velocity.tx = velocity.tx + (ox / 8) * scale * (touchInput ? 1 : -1);
+//       velocity.ty = velocity.ty + (oy / 8) * scale * (touchInput ? 1 : -1);
+//     }
 
-      movePointer(event.clientX, event.clientY);
-    }
+//     pointerX = x;
+//     pointerY = y;
+//   }
 
-    function onTouchMove(event) {
-      touchInput = true;
+//   function onMouseMove(event) {
+//     touchInput = false;
 
-      movePointer(event.touches[0].clientX, event.touches[0].clientY, true);
+//     movePointer(event.clientX, event.clientY);
+//   }
 
-      event.preventDefault();
-    }
+//   function onTouchMove(event) {
+//     touchInput = true;
 
-    function onMouseLeave() {
-      console.log("1");
-      pointerX = null;
-      pointerY = null;
-    }
-  },
-};
+//     movePointer(event.touches[0].clientX, event.touches[0].clientY, true);
+
+//     event.preventDefault();
+//   }
+
+//   function onMouseLeave() {
+//     console.log("1");
+//     pointerX = null;
+//     pointerY = null;
+//   }
+// },
 </script>
-
-<style scoped="scoped">
+<style>
 body {
   width: 100%;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  background-image: radial-gradient(
+      circle at top right,
+      rgba(121, 68, 154, 0.13),
+      transparent
+    ),
+    radial-gradient(circle at 20% 80%, rgba(41, 196, 255, 0.13), transparent);
+}
+canvas {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+a {
+  position: absolute;
+  bottom: 2vmin;
+  right: 2vmin;
+  color: rgba(255, 255, 255, 0.2);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #fff;
+}
+.login-register {
+  width: 70vw;
+}
+.contain {
+  width: 100%;
+  height: 100%;
+}
+.big-box {
+  height: 60vh;
+}
+.big-contain {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.btitle {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: rgb(57, 167, 176);
+}
+.bform {
+  width: 100%;
+  height: 55%;
+  padding: 2em 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+.bform .errTips {
+  display: block;
+  width: 50%;
+  text-align: left;
+  color: red;
+  font-size: 0.7em;
+  margin-left: 1em;
+}
+.bform input {
+  width: 50%;
+  height: 40px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  padding-left: 2em;
+  background-color: #f0f0f0;
+}
+.bbutton {
+  width: 20%;
+  height: 40px;
+  border-radius: 24px;
+  border: none;
+  outline: none;
+  background-color: rgb(57, 167, 176);
+  color: #fff;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+.small-box {
+  height: 100%;
+  background: linear-gradient(135deg, rgb(57, 167, 176), rgb(56, 183, 145));
+
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+}
+.small-contain {
+  width: 100%;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.stitle {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #fff;
+}
+.scontent {
+  font-size: 0.8em;
+  color: #fff;
+  text-align: center;
+  padding: 2em 4em;
+  line-height: 1.7em;
+}
+.sbutton {
+  width: 60%;
+  height: 40px;
+  border-radius: 24px;
+  border: 1px solid #fff;
+  outline: none;
+  background-color: transparent;
+  color: #fff;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+</style>
+<!-- <style scoped="scoped">
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #ffffff;
   background-image: radial-gradient(
       circle at top right,
@@ -373,7 +493,6 @@ a:hover {
 }
 .login-register {
   opacity: 0.9;
-
   width: 60vw;
   height: 60vh;
   box-sizing: border-box;
@@ -382,7 +501,7 @@ a:hover {
 .contain {
   /* width: 60%; */
   height: 600px;
-  position: relative;
+  /* position: relative; */
   /* position: absolute; */
   top: 300px;
   left: 50%;
@@ -507,4 +626,4 @@ a:hover {
   transform: translateX(-100%);
   transition: all 1s;
 }
-</style>
+</style> -->

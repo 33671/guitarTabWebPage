@@ -79,6 +79,15 @@ module.exports = configure(function (ctx) {
       },
       port: 8080,
       open: true, // opens browser window automatically
+      proxy: {
+        "/api": {
+          target: "http://127.0.0.1:5000",
+          changeOrigin: true,
+          pathRewrite: {
+            "^/api": "",
+          },
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
@@ -96,7 +105,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ["Dialog"],
     },
 
     // animations: 'all', // --- includes all animations
