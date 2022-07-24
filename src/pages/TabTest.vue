@@ -2,7 +2,7 @@
   <div class="row justify-center">
     <div class="col-12 col-sm-11 col-md-10 col-lg-8">
       <iframe
-        class="rounded-borders bg-white q-mt-sm"
+        class="bg-white q-mt-sm"
         src="./alphaTab"
         frameborder="0"
         id="tab-iframe"
