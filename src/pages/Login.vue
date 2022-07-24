@@ -39,7 +39,7 @@
                   v-model="form.captcha"
                 />
 
-                <img style="max-width: 120px" src="/api/captcha/" alt="" />
+                <img style="max-width: 120px" src="/api/captcha" alt="" />
               </div>
               <!-- <span class="errTips" v-if="emailError">* 密码填写错误 *</span> -->
             </div>
@@ -67,7 +67,7 @@
                   v-model="form.captcha"
                 />
 
-                <img style="max-width: 120px" src="/api/captcha/" alt="" />
+                <img style="max-width: 120px" src="/api/captcha" alt="" />
               </div>
             </div>
             <button class="bbutton" @click="userreg">注册</button>
@@ -95,7 +95,7 @@ async function userlogin() {
   const aa = await axios.post("/api/login", loginform);
   console.log(aa);
   // $q.dialog({
-  //   title: `<img src="/api/captcha/" alt="" />`,
+  //   title: `<img src="/api/captcha" alt="" />`,
   //   message: "Some message",
   //   html: true,
   // })
@@ -115,7 +115,7 @@ async function userreg() {
   regform.append("email", form.value.useremail);
   regform.append("password", form.value.password);
   regform.append("captcha", "111");
-  const aa = await axios.post("/api/register/", regform);
+  const aa = await axios.post("/api/register", regform);
   console.log(aa);
 }
 
@@ -137,7 +137,7 @@ function changeType() {
   form.value.password = "";
 }
 
-onMounted(() => {
+onMounted(async () => {
   const STAR_COLOR = "#000000";
   const STAR_SIZE = 3;
   const STAR_MIN_SCALE = 0.2;
