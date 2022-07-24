@@ -35,34 +35,6 @@
                   ],
                 ]"
               >
-                <template v-slot:token>
-                  <q-btn-dropdown
-                    dense
-                    no-caps
-                    ref="tokenRef"
-                    no-wrap
-                    unelevated
-                    color="white"
-                    text-color="primary"
-                    label="Token"
-                    size="sm"
-                  >
-                    <q-list dense>
-                      <q-item tag="label" clickable @click="add('email')">
-                        <q-item-section side>
-                          <q-icon name="mail" />
-                        </q-item-section>
-                        <q-item-section>Email</q-item-section>
-                      </q-item>
-                      <q-item tag="label" clickable @click="add('title')">
-                        <q-item-section side>
-                          <q-icon name="title" />
-                        </q-item-section>
-                        <q-item-section>Title</q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-btn-dropdown>
-                </template>
               </q-editor>
               <q-input filled v-model="tabname" label="乐谱名 *" />
               <q-input filled v-model="realname" label="原作歌曲名 *" />
@@ -139,11 +111,9 @@ export default {
       },
     ];
     function checkFileSize(files) {
-      return files.filter((file) => file.size < 2048);
+      return files.filter((file) => file.size < 1024 * 16);
     }
     function onRejected(rejectedEntries) {
-      // Notify plugin needs to be installed
-      // https://quasar.dev/quasar-plugins/notify#Installation
       $q.notify({
         type: "negative",
         message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
@@ -220,17 +190,6 @@ export default {
       editorRef,
       tokenRef,
       editor: ref("谱详情"),
-
-      add(name) {
-        const edit = editorRef.value;
-        tokenRef.value.hide();
-        edit.caret.restore();
-        edit.runCmd(
-          "insertHTML",
-          `&nbsp;<div class="editor_token row inline items-center" contenteditable="false">&nbsp;<span>${name}</span>&nbsp;<i class="q-icon material-icons cursor-pointer" onclick="this.parentNode.parentNode.removeChild(this.parentNode)">close</i></div>&nbsp;`
-        );
-        edit.focus();
-      },
     };
   },
 };
