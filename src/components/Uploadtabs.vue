@@ -2,12 +2,14 @@
   <q-card style="border-radius: 30px">
     <q-card-section>
       <div class="flex justify-center q-my-lg">
+        <!-- :filter="checkFileSize" -->
         <q-uploader
           style="width: 80%"
-          url="http://localhost:4444/upload"
-          label="Filtered (for <2k size)"
+          hide-upload-btn
+          auto-upload
+          url="/api/tabs_upload"
+          label="上传谱文件"
           multiple
-          :filter="checkFileSize"
           @rejected="onRejected"
         />
       </div>
@@ -20,56 +22,11 @@
               <q-select
                 transition-show="jump-up"
                 transition-hide="jump-up"
-                v-model="model"
+                v-model="tabType"
                 :options="guitaroptions"
                 label="谱类型"
               />
 
-              <q-list>
-                <!--
-                  Rendering a <label> tag (notice tag="label")
-                  so QRadios will respond to clicks on QItems to
-                  change Toggle state.
-                -->
-
-                <q-item tag="label" v-ripple>
-                  <q-item-section avatar>
-                    <q-radio v-model="color" val="teal" color="teal" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Teal</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item tag="label" v-ripple>
-                  <q-item-section avatar>
-                    <q-radio v-model="color" val="orange" color="orange" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Orange</q-item-label>
-                    <q-item-label caption>With description </q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item tag="label" v-ripple>
-                  <q-item-section avatar top>
-                    <q-radio v-model="color" val="cyan" color="cyan" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Cyan</q-item-label>
-                    <q-item-label caption
-                      >Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                      Duis aute irure dolor in reprehenderit in voluptate velit
-                      esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                      sint occaecat cupidatat non proident, sunt in culpa qui
-                      officia deserunt mollit anim id est laborum.</q-item-label
-                    >
-                  </q-item-section>
-                </q-item>
-              </q-list>
               <q-editor
                 v-model="editor"
                 ref="editorRef"
@@ -77,7 +34,6 @@
                 toolbar-toggle-color="yellow-8"
                 toolbar-bg="primary"
                 :toolbar="[
-                  ['token'],
                   ['bold', 'italic', 'underline'],
                   [
                     {
@@ -128,25 +84,22 @@
                   inline
                 />
               </div>
-              <!-- <q-input filled v-model="name" label="原歌曲网易云音乐链接 *" /> -->
+              <q-input filled v-model="name" label="原歌曲链接 *" />
               <!-- <q-input filled type="number" v-model="age" label="Your age *" /> -->
               <div>
-                <q-checkbox v-model="right1" label="Label on Right" />
+                <q-checkbox v-model="right1" label="匿名上传" />
               </div>
               <div>
-                <q-checkbox v-model="right2" label="Label on Right" />
+                <q-checkbox v-model="right2" label="我接受用户协议" />
               </div>
 
+              <!-- <div class="flex justify-start">
+                <q-toggle v-model="accept" label="我接受用户协议" />
+              </div> -->
               <div class="flex justify-end">
-                <q-toggle
-                  v-model="accept"
-                  label="I accept the license and terms"
-                />
-              </div>
-              <div class="flex justify-end">
-                <q-btn label="Submit" type="submit" color="primary" />
+                <q-btn label="发布" type="submit" color="primary" />
                 <q-btn
-                  label="Reset"
+                  label="重设"
                   type="reset"
                   color="primary"
                   flat
@@ -189,6 +142,7 @@ export default {
     }
 
     return {
+      tabType: ref("吉他谱"),
       preferred: ref("rock"),
       submitResult,
       copyright: [
@@ -249,7 +203,7 @@ export default {
       },
       editorRef,
       tokenRef,
-      editor: ref("Customize it."),
+      editor: ref("谱详情"),
 
       add(name) {
         const edit = editorRef.value;
