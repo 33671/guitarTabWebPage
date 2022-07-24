@@ -17,16 +17,6 @@
         <q-card-section>
           <div>
             <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-              <q-input filled v-model="name" label="乐谱名 *" />
-              <q-input filled v-model="name" label="原作歌曲名 *" />
-              <q-select
-                transition-show="jump-up"
-                transition-hide="jump-up"
-                v-model="tabType"
-                :options="guitaroptions"
-                label="谱类型"
-              />
-
               <q-editor
                 v-model="editor"
                 ref="editorRef"
@@ -74,28 +64,34 @@
                   </q-btn-dropdown>
                 </template>
               </q-editor>
+              <q-input filled v-model="tabname" label="乐谱名 *" />
+              <q-input filled v-model="realname" label="原作歌曲名 *" />
+              <q-select
+                transition-show="jump-up"
+                transition-hide="jump-up"
+                v-model="tabType"
+                :options="guitaroptions"
+                label="谱类型"
+              />
+
               <div class="bg-grey-2 q-pa-sm rounded-borders">
                 Copyright相关
                 <q-option-group
-                  name="preferred_genre"
-                  v-model="preferred"
+                  name="iscopyright"
+                  v-model="iscopyright"
                   :options="copyright"
                   color="primary"
                   inline
                 />
               </div>
-              <q-input filled v-model="name" label="原歌曲链接 *" />
-              <!-- <q-input filled type="number" v-model="age" label="Your age *" /> -->
+              <q-input filled v-model="musiclink" label="原歌曲链接 *" />
               <div>
-                <q-checkbox v-model="right1" label="匿名上传" />
-              </div>
-              <div>
-                <q-checkbox v-model="right2" label="我接受用户协议" />
+                <q-checkbox v-model="noname" label="匿名上传" />
               </div>
 
-              <!-- <div class="flex justify-start">
+              <div class="flex justify-start">
                 <q-toggle v-model="accept" label="我接受用户协议" />
-              </div> -->
+              </div>
               <div class="flex justify-end">
                 <q-btn label="发布" type="submit" color="primary" />
                 <q-btn
@@ -121,14 +117,27 @@ import { ref } from "vue";
 export default {
   setup() {
     const submitResult = ref([]);
-
     const $q = useQuasar();
-    const name = ref(null);
-    const age = ref(null);
+    const noname = ref(false);
     const accept = ref(false);
     const editorRef = ref(null);
     const tokenRef = ref(null);
-
+    const tabname = ref(null);
+    const musiclink = ref(null);
+    const tabType = ref("吉他谱");
+    const realname = ref(null);
+    const iscopyright = ref(null);
+    const guitaroptions = ["吉他谱", "贝斯谱", "乐队总谱"];
+    const copyright = [
+      {
+        label: "转载",
+        value: "true",
+      },
+      {
+        label: "自制",
+        value: "false",
+      },
+    ];
     function checkFileSize(files) {
       return files.filter((file) => file.size < 2048);
     }
@@ -142,41 +151,18 @@ export default {
     }
 
     return {
-      tabType: ref("吉他谱"),
-      preferred: ref("rock"),
+      tabname,
+      noname,
+      musiclink,
+      realname,
+      tabType,
       submitResult,
-      copyright: [
-        {
-          label: "转载",
-          value: "true",
-        },
-        {
-          label: "自制",
-          value: "false",
-        },
-      ],
-      color: ref("cyan"),
-      right1: ref(false),
-      right2: ref(false),
-      guitaroptions: ["吉他谱", "贝斯谱", "乐队总谱"],
-      name,
-      age,
+      copyright,
+      iscopyright,
+      guitaroptions,
       accept,
       checkFileSize,
       onRejected,
-      onSubmit1(evt) {
-        const formData = new FormData(evt.target);
-        const data = [];
-
-        for (const [name, value] of formData.entries()) {
-          data.push({
-            name,
-            value,
-          });
-        }
-
-        submitResult.value = data;
-      },
 
       onSubmit() {
         if (accept.value !== true) {
@@ -184,7 +170,35 @@ export default {
             color: "red-5",
             textColor: "white",
             icon: "warning",
-            message: "You need to accept the license and terms first",
+            message: "请先同意用户协议",
+          });
+        } else if (tabname.value == null) {
+          $q.notify({
+            color: "dark-5",
+            textColor: "white",
+            icon: "warning",
+            message: "乐谱名没有写哦",
+          });
+        } else if (realname.value == null) {
+          $q.notify({
+            color: "blue-5",
+            textColor: "white",
+            icon: "warning",
+            message: "原歌曲名没有写哦",
+          });
+        } else if (iscopyright.value == null) {
+          $q.notify({
+            color: "green-5",
+            textColor: "white",
+            icon: "warning",
+            message: "请填写乐谱版权类型，本数据仅作统计",
+          });
+        } else if (musiclink.value == null) {
+          $q.notify({
+            color: "dark-5",
+            textColor: "white",
+            icon: "warning",
+            message: "请填写音乐平台对应链接，以获得更优质服务",
           });
         } else {
           $q.notify({
@@ -197,9 +211,11 @@ export default {
       },
 
       onReset() {
-        name.value = null;
-        age.value = null;
-        accept.value = false;
+        tabname.value = null;
+        accept.value = null;
+        iscopyright.value = null;
+        realname.value = null;
+        musiclink.value = false;
       },
       editorRef,
       tokenRef,
