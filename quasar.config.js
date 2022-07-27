@@ -81,11 +81,11 @@ module.exports = configure(function (ctx) {
       open: true, // opens browser window automatically
       proxy: {
         "/api": {
-          target: "http://127.0.0.1:5000",
+          target: "http://106.52.146.180:8081/",
           changeOrigin: true,
-          pathRewrite: {
-            "^/api": "",
-          },
+          // pathRewrite: {
+          //   "^/api": "",
+          // },
         },
       },
     },
