@@ -7,9 +7,10 @@
           style="width: 80%"
           hide-upload-btn
           auto-upload
-          url="/api/tabs_upload"
+          url="/api/tab_files"
           label="上传谱文件"
           multiple
+          @uploaded="uploaded"
           @rejected="onRejected"
         />
       </div>
@@ -18,7 +19,7 @@
           <div>
             <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
               <q-editor
-                v-model="editor"
+                v-model="tab_detail.description"
                 ref="editorRef"
                 toolbar-text-color="white"
                 toolbar-toggle-color="yellow-8"
@@ -36,29 +37,51 @@
                 ]"
               >
               </q-editor>
-              <q-input filled v-model="tabname" label="乐谱名 *" />
-              <q-input filled v-model="realname" label="原作歌曲名 *" />
+              <q-input filled v-model="tab_detail.tab_name" label="乐谱名 *" />
+              <q-input
+                filled
+                v-model="tab_detail.music_name"
+                label="原作歌曲名 *"
+              />
               <q-select
                 transition-show="jump-up"
                 transition-hide="jump-up"
-                v-model="tabType"
+                v-model="tab_detail.tab_type"
                 :options="guitaroptions"
                 label="谱类型"
+              />
+              <q-select
+                label="添加标签"
+                filled
+                v-model="tab_detail.tags"
+                use-input
+                use-chips
+                multiple
+                hide-dropdown-icon
+                input-debounce="0"
+                new-value-mode="add-unique"
               />
 
               <div class="bg-grey-2 q-pa-sm rounded-borders">
                 Copyright相关
                 <q-option-group
-                  name="iscopyright"
-                  v-model="iscopyright"
+                  name="is_reshiped"
+                  v-model="tab_detail.is_reshiped"
                   :options="copyright"
                   color="primary"
                   inline
                 />
               </div>
-              <q-input filled v-model="musiclink" label="原歌曲链接 *" />
+              <q-input
+                filled
+                v-model="tab_detail.original_music_url"
+                label="原歌曲链接 *"
+              />
               <div>
-                <q-checkbox v-model="noname" label="匿名上传" />
+                <q-checkbox
+                  v-model="tab_detail.is_anonymous"
+                  label="匿名上传"
+                />
               </div>
 
               <div class="flex justify-start">
@@ -83,33 +106,48 @@
 </template>
 
 <script>
+import { Axios } from "axios";
 import { useQuasar } from "quasar";
-import { ref } from "vue";
-
+import { axios } from "src/boot/axios";
+import { ref, unref } from "vue";
 export default {
   setup() {
     const submitResult = ref([]);
     const $q = useQuasar();
-    const noname = ref(false);
     const accept = ref(false);
     const editorRef = ref(null);
-    const tokenRef = ref(null);
-    const tabname = ref(null);
-    const musiclink = ref(null);
-    const tabType = ref("吉他谱");
-    const realname = ref(null);
-    const iscopyright = ref(null);
+
     const guitaroptions = ["吉他谱", "贝斯谱", "乐队总谱"];
     const copyright = [
       {
         label: "转载",
-        value: "true",
+        value: true,
       },
       {
         label: "自制",
-        value: "false",
+        value: false,
       },
     ];
+    const tab_detail = ref({
+      files_id: [],
+      tab_name: null,
+      is_anonymous: false,
+      original_music_url: null,
+      music_name: null,
+      tab_type: "吉他谱",
+      is_reshiped: null,
+      description: "详情",
+      tags: null,
+    });
+    function uploaded(info) {
+      tab_detail.value.files_id.push(JSON.parse(info.xhr.response).tab_file_id);
+      $q.notify({
+        color: "green-5",
+        textColor: "white",
+        icon: "warning",
+        message: "文件上传成功！",
+      });
+    }
     function checkFileSize(files) {
       return files.filter((file) => file.size < 1024 * 16);
     }
@@ -121,20 +159,15 @@ export default {
     }
 
     return {
-      tabname,
-      noname,
-      musiclink,
-      realname,
-      tabType,
-      submitResult,
-      copyright,
-      iscopyright,
       guitaroptions,
-      accept,
+      uploaded,
+      tab_detail,
       checkFileSize,
       onRejected,
-
-      onSubmit() {
+      copyright,
+      submitResult,
+      accept,
+      async onSubmit() {
         if (accept.value !== true) {
           $q.notify({
             color: "red-5",
@@ -142,54 +175,64 @@ export default {
             icon: "warning",
             message: "请先同意用户协议",
           });
-        } else if (tabname.value == null) {
+          return;
+        }
+        if (tab_detail.value.tab_name == null) {
           $q.notify({
             color: "dark-5",
             textColor: "white",
             icon: "warning",
             message: "乐谱名没有写哦",
           });
-        } else if (realname.value == null) {
+          return;
+        }
+        if (tab_detail.value.music_name == null) {
           $q.notify({
             color: "blue-5",
             textColor: "white",
             icon: "warning",
             message: "原歌曲名没有写哦",
           });
-        } else if (iscopyright.value == null) {
+          return;
+        }
+        if (tab_detail.value.is_reshiped == null) {
           $q.notify({
             color: "green-5",
             textColor: "white",
             icon: "warning",
             message: "请填写乐谱版权类型，本数据仅作统计",
           });
-        } else if (musiclink.value == null) {
+          return;
+        }
+        if (tab_detail.value.original_music_url == null) {
           $q.notify({
             color: "dark-5",
             textColor: "white",
             icon: "warning",
             message: "请填写音乐平台对应链接，以获得更优质服务",
           });
-        } else {
-          $q.notify({
-            color: "green-4",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "Submitted",
-          });
+          return;
         }
+        $q.notify({
+          color: "green-4",
+          textColor: "white",
+          icon: "cloud_done",
+          message: "Submitted",
+        });
+        const upload_object = unref(tab_detail);
+        const resp = await axios.post("/api/tabs_publish", upload_object);
+        console.log(resp);
       },
 
       onReset() {
-        tabname.value = null;
-        accept.value = null;
-        iscopyright.value = null;
-        realname.value = null;
-        musiclink.value = false;
+        tab_detail.value.tab_name = null;
+        tab_detail.value.accept = null;
+        tab_detail.value.is_reshiped = null;
+        tab_detail.value.music_name = null;
+        tab_detail.value.original_music_url = false;
       },
       editorRef,
-      tokenRef,
-      editor: ref("谱详情"),
+      description: ref("谱详情"),
     };
   },
 };
