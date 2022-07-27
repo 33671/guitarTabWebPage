@@ -51,7 +51,7 @@
                 label="谱类型"
               />
               <q-select
-                label="添加标签"
+                label="回车以添加标签"
                 filled
                 v-model="tab_detail.tags"
                 use-input
