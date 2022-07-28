@@ -14,6 +14,7 @@ const routes = [
       },
       { path: "home", component: () => import("pages/Index.vue") },
       { path: "publish", component: () => import("pages/PublishScore.vue") },
+      { path: "user", component: () => import("pages/User.vue") },
       { path: "", redirect: "/home" },
       {
         path: "search",
