@@ -18,9 +18,16 @@
         </div>
         <div class="col"></div>
         <div class="col">
-          <q-input dark rounded dense standout v-model="text">
+          <q-input
+            dark
+            rounded
+            dense
+            standout
+            v-model="searchText"
+            @keyup.enter="entersearch(e)"
+          >
             <template v-slot:append>
-              <q-icon name="search" />
+              |<q-icon name="search" @click="entersearch(e)" />
             </template>
           </q-input>
         </div>
@@ -68,10 +75,14 @@
 
 <script>
 import { ref } from "vue";
-
+import { useRoute, useRouter } from "vue-router";
+import useSearch from "./../search_input";
 export default {
   setup() {
+    const { search, searchText } = useSearch();
     const leftDrawerOpen = ref(false);
+    const route = useRoute();
+    const router = useRouter();
     const naviItem = [
       { to: "/home", name: "首页", icon: "inbox" },
       { to: "/star", name: "收藏", icon: "star" },
@@ -83,7 +94,13 @@ export default {
     return {
       naviItem,
       leftDrawerOpen,
-      text:ref(""),
+      searchText,
+      entersearch() {
+        search();
+        if (route.path != "/search") {
+          router.push("/search");
+        }
+      },
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },

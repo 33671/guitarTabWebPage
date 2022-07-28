@@ -5,8 +5,8 @@
     class="bg-primary text-white shadow-2"
     :breakpoint="0"
   >
-    <q-tab name="mails" icon="menu_book" />
-    <q-tab name="alarms" icon="account_circle" />
+    <q-tab name="tabs" icon="menu_book" />
+    <q-tab name="accounts" icon="account_circle" />
   </q-tabs>
 
   <q-tab-panels
@@ -15,20 +15,23 @@
     transition-prev="slide-right"
     transition-next="slide-left"
   >
-    <q-tab-panel name="mails">
+    <q-tab-panel name="tabs">
       <div class="row bg-white rounded-border">
         <div class="col-md-2 col-sm-3" v-for="score in scores" :key="score.url">
           <q-card class="my-card q-ma-md" v-ripple>
-            <img :src="score.cover" class="white--text align-end" />
+            <img
+              src="https://z3.ax1x.com/2021/09/30/4ououj.png"
+              class="white--text align-end"
+            />
             <q-card-section>
               <router-link
                 class="text-h7 ellipsis"
-                :to="'/tabs/' + score.title + '.gp'"
-                >{{ score.title }}</router-link
+                :to="'/tabs/' + score.tab_name + '.gp'"
+                >{{ score.tab_name }}</router-link
               >
-              <!-- <div class="text-h7 ellipsis">{{ score.title }}</div> -->
-              <div class="text-subtitle2 ellipsis">
-                {{ score.author }}
+              <!-- <div class="text-h7 ellipsis">{{ score.tab_name }}</div> -->
+              <div class="text-subtab_name2 ellipsis">
+                {{ score.uploader_detail.nick }}
               </div>
             </q-card-section>
           </q-card>
@@ -36,20 +39,23 @@
       </div>
     </q-tab-panel>
 
-    <q-tab-panel name="alarms">
+    <q-tab-panel name="accounts">
       <div class="row bg-white rounded-border">
         <div class="col-md-2 col-sm-3" v-for="score in scores" :key="score.url">
           <q-card class="my-card q-ma-md" v-ripple>
-            <img :src="score.cover" class="white--text align-end" />
+            <img
+              src="https://z3.ax1x.com/2021/09/30/4ououj.png"
+              class="white--text align-end"
+            />
             <q-card-section>
               <router-link
                 class="text-h7 ellipsis"
-                :to="'/tabs/' + score.title + '.gp'"
-                >{{ score.title }}</router-link
+                :to="'/tabs/' + score.tab_name + '.gp'"
+                >{{ score.tab_name }}</router-link
               >
-              <!-- <div class="text-h7 ellipsis">{{ score.title }}</div> -->
-              <div class="text-subtitle2 ellipsis">
-                {{ score.author }}
+              <!-- <div class="text-h7 ellipsis">{{ score.tab_name }}</div> -->
+              <div class="text-subtab_name2 ellipsis">
+                {{ score.uploader_detail.nick }}
               </div>
             </q-card-section>
           </q-card>
@@ -58,20 +64,20 @@
     </q-tab-panel>
   </q-tab-panels>
 
+  <!--   翻页
   <div class="q-pa-lg flex flex-center col-3">
     <q-pagination v-model="current" :max="5" input />
-  </div>
+  </div> -->
 </template>
 
 <script>
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { axios } from "boot/axios";
-
+import useSearch from "./../search_input";
 export default {
   async setup() {
-    let scores = ref([]);
-    const res = await axios.get("a.json");
-    scores.value = res.data.tab;
+    const { searchResult: scores } = useSearch();
+
     // console.log(scores.value);
     // console.log(res);
     // console.log(res.data.tab);
@@ -80,7 +86,7 @@ export default {
     // this.fetchTabReady = true;
     // console.log(this.scores);
     return {
-      tab: ref("mails"),
+      tab: ref("tabs"),
       scores,
       current: ref(1),
     };
