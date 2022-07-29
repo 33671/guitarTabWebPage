@@ -113,7 +113,6 @@ export default {
     return {
       naviItem,
       leftDrawerOpen,
-
       filterFn,
       options,
       searchResult,
