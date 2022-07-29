@@ -18,7 +18,26 @@
         </div>
         <div class="col"></div>
         <div class="col">
-          <q-input
+          <q-select
+            dense
+            dark
+            filled
+            v-model="searchText"
+            use-input
+            hide-selected
+            fill-input
+            input-debounce="0"
+            :options="options"
+            @keyup.enter="entersearch(e)"
+            @filter="filterFn"
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <!-- <q-input
             dark
             rounded
             dense
@@ -29,7 +48,7 @@
             <template v-slot:append>
               |<q-icon name="search" @click="entersearch(e)" />
             </template>
-          </q-input>
+          </q-input> -->
         </div>
         <div class="col"></div>
         <div class="col"></div>
@@ -79,7 +98,7 @@ import { useRoute, useRouter } from "vue-router";
 import useSearch from "./../search_input";
 export default {
   setup() {
-    const { search, searchText } = useSearch();
+    const { options, searchResult, searchText, search, filterFn } = useSearch();
     const leftDrawerOpen = ref(false);
     const route = useRoute();
     const router = useRouter();
@@ -94,6 +113,10 @@ export default {
     return {
       naviItem,
       leftDrawerOpen,
+
+      filterFn,
+      options,
+      searchResult,
       searchText,
       entersearch() {
         search();
