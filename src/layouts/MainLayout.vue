@@ -2,24 +2,20 @@
   <q-layout view="hHh lpr fff" class="body">
     <q-header reveal elevated class="header">
       <q-toolbar>
-        <div class="col">
-          <div class="row">
-            <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+        <!-- <div class="row"> -->
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-            <q-toolbar-title>
-              <q-avatar>
+        <q-toolbar-title style="max-width: 200px; min-width: 130px">
+          <!-- <q-avatar>
                 <img
                   src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg"
                 />
-              </q-avatar>
-              Guitar Club
-            </q-toolbar-title>
-          </div>
-        </div>
-        <div class="col"></div>
-        <div class="col">
-          <!-- dark -->
+              </q-avatar> -->
+          Guitar Club
+        </q-toolbar-title>
+        <div class="flex justify-center col-shrink" style="flex: 1">
           <q-select
+            style="flex: 1; max-width: 260px; min-width: 20px"
             dense
             standout="bg-primary text-white"
             use-input
@@ -35,49 +31,15 @@
             :model-value="searchText"
             @input-value="setModel"
           >
-            <!-- v-model="searchText" -->
             <template v-slot:append>
               <q-icon name="search" @click.stop.prevent />
             </template>
           </q-select>
-          <!-- outlined -->
-          <!-- <q-select
-            standout="bg-primary text-white"
-            use-input
-            hide-dropdown-icon
-            hide-selected
-            dense
-            v-model="searchText"
-            :options="options"
-            maxlength="12"
-            options-dense
-          >
-            <template v-slot:append>
-              <q-icon
-                v-if="model !== ''"
-                name="close"
-                @click.stop.prevent="model = ''"
-                class="cursor-pointer"
-              />
-              <q-icon name="search" @click.stop.prevent />
-            </template>
-          </q-select> -->
-
-          <!-- <q-input
-            dark
-            rounded
-            dense
-            standout
-            v-model="searchText"
-            @keyup.enter="entersearch(e)"
-          >
-            <template v-slot:append>
-              |<q-icon name="search" @click="entersearch(e)" />
-            </template>
-          </q-input> -->
         </div>
-        <div class="col"></div>
-        <div class="col"></div>
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- <div class="col"></div>
+        <div class="col"></div> -->
       </q-toolbar>
     </q-header>
 
@@ -164,7 +126,7 @@ export default {
   background-color: rgb(25, 118, 210);
 }
 
-.body {
-  background-color: rgb(206, 211, 217);
-}
+// .body {
+//   background-color: rgb(206, 211, 217);
+// }
 </style>

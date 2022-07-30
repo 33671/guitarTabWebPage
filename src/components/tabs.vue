@@ -1,11 +1,11 @@
 <template>
   <div>
-    <q-splitter v-model="splitterModel">
+    <q-splitter v-model="splitterModel" :horizontal="ismobel">
       <template v-slot:before>
-        <q-tabs v-model="tab" vertical class="text-teal">
-          <q-tab class="text-purple" name="mails" label="Mails" />
-          <q-tab class="text-orange" name="alarms" label="Alarms" />
-          <q-tab class="text-teal" name="movies" label="Movies" />
+        <q-tabs v-model="tab" :vertical="!ismobel" class="text-teal">
+          <q-tab class="text-purple" name="吉他谱" label="吉他谱" />
+          <q-tab class="text-orange" name="贝斯谱" label="贝斯谱" />
+          <q-tab class="text-teal" name="乐队总谱" label="乐队总谱" />
         </q-tabs>
       </template>
 
@@ -14,28 +14,32 @@
           v-model="tab"
           animated
           swipeable
-          vertical
+          :vertical="!ismobel"
           transition-prev="slide-down"
           transition-next="slide-up"
         >
           <q-tab-panel
-            :name="sec"
-            v-for="(sec, index) in ['mails', 'alarms', 'movies']"
+            class="q-pa-none q-pa-md-sm"
+            :name="index"
+            v-for="(tablist, index) in scores"
             :key="index"
           >
             <!-- q-gutter-y-lg q-gutter-x-md q-gutter-lg-x-lg -->
             <div class="row">
               <div
-                class="col-md-2 col-sm-3"
-                v-for="score in scores"
+                class="col-md-2 col-sm-12 col-12"
+                v-for="score in tablist"
                 :key="score.url"
               >
-                <q-card class="my-card position-relative q-ma-md" v-ripple>
+                <q-card
+                  class="my-card position-relative q-ma-md q-ma-none"
+                  v-ripple
+                >
                   <img
                     src="https://z3.ax1x.com/2021/09/30/4ououj.png"
                     class="white--text align-end"
                   />
-                  <q-card-section>
+                  <q-card-section class="overflow-hidden ellipsis">
                     <router-link
                       class="text-h7 ellipsis"
                       :to="'/tabs/' + score.music_name + '.gp'"
@@ -59,25 +63,28 @@
 <script>
 import { ref } from "vue";
 import { axios } from "boot/axios";
+import { useQuasar } from "quasar";
 
 export default {
   async setup() {
-    let scores = ref([]);
-    const res = await axios.get("/api/tabs_publish?random=true");
-    for (var i = 0; i < 12; i++) {
-      scores.value.push(res.data[i]);
+    const $q = useQuasar();
+    const ismobel = $q.platform.is.mobile;
+    let scores = ref({
+      吉他谱: [],
+      贝斯谱: [],
+      乐队总谱: [],
+    });
+    for (let i of ["吉他谱", "贝斯谱", "乐队总谱"]) {
+      scores.value[i] = (
+        await axios.get("/api/tabs_publish?random=true&tab_type=" + i)
+      ).data.slice(0, 12);
     }
     console.log(scores.value);
-    // console.log(res);
-    // console.log(res.data.tab);
-    // var score = this.axios.get("a.json");
-    // this.scores = tab.data.score;
-    // this.fetchTabReady = true;
-    // console.log(this.scores);
     return {
       scores,
-      tab: ref("mails"),
-      splitterModel: ref(20),
+      ismobel,
+      tab: ref("吉他谱"),
+      splitterModel: ref(12),
     };
   },
 };

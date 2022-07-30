@@ -6,11 +6,11 @@ const searchResult = ref([]);
 const options = ref([]);
 let last_input = "";
 async function filterFn(val, update, abort) {
-  // call abort() at any time if you can't retrieve data somehow
+  if (val.trim() == last_input.trim() || val == "") abort();
   setTimeout(() => {
-    if (searchText.value == last_input) return;
+    if (val.trim() == last_input.trim()) abort();
     update(async () => {
-      if (val === "") {
+      if (val.trim() === "") {
         options.value = [];
       } else {
         options.value = (
