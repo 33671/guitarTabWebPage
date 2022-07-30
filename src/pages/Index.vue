@@ -1,16 +1,18 @@
 <template>
-  <div class="carousel">
-    <!-- <carousel /> -->
-  </div>
+  <q-page padding>
+    <div class="carousel">
+      <!-- <carousel /> -->
+    </div>
 
-  <q-card class="tabs">
-    <q-card-section>
-      <suspense>
-        <tabs />
-      </suspense>
-    </q-card-section>
-  </q-card>
-  <div style="height: 30px"></div>
+    <q-card class="tabs">
+      <q-card-section>
+        <suspense>
+          <tabs />
+        </suspense>
+      </q-card-section>
+    </q-card>
+    <div style="height: 30px"></div>
+  </q-page>
 </template>
 
 <script>
@@ -30,10 +32,13 @@ export default {
   margin: 0 auto;
   margin-top: 30px;
 }
-
+@media (min-width: 768px) {
+  .tabs {
+    max-width: 80%;
+  }
+}
 .tabs {
   margin: 0 auto;
-  max-width: 80%;
   margin-top: 30px;
 }
 </style>

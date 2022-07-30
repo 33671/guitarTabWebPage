@@ -43,7 +43,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" side="left" behavior="desktop" elevated>
+    <q-drawer v-model="leftDrawerOpen" side="left" elevated>
       <!-- drawer content -->
       <q-scroll-area
         style="height: calc(100% - 150px); border-right: 1px solid #ddd"
