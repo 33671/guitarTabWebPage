@@ -18,25 +18,51 @@
         </div>
         <div class="col"></div>
         <div class="col">
+          <!-- dark -->
           <q-select
             dense
-            dark
-            filled
-            v-model="searchText"
+            standout="bg-primary text-white"
             use-input
+            hide-dropdown-icon
+            options-dense
             hide-selected
             fill-input
             input-debounce="0"
             :options="options"
+            maxlength="12"
             @keyup.enter="entersearch(e)"
             @filter="filterFn"
+            :model-value="searchText"
+            @input-value="setModel"
           >
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
+            <!-- v-model="searchText" -->
+            <template v-slot:append>
+              <q-icon name="search" @click.stop.prevent />
             </template>
           </q-select>
+          <!-- outlined -->
+          <!-- <q-select
+            standout="bg-primary text-white"
+            use-input
+            hide-dropdown-icon
+            hide-selected
+            dense
+            v-model="searchText"
+            :options="options"
+            maxlength="12"
+            options-dense
+          >
+            <template v-slot:append>
+              <q-icon
+                v-if="model !== ''"
+                name="close"
+                @click.stop.prevent="model = ''"
+                class="cursor-pointer"
+              />
+              <q-icon name="search" @click.stop.prevent />
+            </template>
+          </q-select> -->
+
           <!-- <q-input
             dark
             rounded
@@ -114,6 +140,9 @@ export default {
       naviItem,
       leftDrawerOpen,
       filterFn,
+      setModel(val) {
+        searchText.value = val;
+      },
       options,
       searchResult,
       searchText,

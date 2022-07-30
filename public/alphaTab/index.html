@@ -125,12 +125,30 @@
       </template>
     </div>
     <script>
+      // async function request_file(url) {
+      //   return new Promise((r, j) => {
+      //     var oReq = new XMLHttpRequest();
+      //     oReq.open("GET", "url", true);
+      //     oReq.responseType = "arraybuffer";
+      //     oReq.onload = function (oEvent) {
+      //       var arrayBuffer = oReq.response; // 注意：不是 oReq.responseText
+      //       if (arrayBuffer) {
+      //         var byteArray = new Uint8Array(arrayBuffer);
+      //         r(byteArray);
+      //       }
+      //       j("请求错误");
+      //     };
+      //     oReq.send(null);
+      //   });
+      // }
+      //
       //const file = window.location.search.replace("?", "");
       const wrapper = document.querySelector(".at-wrap");
       const main = wrapper.querySelector(".at-main");
-      // initialize alphatab
+      // initialize alphatab localStorage.getItem("file")
+      const path = localStorage.getItem("file");
       const settings = {
-        file: localStorage.getItem("file"),
+        file: path,
         // file: "./ふわふわ时间.gp5",
         player: {
           enablePlayer: true,
@@ -138,6 +156,9 @@
           scrollElement: wrapper.querySelector(".at-viewport"),
         },
       };
+      console.log(path);
+      // console.log(settings.file);
+
       const api = new alphaTab.AlphaTabApi(main, settings);
       window.api = api;
 

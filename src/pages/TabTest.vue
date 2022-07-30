@@ -15,11 +15,13 @@
 
 <script>
 import { onMounted } from "@vue/runtime-core";
+
 // import { RenderingResources } from "@coderline/alphatab";
 export default {
   props: ["id"],
   setup(props) {
-    let TabLocation = "./tabs/" + props.id;
+    let TabLocation = "/api/tab_files/" + props.id;
+
     localStorage.setItem("file", TabLocation);
     onMounted(() => {
       // function setIframeHeight(iframe) {

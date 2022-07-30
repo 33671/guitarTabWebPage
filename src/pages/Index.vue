@@ -1,6 +1,6 @@
 <template>
   <div class="carousel">
-    <carousel />
+    <!-- <carousel /> -->
   </div>
 
   <q-card class="tabs">
@@ -20,7 +20,7 @@ import tabs from "../components/tabs.vue";
 export default {
   name: "Index",
   components: {
-    carousel,
+    // carousel,
     tabs,
   },
 };

@@ -3,24 +3,23 @@ import { axios } from "boot/axios";
 const searchText = ref("");
 const searchResult = ref([]);
 
-const stringOptions = ["Google", "Facebook", "Twitter", "Apple", "Oracle"];
-
-const options = ref(stringOptions);
+const options = ref([]);
+let last_input = "";
 async function filterFn(val, update, abort) {
   // call abort() at any time if you can't retrieve data somehow
-
   setTimeout(() => {
-    update(() => {
+    if (searchText.value == last_input) return;
+    update(async () => {
       if (val === "") {
-        options.value = stringOptions;
+        options.value = [];
       } else {
-        const needle = val.toLowerCase();
-        options.value = stringOptions.filter(
-          (v) => v.toLowerCase().indexOf(needle) > -1
-        );
+        options.value = (
+          await axios.get("/api/tabs_search/tips?s=" + searchText.value)
+        ).data.map((x) => x["music_name"]);
+        last_input = searchText.value;
       }
     });
-  }, 1500);
+  }, 500);
 }
 
 async function search(e) {
