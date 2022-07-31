@@ -20,6 +20,7 @@
               :key="score.url"
             >
               <TabCardVue
+                class="q-ma-lg-md q-ma-sm q-ma-xl-lg"
                 :uploader="score.uploader"
                 :music-name="score.tab_name"
                 :publishId="score.publish_id"
@@ -36,6 +37,7 @@
               :key="score.url"
             >
               <TabCardVue
+                class="q-ma-lg-md q-ma-sm q-ma-xl-xl"
                 :uploader="score.uploader"
                 :music-name="score.tab_name"
                 :publishId="score.publish_id"

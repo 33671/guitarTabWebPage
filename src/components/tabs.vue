@@ -26,16 +26,16 @@
           >
             <div class="row">
               <div
-                class="col-lg-2 col-md-3 col-sm-4 col-12"
+                class="col-lg-2 col-md-3 col-sm-4 col-6"
                 v-for="score in tablist"
                 :key="score.url"
               >
                 <TabCard
+                  class="q-ma-lg-md q-ma-sm q-ma-xl-xl"
                   :musicName="score.music_name"
                   :uploader="score.uploader"
                   :publishId="score.publish_id"
-                >
-                </TabCard>
+                />
               </div>
             </div>
           </q-tab-panel>
@@ -50,6 +50,7 @@ import { onMounted, ref } from "vue";
 import { axios } from "boot/axios";
 import { useQuasar } from "quasar";
 import TabCard from "./TabCard.vue";
+// import "../css/bootstrap.css";
 export default {
   components: {
     TabCard,
@@ -79,3 +80,6 @@ export default {
   },
 };
 </script>
+<style>
+/* @import "./../css/bootstrap.css"; */
+</style>

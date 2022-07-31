@@ -9,7 +9,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <q-card class="my-card position-relative q-ma-md q-ma-none" v-ripple>
+  <q-card class="my-card position-relative" v-ripple>
     <img
       :src="
         props.coverId != ''
