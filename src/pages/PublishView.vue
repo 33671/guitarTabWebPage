@@ -67,7 +67,13 @@ const splitterModel = ref(12);
           <div
             class="col-12 col-md-3 flex justify-center justify-sm-center justify-md-end q-py-sm"
           >
-            <q-skeleton width="180px" height="180px" />
+            <q-img
+              v-if="info.cover_file_id != undefined || info.cover_file_id == ''"
+              :src="'/api/cover_files/' + info.cover_file_id"
+              width="180px"
+              height="180px"
+            />
+            <q-skeleton v-else width="180px" height="180px" />
           </div>
           <div
             v-if="finished"

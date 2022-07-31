@@ -1,10 +1,10 @@
 <template>
   <q-card style="border-radius: 30px">
     <q-card-section>
-      <div class="flex justify-center q-my-lg">
+      <div class="row justify-center q-my-lg q-gutter-y-md q-gutter-x-md">
         <!-- :filter="checkFileSize" -->
         <q-uploader
-          style="width: 80%"
+          class="col-10 col-md-6"
           hide-upload-btn
           auto-upload
           url="/api/tab_files"
@@ -13,30 +13,23 @@
           @uploaded="uploaded"
           @rejected="onRejected"
         />
+        <q-uploader
+          class="col-10 col-md-4"
+          url="/api/cover_files"
+          color="teal"
+          hide-upload-btn
+          auto-upload
+          :multiple="false"
+          accept=".jpg, image/*"
+          @uploaded="coverUploaded"
+          @rejected="onRejected"
+          label="上传封面"
+        />
       </div>
       <q-card class="q-my-lg" flat>
         <q-card-section>
           <div>
             <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-              <q-editor
-                v-model="tab_detail.description"
-                ref="editorRef"
-                toolbar-text-color="white"
-                toolbar-toggle-color="yellow-8"
-                toolbar-bg="primary"
-                :toolbar="[
-                  ['bold', 'italic', 'underline'],
-                  [
-                    {
-                      label: $q.lang.editor.formatting,
-                      icon: $q.iconSet.editor.formatting,
-                      list: 'no-icons',
-                      options: ['p', 'h3', 'h4', 'h5', 'h6', 'code'],
-                    },
-                  ],
-                ]"
-              >
-              </q-editor>
               <q-input filled v-model="tab_detail.tab_name" label="乐谱名 *" />
               <q-input
                 filled
@@ -50,8 +43,28 @@
                 :options="guitaroptions"
                 label="谱类型"
               />
+              <q-editor
+                v-model="tab_detail.description"
+                ref="editorRef"
+                class="col-10 col-md-11"
+                toolbar-text-color="white"
+                toolbar-toggle-color="yellow-8"
+                toolbar-bg="purple"
+                :toolbar="[
+                  ['bold', 'italic', 'underline'],
+                  [
+                    {
+                      label: $q.lang.editor.formatting,
+                      icon: $q.iconSet.editor.formatting,
+                      list: 'no-icons',
+                      options: ['p', 'h3', 'h4', 'h5', 'h6', 'code'],
+                    },
+                  ],
+                ]"
+              >
+              </q-editor>
               <q-select
-                label="回车以添加标签"
+                label="添加标签"
                 filled
                 v-model="tab_detail.tags"
                 use-input
@@ -138,6 +151,7 @@ export default {
       is_reshiped: null,
       description: "详情",
       tags: null,
+      cover_file_id: "",
     });
     function uploaded(info) {
       tab_detail.value.files_id.push(JSON.parse(info.xhr.response).tab_file_id);
@@ -157,6 +171,17 @@ export default {
         message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
       });
     }
+    function coverUploaded(info) {
+      tab_detail.value.cover_file_id = JSON.parse(
+        info.xhr.response
+      ).cover_file_id;
+      $q.notify({
+        color: "green-5",
+        textColor: "white",
+        icon: "warning",
+        message: "封面上传成功！",
+      });
+    }
 
     return {
       guitaroptions,
@@ -164,6 +189,7 @@ export default {
       tab_detail,
       checkFileSize,
       onRejected,
+      coverUploaded,
       copyright,
       submitResult,
       accept,
@@ -229,7 +255,7 @@ export default {
         tab_detail.value.accept = null;
         tab_detail.value.is_reshiped = null;
         tab_detail.value.music_name = null;
-        tab_detail.value.original_music_url = false;
+        tab_detail.value.original_music_url = "";
       },
       editorRef,
       description: ref("谱详情"),

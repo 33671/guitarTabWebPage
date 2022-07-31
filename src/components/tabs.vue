@@ -32,7 +32,7 @@
               >
                 <TabCard
                   class="q-ma-lg-md q-ma-sm q-ma-xl-xl"
-                  :musicName="score.music_name"
+                  :musicName="score.tab_name"
                   :uploader="score.uploader"
                   :publishId="score.publish_id"
                 />

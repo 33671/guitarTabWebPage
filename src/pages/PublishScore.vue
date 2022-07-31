@@ -1,10 +1,8 @@
 <template>
-  <div class="row q-mt-xl">
-    <div class="col-3"></div>
-    <div class="col-6">
+  <div class="row q-mt-sm q-mt-md-xl justify-center">
+    <div class="col-12 col-md-6">
       <uploadtabs />
     </div>
-    <div class="col-3"></div>
   </div>
 </template>
 
