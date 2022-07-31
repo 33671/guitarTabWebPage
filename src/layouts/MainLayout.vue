@@ -12,10 +12,7 @@
               </q-avatar> -->
           Guitar Club
         </q-toolbar-title>
-        <div
-          class="flex justify-center col-shrink"
-          style="flex: 1; min-width: 160px"
-        >
+        <div class="flex justify-center col-shrink q-pr-sm" style="width: 100%">
           <q-select
             style="flex: 1; max-width: 260px; min-width: 20px"
             dense
