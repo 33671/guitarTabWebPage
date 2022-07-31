@@ -9,15 +9,18 @@ const routes = [
     children: [
       {
         path: "/tabs/:id",
-        component: (tabs) => import("pages/TabTest.vue"),
+        component: () => import("pages/TabTest.vue"),
         props: true,
       },
       {
         path: "/publishView/:publishId",
-        component: (tabs) => import("pages/PublishView.vue"),
+        component: () => import("pages/PublishView.vue"),
         props: true,
       },
-      { path: "home", component: () => import("pages/Index.vue") },
+      {
+        path: "home",
+        component: () => import("pages/Index.vue"),
+      },
       { path: "publish", component: () => import("pages/PublishScore.vue") },
       { path: "user", component: () => import("pages/User.vue") },
       { path: "", redirect: "/home" },

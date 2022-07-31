@@ -2,7 +2,6 @@
   <q-layout view="hHh lpr fff" class="body">
     <q-header reveal elevated class="header">
       <q-toolbar>
-        <!-- <div class="row"> -->
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title style="max-width: 200px; min-width: 130px">
@@ -36,15 +35,10 @@
             </template>
           </q-select>
         </div>
-        <!-- </div> -->
-        <!-- </div> -->
-        <!-- <div class="col"></div>
-        <div class="col"></div> -->
       </q-toolbar>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" side="left" elevated>
-      <!-- drawer content -->
       <q-scroll-area
         style="height: calc(100% - 150px); border-right: 1px solid #ddd"
       >
@@ -67,7 +61,11 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <keep-alive include="Home">
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
     </q-page-container>
 
     <q-footer elevated class="bg-grey-8 text-white hidden">
@@ -105,6 +103,7 @@ export default {
       setModel(val) {
         searchText.value = val;
       },
+      route,
       options,
       searchResult,
       searchText,

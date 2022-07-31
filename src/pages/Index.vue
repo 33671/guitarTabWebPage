@@ -6,26 +6,22 @@
 
     <q-card class="tabs">
       <q-card-section>
-        <suspense>
-          <tabs />
-        </suspense>
+        <tabs />
       </q-card-section>
     </q-card>
     <div style="height: 30px"></div>
   </q-page>
 </template>
-
 <script>
+export default {
+  name: "Home",
+};
+</script>
+<script setup>
+import { defineComponent } from "vue";
 import carousel from "../components/carousel.vue";
 import tabs from "../components/tabs.vue";
-
-export default {
-  name: "Index",
-  components: {
-    // carousel,
-    tabs,
-  },
-};
+// const tab = "tabs";
 </script>
 <style lang="scss" scoped>
 .carousel {

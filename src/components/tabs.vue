@@ -24,33 +24,18 @@
             v-for="(tablist, index) in scores"
             :key="index"
           >
-            <!-- q-gutter-y-lg q-gutter-x-md q-gutter-lg-x-lg -->
             <div class="row">
               <div
-                class="col-md-2 col-sm-12 col-12"
+                class="col-lg-2 col-md-3 col-sm-4 col-12"
                 v-for="score in tablist"
                 :key="score.url"
               >
-                <q-card
-                  class="my-card position-relative q-ma-md q-ma-none"
-                  v-ripple
+                <TabCard
+                  :music_name="score.music_name"
+                  :uploader="score.uploader"
+                  :publishId="score.publish_id"
                 >
-                  <img
-                    src="https://z3.ax1x.com/2021/09/30/4ououj.png"
-                    class="white--text align-end"
-                  />
-                  <q-card-section class="overflow-hidden ellipsis">
-                    <router-link
-                      class="text-h7 ellipsis"
-                      :to="'/tabs/' + score.music_name + '.gp'"
-                      >{{ score.music_name }}</router-link
-                    >
-                    <!-- <div class="text-h7 ellipsis">{{ score.title }}</div> -->
-                    <div class="text-subtitle2 ellipsis">
-                      {{ score.uploader }}
-                    </div>
-                  </q-card-section>
-                </q-card>
+                </TabCard>
               </div>
             </div>
           </q-tab-panel>
@@ -61,12 +46,15 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { axios } from "boot/axios";
 import { useQuasar } from "quasar";
-
+import TabCard from "./TabCard.vue";
 export default {
-  async setup() {
+  components: {
+    TabCard,
+  },
+  setup() {
     const $q = useQuasar();
     const ismobel = $q.platform.is.mobile;
     let scores = ref({
@@ -74,12 +62,14 @@ export default {
       贝斯谱: [],
       乐队总谱: [],
     });
-    for (let i of ["吉他谱", "贝斯谱", "乐队总谱"]) {
-      scores.value[i] = (
-        await axios.get("/api/tabs_publish?random=true&tab_type=" + i)
-      ).data.slice(0, 12);
-    }
-    console.log(scores.value);
+    onMounted(async () => {
+      for (let i of ["吉他谱", "贝斯谱", "乐队总谱"]) {
+        scores.value[i] = (
+          await axios.get("/api/tabs_publish?random=true&tab_type=" + i)
+        ).data.slice(0, 12);
+      }
+      console.log(scores.value);
+    });
     return {
       scores,
       ismobel,
@@ -89,4 +79,3 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
