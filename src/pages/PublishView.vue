@@ -1,94 +1,91 @@
 <script setup>
-const contacts = [
-  {
-    id: 1,
-    name: "Ruddy Jedrzej",
-    email: "rjedrzej0@discuz.net",
-    letter: "R",
-  },
-  {
-    id: 2,
-    name: "Mallorie Alessandrini",
-    email: "malessandrini1@marketwatch.com",
-    letter: "M",
-  },
-  {
-    id: 3,
-    name: "Elisabetta Wicklen",
-    email: "ewicklen2@microsoft.com",
-    letter: "E",
-  },
-  {
-    id: 4,
-    name: "Seka Fawdrey",
-    email: "sfawdrey3@wired.com",
-    letter: "S",
-  },
-];
+import { axios } from "src/boot/axios";
+import { onMounted, ref, defineProps } from "vue";
+const props = defineProps({
+  publishId: String,
+});
+const info = ref({});
+const scores = ref([]);
+const finished = ref(false);
+onMounted(async () => {
+  const res = await axios.get(`/api/tabs_publish/${props.publishId}`);
+  const data = res.data;
+  // console.log(data);
+  info.value = data;
+  data["files_id"].forEach(async (file) => {
+    scores.value.push((await axios.get(`/api/tab_files/${file}/info`)).data);
+  });
+  info.value.tags = data.tags.map((x) => "#" + x).join(" ");
+  finished.value = true;
+});
+const tab = ref("简介");
+const splitterModel = ref(12);
 </script>
 
 <template>
   <q-page padding>
-    <q-card
-      class="col-md-9"
-      flat
-      style="
-        background-image: linear-gradient(
-            to bottom,
-            rgba(245, 246, 252, 0.52),
-            rgba(117, 19, 93, 0.73)
-          ),
-          url(https://cfcore-assets.forgecdn.net/game-covers/457c8141-8d81-4d13-aaa9-b5655011fb69.png);
-        background-size: cover;
-      "
-    >
-      <q-card-section class="flex row" style="height: 100%">
-        <div
-          class="cover col-12 col-md-3 flex justify-center justify-sm-center justify-md-end"
-        >
-          <q-skeleton width="180px" height="180px" />
-        </div>
-        <div
-          class="col-12 col-md-8 justify-center justify-md-start row flex-wrap items-center"
-        >
-          <div class="text-h4 ellipsis col-12">Lorem ipsum dolor si</div>
-          <div class="text-caption ellipsis col-12">
-            收藏:1277 标签：#初音未来 #二次元 #VOCALOID #吉他谱 #JPOP
+    <div class="back-div">
+      <div class="col-md-9 filter-div" flat>
+        <div class="flex row" style="height: 100%">
+          <div
+            class="col-12 col-md-3 flex justify-center justify-sm-center justify-md-end q-py-sm"
+          >
+            <q-skeleton width="180px" height="180px" />
+          </div>
+          <div
+            v-if="finished"
+            class="col-12 col-md-7 justify-center justify-md-start row flex-wrap items-center"
+          >
+            <div class="text-h4 ellipsis col-12">{{ info.tab_name }}</div>
+            <div class="text-caption ellipsis col-12">
+              收藏:1277 标签：{{ info.tags }}
+            </div>
+          </div>
+          <div class="col-12 col-md-2 flex items-center justify-center">
+            <q-btn color="primary">
+              <q-icon size="2" name="star" />
+            </q-btn>
           </div>
         </div>
-        <div class="col-12 col-md-1 flex items-center justify-center">
-          <q-btn color="primary">
-            <q-icon size="2" name="star" />
-          </q-btn>
-        </div>
-      </q-card-section>
-    </q-card>
+      </div>
+    </div>
     <q-separator spaced />
     <div class="row justify-between q-gutter-y-md">
       <div class="q-px-sm col-md-9">
-        <q-card class="q-pa-lg">
-          <q-card-section class="q-pa-lg">
-            <div class="text-h5 text-center q-mb-lg">Lorem ipsum dolor si</div>
-            Lorem ipsum dolor sit amet, consecbr
-            <br />
-            tetur adipiscing elit Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Repudiandae eligendi quibusdam dolorum reiciendis
-            autem deb <br />
-            leniti nisi odio! Vel nulla, id nihil maiores eum aspernatur
-            assumenda mollitia iure incidunt odit consectetur. Lore <br />
-            m ipsum dolor sit amet consectetur adipisicing elit. Adipisci magni
-            nam exercitationem quasi animi assumenda et excepturi odit officiis,
-            comm odi aut
+        <q-card class="q-px-lg" style="height: 100%">
+          <q-splitter v-model="splitterModel" horizontal>
+            <template v-slot:before>
+              <q-tabs v-model="tab" align="left" horizontal class="text-teal">
+                <q-tab class="text-purple" name="简介" label="简介" />
+                <q-tab class="text-orange" name="评论" label="评论" />
+                <!-- <q-tab class="text-teal" name="乐队总谱" label="乐队总谱" /> -->
+              </q-tabs>
+            </template>
 
-            <br />
-            em vel praesentium aperiam voluptate fugiat vitae? Eaque, quo
-            maiores?Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            <br />
-            Omnis esse, quasi corrupti totam reiciendis velit magni officia,
-            <br />
-            dolorem que excepturi doloribus molestiae culpa ratione quidem
-            deserunt fugiat consequuntur quos deleniti labore.lorem
-          </q-card-section>
+            <template v-slot:after>
+              <q-tab-panels
+                v-model="tab"
+                animated
+                swipeable
+                vertical
+                transition-prev="slide-down"
+                transition-next="slide-up"
+              >
+                <q-tab-panel class="q-pa-none q-pa-md-sm" name="简介">
+                  <q-card-section
+                    class="q-pa-lg"
+                    v-if="finished"
+                    v-html="info.description"
+                  >
+                  </q-card-section>
+                </q-tab-panel>
+                <q-tab-panel
+                  class="q-pa-none q-pa-md-sm"
+                  name="评论"
+                ></q-tab-panel>
+              </q-tab-panels>
+            </template>
+          </q-splitter>
         </q-card>
       </div>
       <div class="col-md-3">
@@ -99,19 +96,23 @@ const contacts = [
               <q-icon name="report" size="1em" />
             </div>
             <div style="width: 100%">
-              <q-list dense class="rounded-borders">
+              <q-list dense class="rounded-borders" v-if="finished">
                 <q-item>
                   <q-item-section> ID </q-item-section>
-                  <q-item-section side> weu238g3726eyug326 </q-item-section>
+                  <q-item-section side> {{ props.publishId }} </q-item-section>
                 </q-item>
 
                 <q-item>
                   <q-item-section> 最后修改 </q-item-section>
-                  <q-item-section side> 2022年12月1日 </q-item-section>
+                  <q-item-section side>
+                    {{ info.modified_date }}
+                  </q-item-section>
                 </q-item>
                 <q-item>
                   <q-item-section> 上传时间 </q-item-section>
-                  <q-item-section side> 2022年12月1日 </q-item-section>
+                  <q-item-section side>
+                    {{ info.publish_date }}
+                  </q-item-section>
                 </q-item>
                 <q-item>
                   <q-item-section> 点击量 </q-item-section>
@@ -121,17 +122,31 @@ const contacts = [
                   <q-item-section>下载量 </q-item-section>
                   <q-item-section side> 21823 </q-item-section>
                 </q-item>
+                <q-item>
+                  <q-item-section>歌曲名 </q-item-section>
+                  <q-item-section side> {{ info.music_name }} </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section> 原曲地址 </q-item-section>
+                  <q-item-section side>
+                    {{ info.original_music_url }}
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section> 类型 </q-item-section>
+                  <q-item-section side> {{ info.tab_type }} </q-item-section>
+                </q-item>
               </q-list>
             </div>
           </q-card-section>
         </q-card>
-        <q-card class="q-mt-lg">
+        <q-card class="q-mt-sm">
           <q-card-section>
             <div class="text-subtitle1">谱文件</div>
             <q-list>
               <q-item
-                v-for="contact in contacts"
-                :key="contact.id"
+                v-for="score in scores"
+                :key="score.file_name"
                 class="q-my-sm q-px-none"
               >
                 <q-item-section avatar>
@@ -141,10 +156,10 @@ const contacts = [
                 </q-item-section>
 
                 <q-item-section>
-                  <q-item-label>{{ contact.name }}</q-item-label>
-                  <q-item-label caption lines="1">{{
-                    contact.email
-                  }}</q-item-label>
+                  <q-item-label>{{ score.file_name }}</q-item-label>
+                  <q-item-label caption lines="1"
+                    >{{ score.file_size }} Bytes</q-item-label
+                  >
                 </q-item-section>
 
                 <q-item-section side>
@@ -170,4 +185,23 @@ const contacts = [
     justify-content: end;
   }
 }
+/* .back-div {
+  background-size: cover;
+  background-position-x: center;
+}
+
+.filter-div {
+  animation: filter-animation ease-in 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes filter-animation {
+  0% {
+    backdrop-filter: blur(10px) brightness(0.1);
+  }
+
+  100% {
+    backdrop-filter: blur(15px) brightness(0.6);
+  }
+} */
 </style>

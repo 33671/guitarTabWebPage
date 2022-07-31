@@ -13,6 +13,7 @@
   "dependencies": {
     "@coderline/alphatab": "^1.2.2",
     "@quasar/extras": "^1.0.0",
+    "@vue/compiler-sfc": "^3.2.37",
     "axios": "^0.26.1",
     "core-js": "^3.6.5",
     "quasar": "^2.7.5",
