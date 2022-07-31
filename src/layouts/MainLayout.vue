@@ -12,12 +12,16 @@
               </q-avatar> -->
           Guitar Club
         </q-toolbar-title>
-        <div class="flex justify-center col-shrink" style="flex: 1">
+        <div
+          class="flex justify-center col-shrink"
+          style="flex: 1; min-width: 160px"
+        >
           <q-select
             style="flex: 1; max-width: 260px; min-width: 20px"
             dense
-            standout="bg-primary text-white"
+            standout="bg-light-blue-10 text-white"
             use-input
+            bg-color="light-blue-10"
             hide-dropdown-icon
             options-dense
             hide-selected
@@ -34,6 +38,29 @@
               <q-icon name="search" @click.stop.prevent />
             </template>
           </q-select>
+        </div>
+        <div style="max-width: 200px; flex: 1" class="flex justify-end">
+          <q-avatar>
+            <span style="font-size: 10px">登录</span>
+            <q-menu auto-close :offset="[0, 10]">
+              <q-list style="min-width: 100px">
+                <q-item clickable>
+                  <q-item-section avatar style="padding-right: 0px">
+                    <q-avatar icon="info" />
+                  </q-item-section>
+                  <q-item-section>我的</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable>
+                  <q-item-section avatar>
+                    <q-avatar icon="logout" />
+                  </q-item-section>
+                  <q-item-section>注销</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+            <!-- <img src="https://cdn.quasar.dev/img/avatar.png" /> -->
+          </q-avatar>
         </div>
       </q-toolbar>
     </q-header>
@@ -91,7 +118,7 @@ export default {
     const naviItem = [
       { to: "/home", name: "首页", icon: "inbox" },
       { to: "/star", name: "收藏", icon: "star" },
-      { to: "/mine", name: "我的", icon: "send" },
+      { to: "/user", name: "我的", icon: "send" },
       { to: "/publish", name: "发布", icon: "drafts" },
       { to: "/about", name: "关于", icon: "info" },
     ];

@@ -1,6 +1,7 @@
 <script setup>
 import { axios } from "src/boot/axios";
 import { onMounted, ref, defineProps } from "vue";
+import { useRouter } from "vue-router";
 const props = defineProps({
   publishId: String,
 });
@@ -12,12 +13,48 @@ onMounted(async () => {
   const data = res.data;
   // console.log(data);
   info.value = data;
-  data["files_id"].forEach(async (file) => {
-    scores.value.push((await axios.get(`/api/tab_files/${file}/info`)).data);
+  data["files_id"].forEach(async (file_id) => {
+    const _data = (await axios.get(`/api/tab_files/${file_id}/info`)).data;
+    _data["file_id"] = file_id;
+    scores.value.push(_data);
   });
   info.value.tags = data.tags.map((x) => "#" + x).join(" ");
   finished.value = true;
 });
+const router = useRouter();
+const pushToPlay = () => {
+  const gps = scores.value
+    .filter(
+      (x) =>
+        x.file_name.endsWith(".gp") ||
+        x.file_name.endsWith(".gp5") ||
+        x.file_name.endsWith(".gpx") ||
+        x.file_name.endsWith(".gp3") ||
+        x.file_name.endsWith(".gp4") ||
+        x.file_name.endsWith(".gp7")
+    )
+    .map((x) => x.file_id);
+
+  if (gps.length == 0) return;
+  router.push(`/tabs/${gps[0]}`);
+};
+const pushToPlayFile = (x) => {
+  if (
+    !(
+      x.file_name.endsWith(".gp") ||
+      x.file_name.endsWith(".gp5") ||
+      x.file_name.endsWith(".gpx") ||
+      x.file_name.endsWith(".gp3") ||
+      x.file_name.endsWith(".gp4") ||
+      x.file_name.endsWith(".gp7")
+    )
+  )
+    return;
+  router.push(`/tabs/${x.file_id}`);
+};
+const download = (x) => {
+  window.location = `/api/tab_files/${x.file_id}`;
+};
 const tab = ref("简介");
 const splitterModel = ref(12);
 </script>
@@ -34,24 +71,41 @@ const splitterModel = ref(12);
           </div>
           <div
             v-if="finished"
-            class="col-12 col-md-7 justify-center justify-md-start row flex-wrap items-center"
+            class="col-12 col-md-7 justify-center row flex justify-md-start flex-wrap items-center"
           >
-            <div class="text-h4 ellipsis col-12">{{ info.tab_name }}</div>
-            <div class="text-caption ellipsis col-12">
+            <div class="text-h4 ellipsis col-md-7">
+              {{ info.tab_name }}
+            </div>
+            <div class="text-caption ellipsis col-md-7">
               收藏:1277 标签：{{ info.tags }}
             </div>
           </div>
-          <div class="col-12 col-md-2 flex items-center justify-center">
-            <q-btn color="primary">
-              <q-icon size="2" name="star" />
+          <div
+            class="col-12 col-md-2 flex items-center justify-center no-wrap q-gutter-md"
+          >
+            <!-- <div class=""> -->
+            <q-btn
+              round
+              color="primary"
+              size="20px"
+              @click.stop.prevent="pushToPlay"
+            >
+              <q-icon name="play_arrow" />
             </q-btn>
+            <q-btn round color="primary" size="20px">
+              <q-icon name="star" />
+            </q-btn>
+            <q-btn round color="primary" size="20px">
+              <q-icon name="open_in_new" />
+            </q-btn>
+            <!-- </div> -->
           </div>
         </div>
       </div>
     </div>
     <q-separator spaced />
     <div class="row justify-between q-gutter-y-md">
-      <div class="q-px-sm col-md-9">
+      <div class="q-px-sm col-md-9 col-12">
         <q-card class="q-px-lg" style="height: 100%">
           <q-splitter v-model="splitterModel" horizontal>
             <template v-slot:before>
@@ -87,7 +141,7 @@ const splitterModel = ref(12);
           </q-splitter>
         </q-card>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 col-12">
         <q-card>
           <q-card-section>
             <div class="text-subtitle1">
@@ -149,7 +203,12 @@ const splitterModel = ref(12);
                 class="q-my-sm q-px-none"
               >
                 <q-item-section avatar>
-                  <q-btn color="primary" flat round>
+                  <q-btn
+                    color="primary"
+                    flat
+                    round
+                    @click.stop.prevent="pushToPlayFile(score)"
+                  >
                     <q-icon name="play_arrow" color="green" />
                   </q-btn>
                 </q-item-section>
@@ -162,7 +221,12 @@ const splitterModel = ref(12);
                 </q-item-section>
 
                 <q-item-section side>
-                  <q-btn color="primary" flat round>
+                  <q-btn
+                    color="primary"
+                    flat
+                    round
+                    @click.stop.prevent="download(score)"
+                  >
                     <q-icon name="download" color="green" />
                   </q-btn>
                 </q-item-section>
