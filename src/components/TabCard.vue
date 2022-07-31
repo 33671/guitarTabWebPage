@@ -1,7 +1,7 @@
 <script setup>
 // import { defineProps } from "vue";
 const props = defineProps({
-  music_name: String,
+  musicName: String,
   publishId: String,
   uploader: String,
   coverId: { type: String, required: false, default: "" },
@@ -22,7 +22,7 @@ const props = defineProps({
       <router-link
         class="text-bold ellipsis text-indigo-13 text-hover"
         :to="'/publishView/' + props.publishId"
-        >{{ props.music_name }}</router-link
+        >{{ props.musicName }}</router-link
       >
       <!-- <div class="text-h7 ellipsis">{{ score.title }}</div> -->
       <div class="text-subtitle2 ellipsis">

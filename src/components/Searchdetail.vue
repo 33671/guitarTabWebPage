@@ -1,68 +1,51 @@
 <template>
-  <q-tabs
-    v-model="tab"
-    align="justify"
-    class="bg-primary text-white shadow-2"
-    :breakpoint="0"
-  >
-    <q-tab name="tabs" icon="menu_book" />
-    <q-tab name="accounts" icon="account_circle" />
-  </q-tabs>
+  <q-splitter v-model="splitterModel" horizontal>
+    <template v-slot:before>
+      <!-- class="bg-primary text-white shadow-2" -->
+      <q-tabs v-model="tab" align="left" :breakpoint="0" class="text-teal">
+        <q-tab name="tabs" icon="menu_book" />
+        <q-tab name="accounts" icon="account_circle" />
+      </q-tabs>
+    </template>
 
-  <q-tab-panels
-    v-model="tab"
-    animated
-    transition-prev="slide-right"
-    transition-next="slide-left"
-  >
-    <q-tab-panel name="tabs">
-      <div class="row bg-white rounded-border">
-        <div class="col-md-2 col-sm-3" v-for="score in scores" :key="score.url">
-          <q-card class="my-card q-ma-md" v-ripple>
-            <img
-              src="https://z3.ax1x.com/2021/09/30/4ououj.png"
-              class="white--text align-end"
-            />
-            <q-card-section>
-              <router-link
-                class="text-h7 ellipsis"
-                :to="'/tabs/' + score.tab_name + '.gp'"
-                >{{ score.tab_name }}</router-link
-              >
-              <!-- <div class="text-h7 ellipsis">{{ score.tab_name }}</div> -->
-              <div class="text-subtab_name2 ellipsis">
-                {{ score.uploader_detail.nick }}
-              </div>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
-    </q-tab-panel>
+    <!-- transition-prev="slide-right"
+      transition-next="slide-left" -->
+    <template v-slot:after>
+      <q-tab-panels v-model="tab" animated>
+        <q-tab-panel name="tabs" class="q-pa-none">
+          <div class="row bg-white rounded-border">
+            <div
+              class="col-md-2 col-sm-3"
+              v-for="score in scores"
+              :key="score.url"
+            >
+              <TabCardVue
+                :uploader="score.uploader"
+                :music-name="score.tab_name"
+                :publishId="score.publish_id"
+              ></TabCardVue>
+            </div>
+          </div>
+        </q-tab-panel>
 
-    <q-tab-panel name="accounts">
-      <div class="row bg-white rounded-border">
-        <div class="col-md-2 col-sm-3" v-for="score in scores" :key="score.url">
-          <q-card class="my-card q-ma-md" v-ripple>
-            <img
-              src="https://z3.ax1x.com/2021/09/30/4ououj.png"
-              class="white--text align-end"
-            />
-            <q-card-section>
-              <router-link
-                class="text-h7 ellipsis"
-                :to="'/tabs/' + score.tab_name + '.gp'"
-                >{{ score.tab_name }}</router-link
-              >
-              <!-- <div class="text-h7 ellipsis">{{ score.tab_name }}</div> -->
-              <div class="text-subtab_name2 ellipsis">
-                {{ score.uploader_detail.nick }}
-              </div>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
-    </q-tab-panel>
-  </q-tab-panels>
+        <q-tab-panel name="accounts" class="q-px-none">
+          <div class="row bg-white rounded-border">
+            <div
+              class="col-md-2 col-sm-3"
+              v-for="score in scores"
+              :key="score.url"
+            >
+              <TabCardVue
+                :uploader="score.uploader"
+                :music-name="score.tab_name"
+                :publishId="score.publish_id"
+              ></TabCardVue>
+            </div>
+          </div>
+        </q-tab-panel>
+      </q-tab-panels>
+    </template>
+  </q-splitter>
 
   <!--   翻页
   <div class="q-pa-lg flex flex-center col-3">
@@ -70,27 +53,12 @@
   </div> -->
 </template>
 
-<script>
+<script setup>
 import { onBeforeMount, ref } from "vue";
 import { axios } from "boot/axios";
+import TabCardVue from "./TabCard.vue";
 import useSearch from "./../search_input";
-export default {
-  async setup() {
-    const { searchResult: scores } = useSearch();
-
-    // console.log(scores.value);
-    // console.log(res);
-    // console.log(res.data.tab);
-    // var score = this.axios.get("a.json");
-    // this.scores = tab.data.score;
-    // this.fetchTabReady = true;
-    // console.log(this.scores);
-    return {
-      tab: ref("tabs"),
-      scores,
-      current: ref(1),
-    };
-  },
-};
+const { searchResult: scores } = useSearch();
+const tab = ref("tabs");
+const current = ref(1);
 </script>
-<style lang="scss" scoped></style>

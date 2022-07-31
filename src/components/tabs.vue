@@ -31,7 +31,7 @@
                 :key="score.url"
               >
                 <TabCard
-                  :music_name="score.music_name"
+                  :musicName="score.music_name"
                   :uploader="score.uploader"
                   :publishId="score.publish_id"
                 >

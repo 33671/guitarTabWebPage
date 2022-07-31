@@ -58,7 +58,6 @@ const splitterModel = ref(12);
               <q-tabs v-model="tab" align="left" horizontal class="text-teal">
                 <q-tab class="text-purple" name="简介" label="简介" />
                 <q-tab class="text-orange" name="评论" label="评论" />
-                <!-- <q-tab class="text-teal" name="乐队总谱" label="乐队总谱" /> -->
               </q-tabs>
             </template>
 
