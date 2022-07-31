@@ -10,13 +10,14 @@ const props = defineProps({
 
 <template>
   <q-card class="my-card position-relative" v-ripple>
-    <img
+    <q-img
       :src="
         props.coverId != ''
           ? '/api/cover_files/' + props.coverId
           : 'https://z3.ax1x.com/2021/09/30/4ououj.png'
       "
       class="white--text align-end"
+      ratio="1"
     />
     <q-card-section class="overflow-hidden ellipsis">
       <router-link

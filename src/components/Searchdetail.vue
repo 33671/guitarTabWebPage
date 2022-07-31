@@ -24,6 +24,7 @@
                 :uploader="score.uploader"
                 :music-name="score.tab_name"
                 :publishId="score.publish_id"
+                :coverId="score.cover_file_id"
               ></TabCardVue>
             </div>
           </div>
@@ -41,6 +42,7 @@
                 :uploader="score.uploader"
                 :music-name="score.tab_name"
                 :publishId="score.publish_id"
+                :coverId="score.cover_file_id"
               ></TabCardVue>
             </div>
           </div>

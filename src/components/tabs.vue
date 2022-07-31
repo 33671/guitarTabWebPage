@@ -35,6 +35,7 @@
                   :musicName="score.tab_name"
                   :uploader="score.uploader"
                   :publishId="score.publish_id"
+                  :coverId="score.cover_file_id"
                 />
               </div>
             </div>
