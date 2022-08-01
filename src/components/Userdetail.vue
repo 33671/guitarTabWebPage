@@ -1,25 +1,160 @@
 <template>
   <q-card class="my-card">
-    <q-img src="https://cdn.quasar.dev/img/parallax2.jpg" >
-      <div class="text-h5 absolute-bottom text-right">Title</div>
+    <q-img src="https://cdn.quasar.dev/img/parallax2.jpg" height="250px">
+      <div class="text-h5 absolute-bottom row">
+        <div class="col-2 self-center">
+          <q-avatar class="">
+            <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
+          </q-avatar>
+        </div>
+        <div class="col-2 self-center">
+          <div class="text-overline text-orange-9">User.id</div>
+          <div class="text-subtitle2">User.word</div>
+        </div>
+        <div class="col-2 self-center offset-6">
+          <q-btn color="light-blue-8 " no-wrap>
+            <div class="">关注</div>
+          </q-btn>
+        </div>
+      </div>
     </q-img>
 
-    <q-card-section>
-      <div class="text-h6">Our Changing Planet</div>
-      <div class="text-subtitle2">by John Doe</div>
-    </q-card-section>
+    <div class="q-pa-md" style="max-width: 500px">
+      <q-list>
+        <q-item clickable v-ripple>
+          <q-item-section avatar>
+            <q-avatar color="teal" text-color="white" icon="bluetooth" />
+          </q-item-section>
+
+          <q-item-section>Avatar-type icon</q-item-section>
+        </q-item>
+
+        <q-item clickable v-ripple>
+          <q-item-section avatar>
+            <q-avatar
+              rounded
+              color="purple"
+              text-color="white"
+              icon="bluetooth"
+            />
+          </q-item-section>
+
+          <q-item-section>Rounded avatar-type icon</q-item-section>
+        </q-item>
+
+        <q-item clickable v-ripple>
+          <q-item-section avatar>
+            <q-avatar color="primary" text-color="white"> R </q-avatar>
+          </q-item-section>
+
+          <q-item-section>Letter avatar-type</q-item-section>
+        </q-item>
+
+        <q-separator />
+
+        <q-item clickable v-ripple>
+          <q-item-section avatar>
+            <q-avatar>
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>Image avatar</q-item-section>
+        </q-item>
+
+        <q-item clickable v-ripple>
+          <q-item-section avatar>
+            <q-avatar square>
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>Image square avatar</q-item-section>
+        </q-item>
+
+        <q-item clickable v-ripple>
+          <q-item-section avatar>
+            <q-avatar rounded>
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>Image rounded avatar</q-item-section>
+        </q-item>
+
+        <!-- <q-separator color="dark" /> -->
+      </q-list>
+    </div>
+    <q-tabs v-model="tab" class="text-teal">
+      <q-tab label="follow" name="follow" />
+      <q-tab label="follower" name="follower" />
+    </q-tabs>
+
+    <q-separator />
+
+    <q-tab-panels v-model="tab" animated>
+      <q-tab-panel name="follow">
+        <q-list>
+          <q-item>
+            <q-item-section top avatar>
+              <q-avatar>
+                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label>关注者id</q-item-label>
+              <q-item-label caption>关注者个人简介</q-item-label>
+            </q-item-section>
+
+            <q-item-section side>
+              <q-btn outline color="light-blue-8">
+                <div>关注</div>
+              </q-btn>
+            </q-item-section>
+          </q-item>
+
+          <q-separator />
+        </q-list>
+      </q-tab-panel>
+
+      <q-tab-panel name="follower">
+        <q-list>
+          <q-item>
+            <q-item-section top avatar>
+              <q-avatar>
+                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label>关注者id</q-item-label>
+              <q-item-label caption>关注者个人简介</q-item-label>
+            </q-item-section>
+
+            <q-item-section side>
+              <q-btn outline no-wrap color="light-blue-8">
+                <div>关注</div>
+              </q-btn>
+            </q-item-section>
+          </q-item>
+
+          <q-separator />
+        </q-list>
+      </q-tab-panel>
+    </q-tab-panels>
   </q-card>
 </template>
 
 <script>
+import { ref } from "vue";
+
 export default {
   setup() {
-    return {};
+    return { tab: ref("") };
   },
 };
 </script>
 <style lang="sass" scoped>
+.q-img__content > div
+  padding: 6px
 .my-card
-  width: 100%
-  max-width: 500px
+  max-width: 600px
 </style>
