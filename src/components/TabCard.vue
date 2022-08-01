@@ -19,6 +19,7 @@ const props = defineProps({
       class="white--text align-end"
       ratio="1"
     />
+    <!-- crossorigin="anonymous" -->
     <q-card-section class="overflow-hidden ellipsis">
       <router-link
         class="text-bold ellipsis text-indigo-13 text-hover"

@@ -31,7 +31,7 @@
                 :key="score.url"
               >
                 <TabCard
-                  class="q-ma-lg-md q-ma-sm q-ma-xl-xl"
+                  class="q-ma-lg-md q-ma-sm"
                   :musicName="score.tab_name"
                   :uploader="score.uploader"
                   :publishId="score.publish_id"

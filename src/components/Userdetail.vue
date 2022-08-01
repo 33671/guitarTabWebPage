@@ -2,7 +2,7 @@
   <q-card class="my-card">
     <q-img src="https://cdn.quasar.dev/img/parallax2.jpg" height="250px">
       <div class="text-h5 absolute-bottom row">
-        <div class="col-2 self-center">
+        <div class="col-2 self-center text-center">
           <q-avatar class="">
             <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
           </q-avatar>
