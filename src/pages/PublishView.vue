@@ -77,7 +77,7 @@ const splitterModel = ref(12);
           </div>
           <div
             v-if="finished"
-            class="col-12 col-md-7 justify-center row flex justify-md-start flex-wrap items-center"
+            class="col-12 col-md-7 isMobileTextCenter justify-center row-md justify-md-start flex-wrap items-center"
           >
             <div class="text-h4 ellipsis col-md-7">
               {{ info.tab_name }}
@@ -245,13 +245,16 @@ const splitterModel = ref(12);
   </q-page>
 </template>
 <style>
-@media (min-width: 1024px) {
-  .justify-md-start {
+@media (max-width: 1024px) {
+  /* .justify-md-start {
     justify-content: start;
     padding-left: 30px;
   }
   .justify-md-end {
     justify-content: end;
+  } */
+  .isMobileTextCenter {
+    text-align: center;
   }
 }
 /* .back-div {

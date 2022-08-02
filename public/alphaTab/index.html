@@ -3,14 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
-    /> -->
-    <script
-      src="https://kit.fontawesome.com/b69fff57bd.js"
-      crossorigin="anonymous"
-    ></script>
+    <link rel="stylesheet" href="./css/fontawesome.min.css" />
+    <link rel="stylesheet" href="./css/solid.min.css" />
     <script src="./dist/alphaTab.min.js"></script>
     <title>Tab</title>
   </head>
@@ -19,7 +13,7 @@
     <div id="toAddTrack" class="tabMountPoint">
       <div class="at-wrap">
         <div class="at-overlay">
-          <div class="at-overlay-content">Music sheet is loading</div>
+          <div class="at-overlay-content">正在载入中</div>
         </div>
         <div class="at-content">
           <div class="at-sidebar">
@@ -125,31 +119,11 @@
       </template>
     </div>
     <script>
-      // async function request_file(url) {
-      //   return new Promise((r, j) => {
-      //     var oReq = new XMLHttpRequest();
-      //     oReq.open("GET", "url", true);
-      //     oReq.responseType = "arraybuffer";
-      //     oReq.onload = function (oEvent) {
-      //       var arrayBuffer = oReq.response; // 注意：不是 oReq.responseText
-      //       if (arrayBuffer) {
-      //         var byteArray = new Uint8Array(arrayBuffer);
-      //         r(byteArray);
-      //       }
-      //       j("请求错误");
-      //     };
-      //     oReq.send(null);
-      //   });
-      // }
-      //
-      //const file = window.location.search.replace("?", "");
       const wrapper = document.querySelector(".at-wrap");
       const main = wrapper.querySelector(".at-main");
-      // initialize alphatab localStorage.getItem("file")
       const path = localStorage.getItem("file");
       const settings = {
         file: path,
-        // file: "./ふわふわ时间.gp5",
         player: {
           enablePlayer: true,
           soundFont: "./soundfont/sonivox.sf2",
@@ -157,12 +131,9 @@
         },
       };
       console.log(path);
-      // console.log(settings.file);
-
       const api = new alphaTab.AlphaTabApi(main, settings);
       window.api = api;
 
-      // overlay logic
       const overlay = wrapper.querySelector(".at-overlay");
       api.renderStarted.on(() => {
         overlay.style.display = "flex";
@@ -236,7 +207,6 @@
         }
         refreshTrackUI();
       }
-      // track selector
       function createTrackItem(track) {
         const trackItem = document
           .querySelector("#at-track-template")
@@ -377,18 +347,6 @@
         document.querySelector(".tabMountPoint").requestFullscreen();
       };
 
-      // player loading indicator
-      // const playerIndicator = wrapper.querySelector(
-      //   ".at-controls .at-player-progress"
-      // );
-      // api.soundFontLoad.on((e) => {
-      //   const percentage = Math.floor((e.loaded / e.total) * 100);
-      //   playerIndicator.innerText = percentage + "%";
-      // });
-      // api.playerReady.on(() => {
-      //   playerIndicator.style.display = "none";
-      // });
-
       // main player controls
       const playPause = wrapper.querySelector(
         ".at-controls .at-player-play-pause"
@@ -446,17 +404,9 @@
           formatDuration(e.currentTime) + " / " + formatDuration(e.endTime);
       });
       this.loadComplete = true;
-      //console.log(window.location.search.replace("?", ""));
     </script>
     <script src="./control.js"></script>
     <style>
-      /* .hover-tip [title]:hover:before {
-        content: attr(title);
-        display: block;
-        opacity: 1;
-        position: absolute;
-        visibility: visible;
-      } */
       select :focus-visible {
         border: none;
       }
