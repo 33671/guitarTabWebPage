@@ -77,7 +77,7 @@ const splitterModel = ref(12);
           </div>
           <div
             v-if="finished"
-            class="col-12 col-md-7 isMobileTextCenter justify-center row-md justify-md-start flex-wrap items-center"
+            class="col-12 col-md-7 isMobileTextCenter justify-center q-pl-lg row-md justify-md-start flex-wrap items-center"
           >
             <div class="text-h4 ellipsis col-md-7">
               {{ info.tab_name }}
