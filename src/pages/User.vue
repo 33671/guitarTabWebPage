@@ -5,9 +5,7 @@
         <Userdetail />
       </div>
       <div class="col-12 col-sm-5 col-md-5 col-lg-4 q-ma-lg">
-        <div class="row q-ma-lg">
-          <Usertab />
-        </div>
+        <Usertab />
       </div>
     </div>
   </q-page>
