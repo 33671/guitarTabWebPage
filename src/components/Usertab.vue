@@ -3,7 +3,6 @@
     <!-- class="bg-primary text-white shadow-2" -->
     <q-tabs v-model="tab" align="justify" :breakpoint="0" class="text-teal">
       <q-tab name="favorites" icon="favorite" />
-      <q-tab name="history" icon="history" />
       <q-tab name="userupload" icon="upload" />
     </q-tabs>
 
@@ -44,14 +43,14 @@ import useSearch from "./../search_input";
 const tab = ref("favorites");
 const scores = ref({
   favorites: [],
-  history: [],
   userupload: [],
 });
 onBeforeMount(async () => {
-  for (let i of ["favorites", "history", "userupload"]) {
-    scores.value[i] = (
-      await axios.get("/api/tabs_publish?random=true")
-    ).data.slice(0, 12);
+  for (let i of ["favorites", "userupload"]) {
+    scores.value[i] = (await axios.get("/api/user/mine/publishes")).data.slice(
+      0,
+      12
+    );
   }
   console.log(scores.value);
 });
