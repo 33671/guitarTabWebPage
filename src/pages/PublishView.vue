@@ -1,10 +1,11 @@
 <script setup>
 import { axios } from "src/boot/axios";
-import { onMounted, ref, defineProps } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 const props = defineProps({
   publishId: String,
 });
+
 const info = ref({});
 const scores = ref([]);
 const finished = ref(false);

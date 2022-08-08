@@ -103,9 +103,11 @@
 </template>
 
 <script>
-import { ref } from "vue";
+
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import useSearch from "./../search_input";
+import { axios } from "./../boot/axios";
 export default {
   setup() {
     const { options, searchResult, searchText, search, filterFn } = useSearch();
@@ -119,7 +121,9 @@ export default {
       { to: "/publish", name: "发布", icon: "drafts" },
       { to: "/about", name: "关于", icon: "info" },
     ];
-
+    onMounted(async () => {
+      const loginstatus = await axios.get("/api/login_status");
+    });
     return {
       naviItem,
       leftDrawerOpen,
