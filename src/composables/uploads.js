@@ -7,7 +7,7 @@ const user_name = ref("mine");
 function useUploads({ user = "mine" }) {
   onMounted(async () => {
     if (user != "mine") {
-      user = (await getUserInfo()).name;
+      user = (await getUserInfo(user)).name;
     }
     user_name.value = user;
     axios.get(`/api/user/${user}/publishes`).then((resp) => {
@@ -26,10 +26,10 @@ function useUploads({ user = "mine" }) {
     turnToUploadPage,
   };
 }
-async function turnToUploadPage(mile_stone) {
-  console.log("turnToPage: " + mile_stone);
+async function turnToUploadPage(page) {
+  console.log("turnToPage: " + page);
   const resp = await axios.get(
-    `/api/user/${user_name.value}/publishes?mile_stone=${mile_stone}`
+    `/api/user/${user_name.value}/publishes?page=${page}`
   );
   if (resp.status === 200) {
     uploads.value = resp.data;

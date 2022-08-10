@@ -1,5 +1,5 @@
 <template>
-  <q-card class="my-card">
+  <q-card class="my-card" v-if="finished">
     <q-img src="https://cdn.quasar.dev/img/parallax2.jpg" height="250px">
       <div class="text-h5 absolute-bottom row">
         <div class="col-2 self-center text-center">
@@ -8,8 +8,8 @@
           </q-avatar>
         </div>
         <div class="col-2 self-center">
-          <div class="text-overline text-orange-9">User.id</div>
-          <div class="text-subtitle2">User.word</div>
+          <div class="text-overline text-orange-9">{{ userInfo.name }}</div>
+          <div class="text-subtitle2">{{ userInfo.bio }}</div>
         </div>
         <div class="col-2 self-center offset-6">
           <q-btn color="light-blue-8 " no-wrap>
@@ -143,14 +143,11 @@
   </q-card>
 </template>
 
-<script>
+<script setup>
+import useUserInfo from "src/composables/userInfo";
 import { ref } from "vue";
-
-export default {
-  setup() {
-    return { tab: ref("") };
-  },
-};
+const { userInfo, finished } = useUserInfo({});
+const tab = ref("");
 </script>
 <style lang="sass" scoped>
 .q-img__content > div

@@ -32,7 +32,7 @@
       <q-tab-panel class="q-pa-none q-pa-md-sm" name="userupload">
         <div class="row">
           <div
-            class="col-lg-3 col-md-4 col-sm-4 col-6"
+            class="col-lg-4 col-md-6 col-sm-6 col-6"
             v-for="(score, index) in uploads"
             :key="index"
           >
@@ -75,8 +75,8 @@ const { favs, turnToPage, pageCount } = usefav();
 watch(currentFavPage, (page, prev) => {
   turnToPage(page);
 });
-watch(currentuploadPage, () => {
-  turnToUploadPage(uploads.value[uploads.value.length - 1]._id);
+watch(currentuploadPage, (page, prev) => {
+  turnToUploadPage(page);
 });
 const tab = ref("favorites");
 </script>

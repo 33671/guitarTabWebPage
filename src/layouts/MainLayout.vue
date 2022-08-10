@@ -37,8 +37,10 @@
           </q-select>
         </div>
         <div style="max-width: 200px; flex: 1" class="flex justify-end">
-          <q-avatar @click="checkLoginStatus">
-            <span style="font-size: 10px" v-if="loginStatus">登录</span>
+          <q-avatar @click="checkLogin">
+            <span style="font-size: 10px; user-select: none" v-if="!loginStatus"
+              >登录</span
+            >
             <img src="/icons/favicon-128x128.png" v-else />
             <q-menu auto-close :offset="[0, 10]">
               <q-list style="min-width: 100px">
@@ -122,6 +124,12 @@ export default {
       { to: "/about", name: "关于", icon: "info" },
     ];
     return {
+      loginStatus,
+      checkLogin() {
+        if (!loginStatus.value) {
+          router.push("/login");
+        }
+      },
       async exitLogin() {
         await logout();
         router.replace("/login");

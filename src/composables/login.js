@@ -5,9 +5,7 @@ const loginStatus = ref(false);
 
 (async () => {
   const status = await axios.get("/api/login_status");
-  if (status.status == 200) {
-    loginStatus.value = true;
-  }
+  loginStatus.value = status.status == 200;
 })();
 
 async function userlogin(name, password) {

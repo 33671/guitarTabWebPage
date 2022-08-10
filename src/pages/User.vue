@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import { onMounted } from "@vue/runtime-core";
 import Userdetail from "../components/Userdetail.vue";
 import Usertab from "../components/Usertab.vue";
 

@@ -1,7 +1,15 @@
-import indexdb from "../utils/indexdb";
+let info = null;
+import { axios } from "../boot/axios";
+async function getUserInfo(user) {
+  if (info == null) {
+    const resp = await axios.get(`/api/user/${user}`);
+    if (resp.status === 200) {
+      info = resp.data;
 
-async function getUserInfo() {
-  const userInfo = (await indexdb.get("userInfo")).data;
-  return userInfo;
+      return info;
+    }
+  } else {
+    return info;
+  }
 }
 export { getUserInfo };

@@ -1,11 +1,30 @@
 <script setup>
 import { axios } from "src/boot/axios";
+import usefav from "src/composables/fav";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+const { isInfav, removefav, addTofav } = usefav();
 const props = defineProps({
   publishId: String,
 });
-
+const isInMyFav = ref(false);
+function refreshFavStatus() {
+  isInfav(props.publishId).then((r) => {
+    isInMyFav.value = r;
+  });
+}
+async function pushToFav() {
+  if (isInMyFav.value) {
+    await removefav(props.publishId);
+    refreshFavStatus();
+    return;
+  }
+  const r = await addTofav(props.publishId);
+  if (r) {
+    console.log("收藏成功");
+    refreshFavStatus();
+  }
+}
 const info = ref({});
 const scores = ref([]);
 const finished = ref(false);
@@ -58,6 +77,7 @@ const download = (x) => {
 };
 const tab = ref("简介");
 const splitterModel = ref(12);
+refreshFavStatus();
 </script>
 
 <template>
@@ -99,8 +119,13 @@ const splitterModel = ref(12);
             >
               <q-icon name="play_arrow" />
             </q-btn>
-            <q-btn round color="primary" size="20px">
-              <q-icon name="star" />
+            <q-btn
+              round
+              color="primary"
+              size="20px"
+              @click.stop.prevent="pushToFav"
+            >
+              <q-icon name="star" :color="isInMyFav ? 'red' : 'white'" />
             </q-btn>
             <q-btn round color="primary" size="20px">
               <q-icon name="open_in_new" />
