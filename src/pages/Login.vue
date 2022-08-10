@@ -44,7 +44,9 @@
               <!-- <span class="errTips" v-if="emailError">* 密码填写错误 *</span> -->
             </div>
 
-            <button class="bbutton" @click="userlogin">登录</button>
+            <button class="bbutton" @click="login(form.name, form.password)">
+              登录
+            </button>
           </div>
           <div class="big-contain" v-else>
             <div class="btitle">创建账户</div>
@@ -70,7 +72,12 @@
                 <img style="max-width: 120px" src="/api/captcha" alt="" />
               </div>
             </div>
-            <button class="bbutton" @click="userreg">注册</button>
+            <button
+              class="bbutton"
+              @click="userreg(form.name, form.useremail, form.captcha)"
+            >
+              注册
+            </button>
           </div>
         </div>
       </div>
@@ -84,43 +91,18 @@
 import { onMounted, ref } from "vue";
 import { axios } from "boot/axios";
 import { useQuasar } from "quasar";
+import { userlogin, loginStatus, userreg } from "./../composables/login";
+import { useRouter } from "vue-router";
 const $q = useQuasar();
-//dialog插件，提示用户登录成功与否
-
-async function userlogin() {
-  var loginform = new FormData();
-  loginform.append("name", form.value.name);
-  loginform.append("password", form.value.password);
-  loginform.append("captcha", "111");
-  const aa = await axios.post("/api/login", loginform);
-  console.log(aa);
-  // $q.dialog({
-  //   title: `<img src="/api/captcha" alt="" />`,
-  //   message: "Some message",
-  //   html: true,
-  // })
-  //   .onOk(() => {
-  //     // console.log('OK')
-  //   })
-  //   .onCancel(() => {
-  //     // console.log('Cancel')
-  //   })
-  //   .onDismiss(() => {
-  //     // console.log('I am triggered on both OK and Cancel')
-  //   });
+const isLogin = loginStatus;
+const router = useRouter();
+async function login(name, password) {
+  await userlogin(name, password);
+  if (loginStatus.value) {
+    router.push("/home");
+  }
 }
-async function userreg() {
-  var regform = new FormData();
-  regform.append("name", form.value.name);
-  regform.append("email", form.value.useremail);
-  regform.append("password", form.value.password);
-  regform.append("captcha", "111");
-  const aa = await axios.post("/api/register", regform);
-  console.log(aa);
-}
-
 const dialog3 = ref(false);
-const isLogin = ref(false);
 const emailError = ref(false);
 const passwordError = ref(false);
 const existed = ref(false);

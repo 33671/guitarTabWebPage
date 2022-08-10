@@ -37,8 +37,9 @@
           </q-select>
         </div>
         <div style="max-width: 200px; flex: 1" class="flex justify-end">
-          <q-avatar>
-            <span style="font-size: 10px">登录</span>
+          <q-avatar @click="checkLoginStatus">
+            <span style="font-size: 10px" v-if="loginStatus">登录</span>
+            <img src="/icons/favicon-128x128.png" v-else />
             <q-menu auto-close :offset="[0, 10]">
               <q-list style="min-width: 100px">
                 <q-item clickable>
@@ -48,7 +49,7 @@
                   <q-item-section>我的</q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item clickable>
+                <q-item clickable @click="exitLogin">
                   <q-item-section avatar>
                     <q-avatar icon="logout" />
                   </q-item-section>
@@ -56,7 +57,6 @@
                 </q-item>
               </q-list>
             </q-menu>
-            <!-- <img src="https://cdn.quasar.dev/img/avatar.png" /> -->
           </q-avatar>
         </div>
       </q-toolbar>
@@ -103,11 +103,11 @@
 </template>
 
 <script>
-
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import useSearch from "./../search_input";
 import { axios } from "./../boot/axios";
+import { loginStatus, logout } from "src/composables/login";
 export default {
   setup() {
     const { options, searchResult, searchText, search, filterFn } = useSearch();
@@ -121,10 +121,11 @@ export default {
       { to: "/publish", name: "发布", icon: "drafts" },
       { to: "/about", name: "关于", icon: "info" },
     ];
-    onMounted(async () => {
-      const loginstatus = await axios.get("/api/login_status");
-    });
     return {
+      async exitLogin() {
+        await logout();
+        router.replace("/login");
+      },
       naviItem,
       leftDrawerOpen,
       filterFn,
