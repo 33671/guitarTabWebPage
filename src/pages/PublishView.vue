@@ -1,27 +1,44 @@
 <script setup>
+import { useQuasar } from "quasar";
 import { axios } from "src/boot/axios";
 import usefav from "src/composables/fav";
+import useHistory from "src/composables/history";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+const { pushToHistory } = useHistory();
+
 const { isInfav, removefav, addTofav } = usefav();
 const props = defineProps({
   publishId: String,
 });
+const $q = useQuasar();
 const isInMyFav = ref(false);
-function refreshFavStatus() {
-  isInfav(props.publishId).then((r) => {
-    isInMyFav.value = r;
-  });
+async function refreshFavStatus() {
+  const r = await isInfav(props.publishId);
+  isInMyFav.value = r;
 }
 async function pushToFav() {
   if (isInMyFav.value) {
     await removefav(props.publishId);
-    refreshFavStatus();
+    await refreshFavStatus();
+    if (!isInMyFav.value) {
+      $q.notify({
+        color: "blue-5",
+        textColor: "white",
+        icon: "star",
+        message: "已取消收藏",
+      });
+    }
     return;
   }
   const r = await addTofav(props.publishId);
   if (r) {
-    console.log("收藏成功");
+    $q.notify({
+      color: "green-5",
+      textColor: "white",
+      icon: "star",
+      message: "收藏成功！",
+    });
     refreshFavStatus();
   }
 }
@@ -40,6 +57,7 @@ onMounted(async () => {
   });
   info.value.tags = data.tags.map((x) => "#" + x).join(" ");
   finished.value = true;
+  pushToHistory(data);
 });
 const router = useRouter();
 const pushToPlay = () => {

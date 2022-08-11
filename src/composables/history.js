@@ -1,11 +1,14 @@
 import { onMounted, ref, unref } from "vue";
 import { axios } from "../boot/axios";
 import indexdb from "../utils/indexdb";
+window.indexdb = indexdb;
 const history = ref([]);
+let historyData = [];
 function useHistory() {
   onMounted(async () => {
     const data = await indexdb.get("history");
     if (data) {
+      historyData = data.data;
       history.value = data.data;
     }
   });
@@ -16,10 +19,15 @@ function useHistory() {
 }
 
 async function pushToHistory(tab) {
-  if (history.value[history.value.length - 1]._id == tab._id) return;
-  history.value.push(tab);
-  history.value = history.value.slice(-100);
-  const data = unref(history);
-  await indexdb.set("history", data);
+  if (
+    historyData.length != 0 &&
+    historyData[historyData.length - 1]._id == tab._id
+  )
+    return;
+  historyData.push(tab);
+  historyData = historyData.slice(-100);
+  history.value = historyData;
+  console.log(historyData);
+  await indexdb.set("history", historyData);
 }
 export default useHistory;
