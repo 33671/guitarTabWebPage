@@ -16,7 +16,7 @@
     "@vue/compiler-sfc": "^3.2.37",
     "axios": "^0.26.1",
     "core-js": "^3.6.5",
-    "quasar": "^2.7.5",
+    "quasar": "^2.7.7",
     "vue": "^3.0.0",
     "vue-avatar-cropper": "^6.0.9",
     "vue-router": "^4.0.0"
