@@ -1,7 +1,7 @@
 <template>
-  <q-page padding>
+  <q-page>
     <div class="carousel">
-      <!-- <carousel /> -->
+      <carousel />
     </div>
 
     <q-card class="tabs">

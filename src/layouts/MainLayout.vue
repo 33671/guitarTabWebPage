@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpr fff" class="body">
+  <q-layout view="hHh Lpr fff" class="body">
     <q-header reveal elevated class="header">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -64,11 +64,12 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" side="left" elevated>
+    <q-drawer v-model="leftDrawerOpen" side="left">
       <q-scroll-area
+        class="fit"
         style="height: calc(100% - 150px); border-right: 1px solid #ddd"
       >
-        <q-list padding>
+        <q-list padding class="menu-list">
           <q-item
             clickable
             v-ripple
@@ -76,7 +77,7 @@
             v-for="(item, index) in naviItem"
             :key="index"
           >
-            <q-item-section avatar>
+            <q-item-section avatar clickable v-ripple>
               <q-icon :name="item.icon" />
             </q-item-section>
 
@@ -157,12 +158,12 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .header {
   background-color: rgb(25, 118, 210);
 }
 
-// .body {
-//   background-color: rgb(206, 211, 217);
-// }
+.menu-list .q-item {
+  border-radius: 0 20px 20px 0;
+}
 </style>

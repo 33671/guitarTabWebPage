@@ -342,9 +342,16 @@
         api.playbackSpeed = speedControl.value;
       };
       const fullscrrenBtn = document.querySelector(".at-full-screen");
+      isFullScreen = false;
       fullscrrenBtn.onclick = (e) => {
+        if (isFullScreen) {
+          document.exitFullscreen();
+          isFullScreen = false;
+          return;
+        }
         e.stopPropagation();
         document.querySelector(".tabMountPoint").requestFullscreen();
+        isFullScreen = true;
       };
 
       // main player controls

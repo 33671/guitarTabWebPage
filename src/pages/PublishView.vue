@@ -4,9 +4,11 @@ import { axios } from "src/boot/axios";
 import usefav from "src/composables/fav";
 import useHistory from "src/composables/history";
 import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import useSearch from "./../search_input";
+const route = useRoute();
 const { pushToHistory } = useHistory();
-
+const { options, searchText, search, filterFn } = useSearch();
 const { isInfav, removefav, addTofav } = usefav();
 const props = defineProps({
   publishId: String,
@@ -16,6 +18,13 @@ const isInMyFav = ref(false);
 async function refreshFavStatus() {
   const r = await isInfav(props.publishId);
   isInMyFav.value = r;
+}
+function entersearch(item) {
+  searchText.value = item;
+  search();
+  if (route.path != "/search") {
+    router.push("/search");
+  }
 }
 async function pushToFav() {
   if (isInMyFav.value) {
@@ -55,7 +64,6 @@ onMounted(async () => {
     _data["file_id"] = file_id;
     scores.value.push(_data);
   });
-  info.value.tags = data.tags.map((x) => "#" + x).join(" ");
   finished.value = true;
   pushToHistory(data);
 });
@@ -121,14 +129,22 @@ refreshFavStatus();
             <div class="text-h4 ellipsis col-md-7">
               {{ info.tab_name }}
             </div>
-            <div class="text-caption ellipsis col-md-7">
-              收藏:1277 标签：{{ info.tags }}
+            <div class="text-caption col-md-9 wrap">
+              收藏:{{ info.fav_times }} <br />
+              标签：
+              <q-chip
+                clickable
+                v-for="(item, key) in info.tags"
+                @click="entersearch(item)"
+                :key="key"
+              >
+                #{{ item }}</q-chip
+              >
             </div>
           </div>
           <div
             class="col-12 col-md-2 flex items-center justify-center no-wrap q-gutter-md"
           >
-            <!-- <div class=""> -->
             <q-btn
               round
               color="primary"
@@ -148,7 +164,6 @@ refreshFavStatus();
             <q-btn round color="primary" size="20px">
               <q-icon name="open_in_new" />
             </q-btn>
-            <!-- </div> -->
           </div>
         </div>
       </div>

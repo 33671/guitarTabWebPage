@@ -122,9 +122,12 @@
 import { Axios } from "axios";
 import { useQuasar } from "quasar";
 import { axios } from "src/boot/axios";
+import router from "src/router";
 import { ref, unref } from "vue";
+import { useRouter } from "vue-router";
 export default {
   setup() {
+    const router = useRouter();
     const submitResult = ref([]);
     const $q = useQuasar();
     const accept = ref(false);
@@ -239,14 +242,20 @@ export default {
           });
           return;
         }
-        $q.notify({
-          color: "green-4",
-          textColor: "white",
-          icon: "cloud_done",
-          message: "Submitted",
-        });
+
         const upload_object = unref(tab_detail);
         const resp = await axios.post("/api/tabs_publish", upload_object);
+        if (resp.status == 200) {
+          $q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "上传成功！稍后刷新页面",
+          });
+          setTimeout(() => {
+            router.go(0);
+          }, 3000);
+        }
         console.log(resp);
       },
 
