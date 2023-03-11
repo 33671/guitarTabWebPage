@@ -26,8 +26,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: npm i -g @quasar/cli
     - run: npm install
-    - run: npm run build --if-present
+    - run: quasar build
     - name: Zip Release
     # You may pin to the exact commit or the version.
     # uses: TheDoctor0/zip-release@09336613be18a8208dfa66bd57efafd9e2685657
