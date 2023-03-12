@@ -5,7 +5,6 @@ async function getUserInfo(user) {
     const resp = await axios.get(`/api/user/${user}`);
     if (resp.status === 200) {
       info = resp.data;
-
       return info;
     }
   } else {

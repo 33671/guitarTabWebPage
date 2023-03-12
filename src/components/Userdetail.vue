@@ -1,15 +1,24 @@
 <template>
   <q-card class="my-card" v-if="finished">
-    <q-img src="https://cdn.quasar.dev/img/parallax2.jpg" height="250px">
+    <q-img src="https://s1.ax1x.com/2023/03/12/ppMyfYT.md.jpg" height="250px">
+      <!-- 用q-img做背景，在其字幕处显示id和头像等 -->
       <div class="text-h5 absolute-bottom row">
         <div class="col-2 self-center text-center">
           <q-avatar class="">
-            <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
+            <img :src="userAvator" />
           </q-avatar>
         </div>
         <div class="col-2 self-center">
-          <div class="text-overline text-orange-9">{{ userInfo.name }}</div>
-          <div class="text-subtitle2">{{ userInfo.bio }}</div>
+          <div class="column">
+            <div class="col">
+              <div class="text-body1 text-orange-9">
+                {{ userInfo.name }}
+              </div>
+            </div>
+            <div class="col">
+              <div class="text-subtitle2">{{ userInfo.bio }}</div>
+            </div>
+          </div>
         </div>
         <div class="col-2 self-center offset-6">
           <q-btn color="light-blue-8 " no-wrap>
@@ -146,7 +155,7 @@
 <script setup>
 import useUserInfo from "src/composables/userInfo";
 import { ref } from "vue";
-const { userInfo, finished } = useUserInfo({});
+const { userInfo, finished, userAvator } = useUserInfo({});
 const tab = ref("");
 </script>
 <style lang="sass" scoped>
