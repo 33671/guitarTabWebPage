@@ -1,5 +1,5 @@
 <template>
-  <q-card style="border-radius: 30px">
+  <q-card style="border-radius: 30px" class="q-mb-xl">
     <q-card-section>
       <div class="row justify-center q-my-lg q-gutter-y-md q-gutter-x-md">
         <!-- :filter="checkFileSize" -->
@@ -43,14 +43,14 @@
                 :options="guitaroptions"
                 label="谱类型"
               />
-              <h6 class="q-mb-none">曲谱主题色：</h6>
+              <h6 class="q-mb-none text-bold">曲谱主题色：</h6>
               <div class="row q-mt-none">
                 <div class="col-lg-2 col-md-2 col-sm-4 col-4">
                   <q-radio
                     keep-color
-                    v-model="color"
+                    v-model="tab_detail.themeColor"
                     size="100px"
-                    val="teal"
+                    val="blue-8"
                     color="blue-8"
                   />
                 </div>
@@ -58,8 +58,8 @@
                   <q-radio
                     keep-color
                     size="100px"
-                    v-model="color"
-                    val="orange"
+                    v-model="tab_detail.themeColor"
+                    val="orange-13"
                     color="orange-13"
                   />
                 </div>
@@ -67,8 +67,8 @@
                   <q-radio
                     keep-color
                     size="100px"
-                    v-model="color"
-                    val="red"
+                    v-model="tab_detail.themeColor"
+                    val="pink-4"
                     color="pink-4"
                   />
                 </div>
@@ -76,26 +76,26 @@
                   <q-radio
                     keep-color
                     size="100px"
-                    v-model="color"
-                    val="cyan"
+                    v-model="tab_detail.themeColor"
+                    val="green-7"
                     color="green-7"
                   />
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-4">
                   <q-radio
                     keep-color
-                    v-model="color"
+                    v-model="tab_detail.themeColor"
                     size="100px"
-                    val="teal"
+                    val="blue-grey-6"
                     color="blue-grey-6"
                   />
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-4">
                   <q-radio
                     keep-color
-                    v-model="color"
+                    v-model="tab_detail.themeColor"
                     size="100px"
-                    val="teal"
+                    val="teal-7"
                     color="teal-7"
                   />
                 </div>
@@ -106,7 +106,7 @@
                 class="col-10 col-md-11"
                 toolbar-text-color="white"
                 toolbar-toggle-color="yellow-8"
-                toolbar-bg="purple"
+                toolbar-bg="deep-purple-4"
                 :toolbar="[
                   ['bold', 'italic', 'underline'],
                   [
@@ -145,7 +145,7 @@
               <q-input
                 filled
                 v-model="tab_detail.original_music_url"
-                label="原歌曲链接 *"
+                label="原歌曲链接(请填写原歌曲任意的第三方链接) *"
               />
               <div>
                 <q-checkbox
@@ -189,7 +189,7 @@ export default {
     const $q = useQuasar();
     const accept = ref(false);
     const editorRef = ref(null);
-
+    const themeColor = ref('blue-8')
     const guitaroptions = ["吉他谱", "贝斯谱", "乐队总谱"];
     const copyright = [
       {
@@ -212,6 +212,7 @@ export default {
       description: "详情",
       tags: null,
       cover_file_id: "",
+      themeColor:"blue-8"
     });
     function uploaded(info) {
       tab_detail.value.files_id.push(JSON.parse(info.xhr.response).tab_file_id);
@@ -245,6 +246,7 @@ export default {
 
     return {
       guitaroptions,
+      themeColor,
       uploaded,
       tab_detail,
       checkFileSize,
@@ -319,6 +321,10 @@ export default {
       onReset() {
         tab_detail.value.tab_name = null;
         tab_detail.value.accept = null;
+        tab_detail.value.themeColor = 'blue-8';
+        tab_detail.value.tab_type = "吉他谱",
+        tab_detail.value.is_anonymous = false,
+        accept.value = false,
         tab_detail.value.is_reshiped = null;
         tab_detail.value.music_name = null;
         tab_detail.value.original_music_url = "";
