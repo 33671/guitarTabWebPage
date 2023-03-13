@@ -3,16 +3,19 @@ import { useQuasar } from "quasar";
 import { axios } from "src/boot/axios";
 import usefav from "src/composables/fav";
 import useHistory from "src/composables/history";
+import useComments from "src/composables/useComments";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import useSearch from "./../search_input";
 const route = useRoute();
 const { pushToHistory } = useHistory();
-const { options, searchText, search, filterFn } = useSearch();
+const { searchText, search } = useSearch();
 const { isInfav, removefav, addTofav } = usefav();
 const props = defineProps({
   publishId: String,
 });
+const commentText = ref("");
+const { comments, sendComment } = useComments(props.publishId);
 const $q = useQuasar();
 const isInMyFav = ref(false);
 async function refreshFavStatus() {
@@ -181,14 +184,10 @@ refreshFavStatus();
             </template>
 
             <template v-slot:after>
-              <q-tab-panels
-                v-model="tab"
-                animated
-                swipeable
-                vertical
+              <q-tab-panels v-model="tab" animated swipeable>
+                <!-- vertical
                 transition-prev="slide-down"
-                transition-next="slide-up"
-              >
+                transition-next="slide-up" -->
                 <q-tab-panel class="q-pa-none q-pa-md-sm" name="简介">
                   <q-card-section
                     class="q-pa-lg"
@@ -197,10 +196,70 @@ refreshFavStatus();
                   >
                   </q-card-section>
                 </q-tab-panel>
-                <q-tab-panel
-                  class="q-pa-none q-pa-md-sm"
-                  name="评论"
-                ></q-tab-panel>
+                <q-tab-panel class="q-pa-none q-pa-md-sm" name="评论">
+                  <q-input
+                    outlined
+                    bottom-slots
+                    v-model="commentText"
+                    label="评论"
+                    counter
+                    maxlength="500"
+                  >
+                    <template v-slot:before>
+                      <q-avatar rounded color="primary" text-color="white">
+                        <img
+                          v-if="hasAvatar"
+                          src="https://cdn.quasar.dev/img/boy-avatar.png"
+                        />
+                        <span v-else>G</span>
+                      </q-avatar>
+                    </template>
+
+                    <template v-slot:append>
+                      <q-icon
+                        v-if="commentText !== ''"
+                        name="close"
+                        @click="commentText = ''"
+                        class="cursor-pointer"
+                      />
+                    </template>
+
+                    <template v-slot:hint> </template>
+
+                    <template v-slot:after>
+                      <q-btn
+                        round
+                        dense
+                        flat
+                        icon="send"
+                        @click="sendComment(commentText)"
+                      />
+                    </template>
+                  </q-input>
+                  <q-list flat>
+                    <q-item
+                      v-for="(item, index) in comments"
+                      :key="index"
+                      class="q-pl-none"
+                    >
+                      <q-item-section top avatar>
+                        <q-avatar rounded color="primary" text-color="white">
+                          <span>G</span>
+                        </q-avatar>
+                      </q-item-section>
+
+                      <q-item-section>
+                        <q-item-label caption>{{ item.user }} </q-item-label>
+                        <q-item-label>{{ item.text }}</q-item-label>
+                      </q-item-section>
+
+                      <!-- <q-item-section side top>
+                        <q-badge label="10k" />
+                      </q-item-section> -->
+                    </q-item>
+                    <!-- {{ comments }} -->
+                  </q-list>
+                </q-tab-panel>
               </q-tab-panels>
             </template>
           </q-splitter>
