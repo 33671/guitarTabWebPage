@@ -43,6 +43,63 @@
                 :options="guitaroptions"
                 label="谱类型"
               />
+              <h6 class="q-mb-none">曲谱主题色：</h6>
+              <div class="row q-mt-none">
+                <div class="col-lg-2 col-md-2 col-sm-4 col-4">
+                  <q-radio
+                    keep-color
+                    v-model="color"
+                    size="100px"
+                    val="teal"
+                    color="blue-8"
+                  />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-4">
+                  <q-radio
+                    keep-color
+                    size="100px"
+                    v-model="color"
+                    val="orange"
+                    color="orange-13"
+                  />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-4">
+                  <q-radio
+                    keep-color
+                    size="100px"
+                    v-model="color"
+                    val="red"
+                    color="pink-4"
+                  />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-4">
+                  <q-radio
+                    keep-color
+                    size="100px"
+                    v-model="color"
+                    val="cyan"
+                    color="green-7"
+                  />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-4">
+                  <q-radio
+                    keep-color
+                    v-model="color"
+                    size="100px"
+                    val="teal"
+                    color="blue-grey-6"
+                  />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-4">
+                  <q-radio
+                    keep-color
+                    v-model="color"
+                    size="100px"
+                    val="teal"
+                    color="teal-7"
+                  />
+                </div>
+              </div>
               <q-editor
                 v-model="tab_detail.description"
                 ref="editorRef"
