@@ -18,14 +18,8 @@ export default {
 };
 </script>
 <script setup>
-import { defineComponent } from "vue";
 import carousel from "../components/carousel.vue";
 import tabs from "../components/tabs.vue";
-import useUserInfo from "src/composables/userInfo";
-import { ref } from "vue";
-
-const { userInfo, finished } = useUserInfo({});
-// const tab = "tabs";
 </script>
 <style lang="scss" scoped>
 .carousel {

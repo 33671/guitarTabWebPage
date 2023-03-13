@@ -45,7 +45,10 @@
               src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
               v-else-if="loginStatus && !finished"
             />
-            <img :src="'/api/user/avator/' + userInfo.avator_id" v-else />
+            <img
+              :src="'/api/user/avator/' + userInfo.avator_id"
+              v-if="finished"
+            />
 
             <q-menu auto-close :offset="[0, 10]">
               <q-list style="min-width: 100px">
@@ -117,9 +120,9 @@ import useSearch from "./../search_input";
 import { axios } from "./../boot/axios";
 import { loginStatus, logout } from "src/composables/login";
 import useUserInfo from "src/composables/userInfo";
-const { userInfo, finished } = useUserInfo({});
 export default {
   setup() {
+    const { userInfo, finished } = useUserInfo({});
     const { options, searchResult, searchText, search, filterFn } = useSearch();
     const leftDrawerOpen = ref(false);
     const route = useRoute();

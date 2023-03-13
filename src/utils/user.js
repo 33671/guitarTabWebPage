@@ -7,6 +7,8 @@ async function getUserInfo(user) {
       info = resp.data;
       return info;
     }
+    console.log("failed to get userinfo");
+    return null;
   } else {
     return info;
   }
