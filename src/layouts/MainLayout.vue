@@ -41,7 +41,12 @@
             <span style="font-size: 10px; user-select: none" v-if="!loginStatus"
               >登录</span
             >
-            <img src="/icons/favicon-128x128.png" v-else />
+            <img
+              src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
+              v-else-if="loginStatus && !finished"
+            />
+            <img :src="'/api/user/avator/' + userInfo.avator_id" v-else />
+
             <q-menu auto-close :offset="[0, 10]">
               <q-list style="min-width: 100px">
                 <q-item clickable>
@@ -111,6 +116,8 @@ import { useRoute, useRouter } from "vue-router";
 import useSearch from "./../search_input";
 import { axios } from "./../boot/axios";
 import { loginStatus, logout } from "src/composables/login";
+import useUserInfo from "src/composables/userInfo";
+const { userInfo, finished } = useUserInfo({});
 export default {
   setup() {
     const { options, searchResult, searchText, search, filterFn } = useSearch();
@@ -125,6 +132,8 @@ export default {
       { to: "/about", name: "关于", icon: "info" },
     ];
     return {
+      userInfo,
+      finished,
       loginStatus,
       checkLogin() {
         if (!loginStatus.value) {

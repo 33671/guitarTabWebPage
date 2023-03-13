@@ -2,7 +2,6 @@ import { onMounted, ref, unref } from "vue";
 import { getUserInfo } from "src/utils/user";
 const finished = ref(false);
 const userInfo = ref({});
-const userAvator = ref({});
 function useUserInfo({ user = "mine" }) {
   onMounted(async () => {
     userInfo.value = await getUserInfo(user);
