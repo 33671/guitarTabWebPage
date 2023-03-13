@@ -11,11 +11,12 @@ const route = useRoute();
 const { pushToHistory } = useHistory();
 const { searchText, search } = useSearch();
 const { isInfav, removefav, addTofav } = usefav();
+const { comments, sendComment, totalPageNum, currentCommentPage, turnToPage } =
+  useComments(props.publishId);
 const props = defineProps({
   publishId: String,
 });
 const commentText = ref("");
-const { comments, sendComment } = useComments(props.publishId);
 const $q = useQuasar();
 const isInMyFav = ref(false);
 async function refreshFavStatus() {
@@ -184,7 +185,7 @@ refreshFavStatus();
             </template>
 
             <template v-slot:after>
-              <q-tab-panels v-model="tab" animated swipeable>
+              <q-tab-panels v-model="tab" animated>
                 <!-- vertical
                 transition-prev="slide-down"
                 transition-next="slide-up" -->
@@ -207,11 +208,11 @@ refreshFavStatus();
                   >
                     <template v-slot:before>
                       <q-avatar rounded color="primary" text-color="white">
-                        <img
+                        <!-- <img
                           v-if="hasAvatar"
                           src="https://cdn.quasar.dev/img/boy-avatar.png"
-                        />
-                        <span v-else>G</span>
+                        /> -->
+                        <span>G</span>
                       </q-avatar>
                     </template>
 
@@ -259,6 +260,19 @@ refreshFavStatus();
                     </q-item>
                     <!-- {{ comments }} -->
                   </q-list>
+                  <div class="q-pa-lg flex flex-center">
+                    <q-pagination
+                      v-model="currentCommentPage"
+                      :max="totalPageNum"
+                      @update:model-value="turnToPage($event)"
+                      direction-links
+                      boundary-links
+                      icon-first="skip_previous"
+                      icon-last="skip_next"
+                      icon-prev="fast_rewind"
+                      icon-next="fast_forward"
+                    />
+                  </div>
                 </q-tab-panel>
               </q-tab-panels>
             </template>

@@ -2,15 +2,19 @@ import { onMounted, ref, unref } from "vue";
 import { axios } from "../boot/axios";
 import indexdb from "../utils/indexdb";
 const comments = ref([]);
-const pageCount = ref(1);
+const currentCommentPage = ref(1);
+let totalItemCount = 0;
+const totalPageNum = ref(0);
 const useComments = (tab_id) => {
   function getCommments() {
     axios.get(`/api/tabs_publish/${tab_id}/comment`).then((response) => {
       if (response.status == 200) {
         console.log(response.data);
+        totalItemCount = Number(response.headers["total-items"]);
+        totalPageNum.value = Math.ceil(totalItemCount / 10);
+        currentCommentPage.value = 1;
         comments.value = response.data;
       }
-      // pageCount.value = Math.ceil(response.favourites_count / 2);
     });
   }
   async function sendComment(text) {
@@ -22,17 +26,32 @@ const useComments = (tab_id) => {
     axios.post(`/api/tabs_publish/${tab_id}/comment`, data).then((response) => {
       if (response.status === 200) {
         console.log(response);
-        getCommments();
+        let showCommentPage = Math.ceil((totalItemCount + 1) / 10); //翻到最后一页
+        turnToPage(showCommentPage);
         return true;
       }
       return false;
     });
   }
+  async function turnToPage(num) {
+    axios
+      .get(`/api/tabs_publish/${tab_id}/comment?page=${num}`)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data);
+          comments.value = response.data;
+          currentCommentPage.value = num;
+        }
+        // pageCount.value = Math.ceil(response.favourites_count / 2);
+      });
+  }
   getCommments();
   return {
+    turnToPage,
     sendComment,
     comments,
-    pageCount,
+    currentCommentPage,
+    totalPageNum,
   };
 };
 export default useComments;
