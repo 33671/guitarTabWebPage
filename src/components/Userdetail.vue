@@ -1,30 +1,28 @@
 <template>
   <q-card class="my-card" v-if="finished">
-    <q-img src="https://s1.ax1x.com/2023/03/12/ppMyfYT.md.jpg" height="250px">
+    <q-img src="https://s1.ax1x.com/2023/03/13/ppQnDPS.md.jpg" height="250px">
       <!-- 用q-img做背景，在其字幕处显示id和头像等 -->
-      <div class="text-h5 absolute-bottom row">
-        <div class="col-2 self-center text-center">
-          <q-avatar class="">
-            <img :src="userAvator" />
-          </q-avatar>
-        </div>
-        <div class="col-2 self-center">
-          <div class="column">
-            <div class="col">
-              <div class="text-body1 text-orange-9">
-                {{ userInfo.name }}
-              </div>
-            </div>
-            <div class="col">
-              <div class="text-subtitle2">{{ userInfo.bio }}</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-2 self-center offset-6">
-          <q-btn color="light-blue-8 " no-wrap>
-            <div class="">关注</div>
-          </q-btn>
-        </div>
+      <div class="text-h5 absolute-bottom">
+        <q-item>
+          <q-item-section avatar>
+            <q-avatar class="">
+              <img :src="'/api/user/avator/' + userInfo.avator_id" />
+            </q-avatar>
+          </q-item-section>
+          <q-item-section caption>
+            <q-item-label class="text-cyan-4">{{ userInfo.nick }}</q-item-label>
+            <q-item-label caption class="text-white"
+              >@{{ userInfo.name }}</q-item-label
+            >
+          </q-item-section>
+          <q-item-section side>
+            <q-item-label>
+              <q-btn color="light-blue-8 " no-wrap>
+                <div class="">关注</div>
+              </q-btn>
+            </q-item-label>
+          </q-item-section>
+        </q-item>
       </div>
     </q-img>
 
@@ -155,7 +153,7 @@
 <script setup>
 import useUserInfo from "src/composables/userInfo";
 import { ref } from "vue";
-const { userInfo, finished, userAvator } = useUserInfo({});
+const { userInfo, finished } = useUserInfo({});
 const tab = ref("");
 </script>
 <style lang="sass" scoped>

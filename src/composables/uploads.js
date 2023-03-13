@@ -14,7 +14,7 @@ function useUploads({ user = "mine" }) {
       if (resp.status === 200) {
         uploads.value = resp.data;
         uploadPageCount.value = Math.ceil(
-          parseInt(resp.headers["total-items"]) / 2
+          parseInt(resp.headers["total-items"]) / 6
         );
         console.log(resp.data, uploadPageCount.value);
       }

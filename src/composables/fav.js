@@ -8,7 +8,7 @@ const usefav = () => {
   onMounted(async () => {
     const info = await getUserInfo("mine");
     console.log(info);
-    pageCount.value = Math.ceil(info.favourites_count / 2);
+    pageCount.value = Math.ceil(info.favourites_count / 6);
     axios.get(`/api/user/${info.name}/fav`).then((resp) => {
       if (resp.status === 200) {
         favs.value = resp.data;

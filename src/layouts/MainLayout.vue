@@ -119,7 +119,7 @@ export default {
     const router = useRouter();
     const naviItem = [
       { to: "/home", name: "首页", icon: "inbox" },
-      { to: "/star", name: "收藏", icon: "star" },
+      { to: "/news", name: "动态", icon: "circle_notifications" },
       { to: "/user", name: "我的", icon: "send" },
       { to: "/publish", name: "发布", icon: "drafts" },
       { to: "/about", name: "关于", icon: "info" },
