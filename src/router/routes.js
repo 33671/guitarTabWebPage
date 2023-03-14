@@ -23,6 +23,8 @@ const routes = [
       },
       { path: "publish", component: () => import("pages/PublishScore.vue") },
       { path: "user", component: () => import("pages/User.vue") },
+      { path: "news", component: () => import("pages/News.vue") },
+
       { path: "", redirect: "/home" },
       {
         path: "search",
