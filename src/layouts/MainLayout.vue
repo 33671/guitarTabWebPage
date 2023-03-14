@@ -4,7 +4,15 @@
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title style="max-width: 200px; min-width: 130px">
+        <q-toolbar-title
+          @click="router.push('/home')"
+          style="
+            max-width: 200px;
+            min-width: 130px;
+            cursor: pointer;
+            user-select: none;
+          "
+        >
           <!-- <q-avatar>
                 <img
                   src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg"
@@ -113,62 +121,45 @@
   </q-layout>
 </template>
 
-<script>
-import { ref, onMounted } from "vue";
+<script setup>
+import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import useSearch from "./../search_input";
-import { axios } from "./../boot/axios";
 import { loginStatus, logout } from "src/composables/login";
 import useUserInfo from "src/composables/userInfo";
-export default {
-  setup() {
-    const { userInfo, finished } = useUserInfo({});
-    const { options, searchResult, searchText, search, filterFn } = useSearch();
-    const leftDrawerOpen = ref(false);
-    const route = useRoute();
-    const router = useRouter();
-    const naviItem = [
-      { to: "/home", name: "首页", icon: "inbox" },
-      { to: "/news", name: "动态", icon: "circle_notifications" },
-      { to: "/user", name: "我的", icon: "send" },
-      { to: "/publish", name: "发布", icon: "drafts" },
-      { to: "/about", name: "关于", icon: "info" },
-    ];
-    return {
-      userInfo,
-      finished,
-      loginStatus,
-      checkLogin() {
-        if (!loginStatus.value) {
-          router.push("/login");
-        }
-      },
-      async exitLogin() {
-        await logout();
-        router.replace("/login");
-      },
-      naviItem,
-      leftDrawerOpen,
-      filterFn,
-      setModel(val) {
-        searchText.value = val;
-      },
-      route,
-      options,
-      searchResult,
-      searchText,
-      entersearch() {
-        search();
-        if (route.path != "/search") {
-          router.push("/search");
-        }
-      },
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-    };
-  },
-};
+const { userInfo, finished } = useUserInfo({});
+const { options, searchText, search, filterFn } = useSearch();
+const leftDrawerOpen = ref(false);
+const route = useRoute();
+const router = useRouter();
+const naviItem = [
+  { to: "/home", name: "首页", icon: "inbox" },
+  { to: "/news", name: "动态", icon: "circle_notifications" },
+  { to: "/user", name: "我的", icon: "send" },
+  { to: "/publish", name: "发布", icon: "drafts" },
+  { to: "/about", name: "关于", icon: "info" },
+];
+function checkLogin() {
+  if (!loginStatus.value) {
+    router.push("/login");
+  }
+}
+async function exitLogin() {
+  await logout();
+  router.replace("/login");
+}
+function setModel(val) {
+  searchText.value = val;
+}
+function entersearch() {
+  search();
+  if (route.path != "/search") {
+    router.push("/search");
+  }
+}
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+}
 </script>
 <style lang="scss" scoped>
 .header {

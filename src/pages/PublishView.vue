@@ -376,7 +376,7 @@ refreshFavStatus();
     </div>
   </q-page>
 </template>
-<style>
+<style scoped>
 @media (max-width: 1024px) {
   /* .justify-md-start {
     justify-content: start;
