@@ -3,11 +3,6 @@ import { ref } from "vue";
 import indexdb from "../utils/indexdb";
 const loginStatus = ref(false);
 
-(async () => {
-  const status = await axios.get("/api/login_status");
-  loginStatus.value = status.status == 200;
-})();
-
 async function userlogin(name, password) {
   var loginform = new FormData();
   loginform.append("name", name);
@@ -15,7 +10,7 @@ async function userlogin(name, password) {
   loginform.append("captcha", "111");
   const aa = await axios.post("/api/login", loginform);
   if (aa.status == 200) {
-    loginStatus.value == true;
+    loginStatus.value = true;
     await indexdb.set("userInfo", aa.data);
   }
   console.log(aa.data);

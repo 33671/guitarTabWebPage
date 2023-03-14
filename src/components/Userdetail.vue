@@ -99,6 +99,7 @@
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="follow">
         <q-list>
+                    <template v-for="(followring,key) in userFollowing" :key = key  >
           <q-item>
             <q-item-section top avatar>
               <q-avatar>
@@ -107,7 +108,7 @@
             </q-item-section>
 
             <q-item-section>
-              <q-item-label>关注者id</q-item-label>
+              <q-item-label>{{followring.following}}</q-item-label>
               <q-item-label caption>关注者个人简介</q-item-label>
             </q-item-section>
 
@@ -119,12 +120,15 @@
           </q-item>
 
           <q-separator />
+        </template>
+
         </q-list>
       </q-tab-panel>
 
       <q-tab-panel name="follower">
         <q-list>
-          <q-item>
+          <template v-for="(follower,key) in userFollower" :key = key  >
+            <q-item >
             <q-item-section top avatar>
               <q-avatar>
                 <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
@@ -132,7 +136,7 @@
             </q-item-section>
 
             <q-item-section>
-              <q-item-label>关注者id</q-item-label>
+              <q-item-label>{{follower.following}}</q-item-label>
               <q-item-label caption>关注者个人简介</q-item-label>
             </q-item-section>
 
@@ -141,9 +145,11 @@
                 <div>关注</div>
               </q-btn>
             </q-item-section>
-          </q-item>
+              </q-item>
 
-          <q-separator />
+            <q-separator/>
+          </template>
+
         </q-list>
       </q-tab-panel>
     </q-tab-panels>
@@ -153,7 +159,7 @@
 <script setup>
 import useUserInfo from "src/composables/userInfo";
 import { ref } from "vue";
-const { userInfo, finished } = useUserInfo({});
+const { userInfo, finished,userFollower,userFollowing } = useUserInfo({});
 const tab = ref("");
 </script>
 <style lang="sass" scoped>
