@@ -94,7 +94,7 @@ import { useQuasar } from "quasar";
 import { userlogin, loginStatus, userreg } from "./../composables/login";
 import { useRouter } from "vue-router";
 const $q = useQuasar();
-const isLogin = loginStatus;
+const isLogin = ref(true);
 const router = useRouter();
 async function login(name, password) {
   await userlogin(name, password);
@@ -315,7 +315,7 @@ function changeType() {
 //   }
 // });
 </script>
-<style>
+<style scoped>
 body {
   width: 100%;
   height: 100vh;
