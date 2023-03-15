@@ -4,9 +4,9 @@ import { getUserInfo } from "src/utils/user";
 const favs = ref([]);
 const pageCount = ref(1);
 
-const usefav = () => {
+const usefav = (user = "mine") => {
   onMounted(async () => {
-    const info = await getUserInfo("mine");
+    const info = await getUserInfo(user);
     console.log(info);
     pageCount.value = Math.ceil(info.favourites_count / 6);
     axios.get(`/api/user/${info.name}/fav`).then((resp) => {

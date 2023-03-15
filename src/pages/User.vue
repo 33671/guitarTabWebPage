@@ -2,10 +2,10 @@
   <q-page class="q-layout-padding">
     <div class="row justify-center">
       <div class="col-12 col-sm-5 col-md-5 col-lg-5 q-ma-lg">
-        <Userdetail />
+        <Userdetail :username="username" />
       </div>
       <div class="col-12 col-sm-5 col-md-5 col-lg-5 q-ma-lg">
-        <Usertab />
+        <Usertab :username="username" />
       </div>
     </div>
   </q-page>
@@ -18,14 +18,16 @@ import { useRouter } from "vue-router";
 import { onMounted } from "@vue/runtime-core";
 import { axios } from "boot/axios";
 import { useQuasar } from "quasar";
-
+import { ref } from "vue";
 // import { RenderingResources } from "@coderline/alphatab";
 export default {
   components: { Userdetail, Usertab },
-
-  setup() {
+  props: ["username"],
+  setup(props) {
     const $q = useQuasar();
     const router = useRouter();
+    const username = ref(props.username);
+    console.log(props.username);
     onMounted(async () => {
       const res = await axios.get("/api/login_status");
       console.log(res.status);

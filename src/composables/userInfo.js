@@ -7,11 +7,12 @@ const finished = ref(false);
 const userInfo = ref({});
 const userFollowing = ref([]);
 const userFollower = ref([]);
-function useUserInfo({ user = "mine" } = { user: "mine" }) {
+function useUserInfo(user = "mine") {
   onMounted(async () => {
     userInfo.value = await getUserInfo(user);
-    userFollowing.value = await getUserFollowing("zhang");
-    userFollower.value = await getUserFollower("zhang");
+    console.log(userInfo.value.name);
+    userFollowing.value = await getUserFollowing(userInfo.value.name);
+    userFollower.value = await getUserFollower(userInfo.value.name);
     console.log(userFollower.value);
     console.log(userFollowing.value);
     finished.value = true;

@@ -65,13 +65,16 @@ import useSearch from "./../search_input";
 import useHistory from "src/composables/history";
 import usefav from "src/composables/fav";
 import useUploads from "src/composables/uploads";
+const props = defineProps({
+  username: String,
+});
 const currentFavPage = ref(1);
 const { uploads, uploadPageCount, turnToUploadPage } = useUploads({
-  user: "mine",
+  user: props.username,
 });
 const currentuploadPage = ref(1);
 const { history } = useHistory();
-const { favs, turnToPage, pageCount } = usefav();
+const { favs, turnToPage, pageCount } = usefav(props.username);
 watch(currentFavPage, (page, prev) => {
   turnToPage(page);
 });

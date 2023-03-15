@@ -99,57 +99,55 @@
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="follow">
         <q-list>
-                    <template v-for="(followring,key) in userFollowing" :key = key  >
-          <q-item>
-            <q-item-section top avatar>
-              <q-avatar>
-                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-              </q-avatar>
-            </q-item-section>
+          <template v-for="(followring, key) in userFollowing" :key="key">
+            <q-item>
+              <q-item-section top avatar>
+                <q-avatar>
+                  <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+                </q-avatar>
+              </q-item-section>
 
-            <q-item-section>
-              <q-item-label>{{followring.following}}</q-item-label>
-              <q-item-label caption>关注者个人简介</q-item-label>
-            </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ followring.following }}</q-item-label>
+                <q-item-label caption>关注者个人简介</q-item-label>
+              </q-item-section>
 
-            <q-item-section side>
-              <q-btn outline color="light-blue-8">
-                <div>关注</div>
-              </q-btn>
-            </q-item-section>
-          </q-item>
+              <q-item-section side>
+                <q-btn outline color="light-blue-8">
+                  <div>关注</div>
+                </q-btn>
+              </q-item-section>
+            </q-item>
 
-          <q-separator />
-        </template>
-
+            <q-separator />
+          </template>
         </q-list>
       </q-tab-panel>
 
       <q-tab-panel name="follower">
         <q-list>
-          <template v-for="(follower,key) in userFollower" :key = key  >
-            <q-item >
-            <q-item-section top avatar>
-              <q-avatar>
-                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-              </q-avatar>
-            </q-item-section>
+          <template v-for="(follower, key) in userFollower" :key="key">
+            <q-item>
+              <q-item-section top avatar>
+                <q-avatar>
+                  <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+                </q-avatar>
+              </q-item-section>
 
-            <q-item-section>
-              <q-item-label>{{follower.following}}</q-item-label>
-              <q-item-label caption>关注者个人简介</q-item-label>
-            </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ follower.following }}</q-item-label>
+                <q-item-label caption>关注者个人简介</q-item-label>
+              </q-item-section>
 
-            <q-item-section side>
-              <q-btn outline no-wrap color="light-blue-8">
-                <div>关注</div>
-              </q-btn>
-            </q-item-section>
-              </q-item>
+              <q-item-section side>
+                <q-btn outline no-wrap color="light-blue-8">
+                  <div>关注</div>
+                </q-btn>
+              </q-item-section>
+            </q-item>
 
-            <q-separator/>
+            <q-separator />
           </template>
-
         </q-list>
       </q-tab-panel>
     </q-tab-panels>
@@ -159,7 +157,14 @@
 <script setup>
 import useUserInfo from "src/composables/userInfo";
 import { ref } from "vue";
-const { userInfo, finished,userFollower,userFollowing } = useUserInfo({});
+const props = defineProps({
+  username: String,
+});
+
+const { userInfo, finished, userFollower, userFollowing } = useUserInfo(
+  props.username
+);
+
 const tab = ref("");
 </script>
 <style lang="sass" scoped>

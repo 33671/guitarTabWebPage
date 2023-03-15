@@ -22,7 +22,15 @@ const routes = [
         component: () => import("pages/Index.vue"),
       },
       { path: "publish", component: () => import("pages/PublishScore.vue") },
-      { path: "user", component: () => import("pages/User.vue") },
+      {
+        path: "/user/:username",
+        component: () => import("pages/User.vue"),
+        props: true,
+      },
+      {
+        path: "/user",
+        component: () => import("pages/User.vue"),
+      },
       { path: "news", component: () => import("pages/News.vue") },
 
       { path: "", redirect: "/home" },
