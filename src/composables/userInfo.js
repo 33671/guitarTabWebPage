@@ -3,13 +3,18 @@ import { getUserInfo } from "src/utils/user";
 import { getUserFollower } from "src/utils/userfollower";
 import { getUserFollowing } from "src/utils/userfollowing";
 
-const finished = ref(false);
-const userInfo = ref({});
-const userFollowing = ref([]);
-const userFollower = ref([]);
-function useUserInfo(user = "mine") {
-  onMounted(async () => {
-    userInfo.value = await getUserInfo(user);
+function useUserInfo({ user = "mine" } = { user: "mine" }) {
+  const finished = ref(false);
+  const userInfo = ref({});
+  const userFollowing = ref([]);
+  const userFollower = ref([]);
+  getUserInfo(user).then(async (info) => {
+    // if (info.avator_id == undefined) {
+    //   info["avator_id"] =
+    //     "https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG";
+    // }
+    // debugger;
+    userInfo.value = info;
     console.log(userInfo.value.name);
     userFollowing.value = await getUserFollowing(userInfo.value.name);
     userFollower.value = await getUserFollower(userInfo.value.name);

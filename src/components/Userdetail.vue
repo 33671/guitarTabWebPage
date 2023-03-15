@@ -6,7 +6,14 @@
         <q-item>
           <q-item-section avatar>
             <q-avatar class="">
-              <img :src="'/api/user/avator/' + userInfo.avator_id" />
+              <img
+                :src="'/api/user/avator/' + userInfo.avator_id"
+                v-if="userInfo.avator_id != undefined"
+              />
+              <img
+                src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
+                v-else
+              />
             </q-avatar>
           </q-item-section>
           <q-item-section caption>
@@ -161,10 +168,10 @@ const props = defineProps({
   username: String,
 });
 
-const { userInfo, finished, userFollower, userFollowing } = useUserInfo(
-  props.username
-);
-
+const { userInfo, finished, userFollower, userFollowing } = useUserInfo({
+  user: props.username,
+});
+console.log(userInfo);
 const tab = ref("");
 </script>
 <style lang="sass" scoped>

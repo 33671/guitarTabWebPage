@@ -4,7 +4,7 @@ import { getUserInfo } from "src/utils/user";
 const uploads = ref([]);
 const uploadPageCount = ref(1);
 const user_name = ref("mine");
-function useUploads({ user = "mine" }) {
+function useUploads({ user = "mine" } = { user: "mine" }) {
   onMounted(async () => {
     if (user != "mine") {
       user = (await getUserInfo(user)).name;

@@ -51,11 +51,13 @@
             >
             <img
               src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
-              v-else-if="loginStatus && !finished"
+              v-else-if="
+                (loginStatus && !finished) || userInfo.avator_id == undefined
+              "
             />
             <img
               :src="'/api/user/avator/' + userInfo.avator_id"
-              v-if="finished"
+              v-if="loginStatus && finished"
             />
 
             <q-menu auto-close :offset="[0, 10]">

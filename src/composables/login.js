@@ -12,7 +12,7 @@ async function userlogin(name, password) {
   if (aa.status == 200) {
     loginStatus.value = true;
     await indexdb.set("userInfo", aa.data);
-  }
+  } else loginStatus.value = false;
   console.log(aa.data);
 }
 async function userreg(name, useremail, password) {
@@ -24,8 +24,19 @@ async function userreg(name, useremail, password) {
   const aa = await axios.post("/api/register", regform);
   console.log(aa);
 }
+async function checkLogin() {
+  return await axios.get("/api/login_status").then((res) => {
+    if (res.status == 200) {
+      console.log("登录状态");
+      loginStatus.value = true;
+      return true;
+    } else loginStatus.value = false;
+    return false;
+  });
+}
+checkLogin();
 async function logout() {
   await axios.get("/api/logout");
 }
 
-export { userlogin, logout, userreg, loginStatus };
+export { userlogin, logout, userreg, loginStatus, checkLogin };

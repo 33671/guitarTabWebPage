@@ -74,7 +74,7 @@ const { uploads, uploadPageCount, turnToUploadPage } = useUploads({
 });
 const currentuploadPage = ref(1);
 const { history } = useHistory();
-const { favs, turnToPage, pageCount } = usefav(props.username);
+const { favs, turnToPage, pageCount } = usefav({ user: props.username });
 watch(currentFavPage, (page, prev) => {
   turnToPage(page);
 });
