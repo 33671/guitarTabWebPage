@@ -359,6 +359,15 @@ a:hover {
 .big-box {
   height: 60vh;
 }
+.big-box {
+  transform: translateX(-50%);
+  transition: all 1s;
+}
+.big-box.active {
+  transform: translateX(0%);
+
+  transition: all 0.5s;
+}
 .big-contain {
   width: 100%;
   height: 100%;
@@ -412,9 +421,19 @@ a:hover {
 .small-box {
   height: 100%;
   background: linear-gradient(135deg, rgb(57, 167, 176), rgb(56, 183, 145));
-
+  transform: translateX(200%);
+  transition: all 1s;
   border-top-left-radius: inherit;
   border-bottom-left-radius: inherit;
+}
+.small-box.active {
+  left: 100%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+  transform: translateX(0%);
+  transition: all 1s;
 }
 .small-contain {
   width: 100%;
