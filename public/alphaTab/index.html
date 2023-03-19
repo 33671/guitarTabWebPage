@@ -365,12 +365,42 @@
         }
         api.playPause();
       };
+      //空格播放暂停
+      document.addEventListener("keyup", function (e) {
+        if (e.key == " ") {
+          api.playPause();
+          // console.log(api.tickPosition);
+        }
+      });
+      //屏蔽空格滚动
+      document.onkeydown = function (ev) {
+        var e = ev || event;
+        if (e.keyCode == 32) {
+          return false;
+        }
+      };
+      //左右方向键控制播放时间
+      document.addEventListener("keyup", function (e) {
+        let pieceCount = parseInt(api.tickPosition / 3840);
+        if (e.key == "ArrowRight") {
+          pieceCount += 1;
+          api.tickPosition = 3840 * pieceCount - 100;
+        }
+        if (e.key == "ArrowLeft") {
+          pieceCount -= 1;
+          api.tickPosition = 3840 * pieceCount - 100;
+          if (api.tickPosition <= 0) {
+            api.tickPosition = 1;
+          }
+        }
+      });
       stop.onclick = (e) => {
         if (e.target.classList.contains("disabled")) {
           return;
         }
         api.stop();
       };
+
       api.playerReady.on(() => {
         playPause.classList.remove("disabled");
         stop.classList.remove("disabled");

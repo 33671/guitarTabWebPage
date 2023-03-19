@@ -189,7 +189,7 @@ export default {
     const $q = useQuasar();
     const accept = ref(false);
     const editorRef = ref(null);
-    const themeColor = ref('blue-8')
+    const themeColor = ref("blue-8");
     const guitaroptions = ["吉他谱", "贝斯谱", "乐队总谱"];
     const copyright = [
       {
@@ -212,7 +212,7 @@ export default {
       description: "详情",
       tags: null,
       cover_file_id: "",
-      themeColor:"blue-8"
+      themeColor: "blue-8",
     });
     function uploaded(info) {
       tab_detail.value.files_id.push(JSON.parse(info.xhr.response).tab_file_id);
@@ -283,6 +283,15 @@ export default {
           });
           return;
         }
+        if (tab_detail.value.tags == null) {
+          $q.notify({
+            color: "blue-5",
+            textColor: "white",
+            icon: "warning",
+            message: "请写些标签，帮助他人搜索",
+          });
+          return;
+        }
         if (tab_detail.value.is_reshiped == null) {
           $q.notify({
             color: "green-5",
@@ -321,11 +330,11 @@ export default {
       onReset() {
         tab_detail.value.tab_name = null;
         tab_detail.value.accept = null;
-        tab_detail.value.themeColor = 'blue-8';
-        tab_detail.value.tab_type = "吉他谱",
-        tab_detail.value.is_anonymous = false,
-        accept.value = false,
-        tab_detail.value.is_reshiped = null;
+        tab_detail.value.themeColor = "blue-8";
+        (tab_detail.value.tab_type = "吉他谱"),
+          (tab_detail.value.is_anonymous = false),
+          (accept.value = false),
+          (tab_detail.value.is_reshiped = null);
         tab_detail.value.music_name = null;
         tab_detail.value.original_music_url = "";
       },
