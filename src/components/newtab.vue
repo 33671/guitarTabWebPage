@@ -4,18 +4,37 @@
     <div
       class="col-lg-6 col-12 q-pa-xl-xl q-pa-lg-xl q-pa-md-xl q-pa-sm-xl q-pa-xs-lg"
     >
-      <q-card class="my-card-radius-20 bg-blue-8">
+      <q-card
+        class="my-card-radius-20 q-mb-xl bg-blue-8"
+        v-for="(new_item, index) in news"
+        :key="index"
+      >
         <q-card-section>
           <div class="row">
             <div class="col-sm-8 col-12">
-              <q-card class="my-card-radius-10 q-ma-lg">
+              <q-card
+                class="my-card-radius-10 q-ma-lg"
+                v-ripple
+                @click="
+                  ($event) => {
+                    router.push(`/publishView/${new_item.result._id}`);
+                  }
+                "
+              >
                 <q-img
-                  src="/api/cover_files/6ef75428-280e-4fff-906e-e2e48b5db9be"
+                  :ratio="16 / 9"
+                  class="tabimg"
+                  :src="`/api/cover_files/${new_item.result.cover_file_id}`"
                 >
                   <!-- 谱封面card -->
-                  <div class="absolute-bottom row justify-between items-center">
-                    <div class="text-h6">花之塔</div>
-                    <div class="text-subtitle1">2天前上传</div>
+                  <div
+                    class="absolute-bottom row justify-between items-center"
+                    style="filter: none"
+                  >
+                    <div class="text-h6">{{ new_item.result.tab_name }}</div>
+                    <div class="text-subtitle1">
+                      {{ new_item.result.publish_date }}
+                    </div>
                   </div>
                 </q-img>
               </q-card>
@@ -26,7 +45,9 @@
                       ><img
                         src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
                     /></q-avatar>
-                    <div class="text-subtitle2">Zhang</div>
+                    <div class="text-h5">
+                      {{ new_item.result.uploader }}
+                    </div>
                     <q-btn round color="primary" size="15px">
                       <q-icon name="star" /> </q-btn
                     ><q-btn round color="primary" size="15px">
@@ -40,26 +61,17 @@
               </q-card>
             </div>
             <div class="col-sm-4 col-12">
-              <q-card class="my-card-radius-10 q-ma-lg bg-light-blue-13">
-                <!-- 谱详情card -->
-                <q-card-section
-                  >1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                  1 <br />
-                </q-card-section>
-              </q-card>
+              <div class="q-pa-lg" style="height: 100%">
+                <q-card
+                  class="my-card-radius-10 bg-light-blue-13"
+                  style="height: 100%"
+                >
+                  <!-- 谱详情card -->
+                  <q-card-section>
+                    <div v-html="new_item.result.description"></div>
+                  </q-card-section>
+                </q-card>
+              </div>
             </div>
           </div>
         </q-card-section>
@@ -69,12 +81,36 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { axios } from "src/boot/axios";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const news = ref([]);
+axios.get("/api/user/dynamics/mine").then((response) => {
+  if (response.status == 200) {
+    console.log(response.data);
+    news.value = response.data;
+  }
+});
+</script>
 <style lang="scss" scoped>
 .my-card-radius-20 {
   border-radius: 20px;
 }
 .my-card-radius-10 {
   border-radius: 10px;
+}
+.tabimg:hover {
+  // filter: brightness(0.7);
+  animation: fade-away 0.5s forwards;
+}
+@keyframes fade-away {
+  10% {
+    filter: brightness(1);
+  }
+  100% {
+    filter: brightness(0.6);
+  }
 }
 </style>
