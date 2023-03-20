@@ -176,10 +176,8 @@
 </template>
 
 <script>
-import { Axios } from "axios";
 import { useQuasar } from "quasar";
 import { axios } from "src/boot/axios";
-import router from "src/router";
 import { ref, unref } from "vue";
 import { useRouter } from "vue-router";
 export default {
@@ -189,7 +187,6 @@ export default {
     const $q = useQuasar();
     const accept = ref(false);
     const editorRef = ref(null);
-    const themeColor = ref("blue-8");
     const guitaroptions = ["吉他谱", "贝斯谱", "乐队总谱"];
     const copyright = [
       {
@@ -246,7 +243,6 @@ export default {
 
     return {
       guitaroptions,
-      themeColor,
       uploaded,
       tab_detail,
       checkFileSize,

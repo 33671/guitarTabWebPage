@@ -38,7 +38,7 @@
                   </div>
                 </q-img>
               </q-card>
-              <q-card class="my-card-radius-10 q-ma-lg bg-teal-13">
+              <q-card class="my-card-radius-10 q-ma-lg bg-light-blue-13">
                 <q-card-section class="q-pa-sm"
                   ><div class="row items-center justify-around">
                     <q-avatar
@@ -63,7 +63,7 @@
             <div class="col-sm-4 col-12">
               <div class="q-pa-lg" style="height: 100%">
                 <q-card
-                  class="my-card-radius-10 bg-light-blue-13"
+                  class="my-card-radius-10 bg-light-blue-4"
                   style="height: 100%"
                 >
                   <!-- 谱详情card -->
@@ -85,6 +85,8 @@
 import { axios } from "src/boot/axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
+const $q = useQuasar();
 const router = useRouter();
 const news = ref([]);
 axios.get("/api/user/dynamics/mine").then((response) => {
@@ -93,6 +95,15 @@ axios.get("/api/user/dynamics/mine").then((response) => {
     news.value = response.data;
   }
 });
+function share() {
+  $q.notify({
+    color: "green-4",
+    textColor: "white",
+    icon: "cloud_done",
+    position: "center",
+    message: "上传成功！稍后刷新页面",
+  });
+}
 </script>
 <style lang="scss" scoped>
 .my-card-radius-20 {

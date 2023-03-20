@@ -1,14 +1,21 @@
 <template>
   <div class="row justify-center">
     <div class="col-12 col-sm-11 col-md-10 col-lg-8">
-      <iframe
-        class="bg-white q-mt-sm"
-        src="./alphaTab"
-        frameborder="0"
-        id="tab-iframe"
-        width="100%"
-        scrolling="no"
-      ></iframe>
+      <q-card class="my-card my-card-radius-10">
+        <q-card-section class="q-pa-none q-my-lg">
+          <div class="q-pa-none" style="height: 100%">
+            <iframe
+              class="bg-white my-card-radius-10"
+              src="./alphaTab"
+              frameborder="0"
+              id="tab-iframe"
+              width="100%"
+              scrolling="no"
+              style="vertical-align: bottom"
+            ></iframe>
+          </div>
+        </q-card-section>
+      </q-card>
     </div>
   </div>
 </template>
@@ -48,4 +55,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.my-card-radius-20 {
+  border-radius: 20px;
+}
+.my-card-radius-10 {
+  border-radius: 10px;
+}
+</style>
