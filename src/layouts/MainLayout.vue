@@ -140,6 +140,8 @@ const naviItem = [
   { to: "/user", name: "我的", icon: "send" },
   { to: "/publish", name: "发布", icon: "drafts" },
   { to: "/about", name: "关于", icon: "info" },
+  { to: "/tuner", name: "调音器", icon: "audiotrack" },
+  { to: "/metronome", name: "节拍器", icon: "alarm" },
 ];
 function checkLogin() {
   if (!loginStatus.value) {

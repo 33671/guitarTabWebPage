@@ -38,12 +38,25 @@ const routes = [
         path: "search",
         component: () => import("pages/Search.vue"),
       },
+      {
+        path: "/tuner",
+        component: () => import("pages/Tuner.vue"),
+      },
+      {
+        path: "/metronome",
+        component: () => import("pages/Metronome.vue"),
+      },
+      {
+        path: "/about",
+        component: () => import("pages/About.vue"),
+      },
     ],
   },
   {
     path: "/test",
     component: () => import("pages/TabTest.vue"),
   },
+
   {
     path: "/login",
     component: () => import("pages/Login.vue"),
