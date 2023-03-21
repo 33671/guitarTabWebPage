@@ -134,6 +134,21 @@ refreshFavStatus();
               {{ info.tab_name }}
             </div>
             <div class="text-caption col-md-9 wrap">
+              <div
+                class="row items-center justify-md-start justify-center"
+                style="cursor: pointer; user-select: none"
+                @click="router.push(`/user/${info.uploader}`)"
+              >
+                <q-avatar size="lg">
+                  <img
+                    :src="`/api/user/avator/${info.uploader_detail.avator_id}`"
+                  />
+                </q-avatar>
+                <span class="text-h6 q-ml-md">
+                  {{ `${info.uploader_detail.nick}` }}
+                </span>
+              </div>
+              <br />
               收藏:{{ info.fav_times }} <br />
               标签：
               <q-chip

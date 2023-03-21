@@ -1,10 +1,10 @@
 <template>
   <q-page class="q-layout-padding">
     <div class="row justify-center">
-      <div class="col-12 col-sm-5 col-md-5 col-lg-5 q-ma-lg">
+      <div class="col-12 col-sm-5 col-md-5 col-lg-5 q-ma-lg justify-center">
         <Userdetail :username="username" />
       </div>
-      <div class="col-12 col-sm-5 col-md-5 col-lg-5 q-ma-lg">
+      <div class="col-12 col-sm-5 col-md-5 col-lg-5 q-ma-lg justify-center">
         <Usertab :username="username" />
       </div>
     </div>

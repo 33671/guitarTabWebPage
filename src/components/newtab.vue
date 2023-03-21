@@ -5,16 +5,20 @@
       class="col-lg-6 col-12 q-pa-xl-xl q-pa-lg-xl q-pa-md-xl q-pa-sm-xl q-pa-xs-lg"
     >
       <q-card
-        class="my-card-radius-20 q-mb-xl bg-blue-8"
+        class="q-mb-md"
         v-for="(new_item, index) in news"
+        flat
+        bordered
         :key="index"
       >
         <q-card-section>
           <div class="row">
             <div class="col-sm-8 col-12">
               <q-card
-                class="my-card-radius-10 q-ma-lg"
+                class="my-card-radius-10 q-ma-md"
                 v-ripple
+                flat
+                bordered
                 @click="
                   ($event) => {
                     router.push(`/publishView/${new_item.result._id}`);
@@ -38,21 +42,33 @@
                   </div>
                 </q-img>
               </q-card>
-              <q-card class="my-card-radius-10 q-ma-lg bg-light-blue-13">
-                <q-card-section class="q-pa-sm"
+              <q-card class="my-card-radius-10 q-ma-md" flat bordered>
+                <!-- {{ user_infos.get(new_item.result.uploader) }} -->
+                <q-card-section class="q-pa-xs"
                   ><div class="row items-center justify-around">
-                    <q-avatar
-                      ><img
+                    <q-avatar size="lg">
+                      <img
+                        v-if="!user_infos.has(new_item.result.uploader)"
                         src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
-                    /></q-avatar>
-                    <div class="text-h5">
-                      {{ new_item.result.uploader }}
+                      />
+                      <img
+                        v-else
+                        :src="`/api/user/avator/${
+                          user_infos.get(new_item.result.uploader).avator_id
+                        }`"
+                      />
+                    </q-avatar>
+                    <div class="text-h6" v-if="user_infos.has(new_item.fo)">
+                      {{
+                        user_infos.get(new_item.result.uploader).nick ??
+                        `@${new_item.fo}`
+                      }}
                     </div>
-                    <q-btn round color="primary" size="15px">
+                    <q-btn flat bordered round color="primary" size="15px">
                       <q-icon name="star" /> </q-btn
-                    ><q-btn round color="primary" size="15px">
+                    ><q-btn flat bordered round color="primary" size="15px">
                       <q-icon name="share" /> </q-btn
-                    ><q-btn round color="primary" size="15px">
+                    ><q-btn flat bordered round color="primary" size="15px">
                       <q-icon name="list" />
                     </q-btn>
                   </div>
@@ -61,10 +77,12 @@
               </q-card>
             </div>
             <div class="col-sm-4 col-12">
-              <div class="q-pa-lg" style="height: 100%">
+              <div class="q-pa-md" style="height: 100%">
                 <q-card
-                  class="my-card-radius-10 bg-light-blue-4"
+                  class="my-card-radius-10"
                   style="height: 100%"
+                  flat
+                  bordered
                 >
                   <!-- 谱详情card -->
                   <q-card-section>
@@ -86,15 +104,27 @@ import { axios } from "src/boot/axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import "core-js/actual/array/group-by";
+
 const $q = useQuasar();
 const router = useRouter();
 const news = ref([]);
+const user_infos = ref(new Map());
 axios.get("/api/user/dynamics/mine").then((response) => {
   if (response.status == 200) {
     console.log(response.data);
     news.value = response.data;
+    const users = response.data.groupBy((item) => item.fo);
+    Object.keys(users).forEach(async (item, index) => {
+      const infoRes = await axios.get(`/api/user/${item}`);
+      if (infoRes.status == 200) {
+        console.log(infoRes.data);
+        user_infos.value.set(item, infoRes.data);
+      }
+    });
   }
 });
+window.user_infos = user_infos;
 function share() {
   $q.notify({
     color: "green-4",
@@ -106,12 +136,6 @@ function share() {
 }
 </script>
 <style lang="scss" scoped>
-.my-card-radius-20 {
-  border-radius: 20px;
-}
-.my-card-radius-10 {
-  border-radius: 10px;
-}
 .tabimg:hover {
   // filter: brightness(0.7);
   animation: fade-away 0.5s forwards;
