@@ -87,6 +87,13 @@ module.exports = configure(function (ctx) {
           //   "^/api": "",
           // },
         },
+        "/static": {
+          target: "http://106.52.146.180:8081/",
+          changeOrigin: true,
+          // pathRewrite: {
+          //   "^/api": "",
+          // },
+        },
       },
       // proxy: {
       //   "/api": {

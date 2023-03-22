@@ -1,7 +1,7 @@
 <template>
   <iframe
     class="bg-white my-card-radius-10"
-    src="./guitartuner/"
+    src="/static/guitartuner/"
     frameborder="0"
     id="tab-iframe"
     width="100%"

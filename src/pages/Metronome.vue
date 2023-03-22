@@ -1,7 +1,7 @@
 <template>
   <iframe
     class="bg-white"
-    src="./metronome"
+    src="/static/metronome"
     frameborder="0"
     id="tab-iframe"
     width="100%"

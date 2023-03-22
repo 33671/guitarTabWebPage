@@ -6,7 +6,7 @@
           <div class="q-pa-none" style="height: 100%">
             <iframe
               class="bg-white my-card-radius-10"
-              src="./alphaTab"
+              src="/static/alphaTab"
               frameborder="0"
               id="tab-iframe"
               width="100%"
