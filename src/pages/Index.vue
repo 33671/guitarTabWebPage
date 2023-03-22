@@ -20,6 +20,9 @@ export default {
 <script setup>
 import carousel from "../components/carousel.vue";
 import tabs from "../components/tabs.vue";
+import { useQuasar } from "quasar";
+const $q = useQuasar();
+$q.addressbarColor.set();
 </script>
 <style lang="scss" scoped>
 .carousel {
