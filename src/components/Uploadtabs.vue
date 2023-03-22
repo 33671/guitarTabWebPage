@@ -1,5 +1,5 @@
 <template>
-  <q-card style="border-radius: 30px" class="q-mb-xl">
+  <q-card style="border-radius: 10px" class="q-mb-xl">
     <q-card-section>
       <div class="row justify-center q-my-lg q-gutter-y-md q-gutter-x-md">
         <!-- :filter="checkFileSize" -->

@@ -1,60 +1,62 @@
 <template>
-  <q-card class="my-card">
-    <!-- class="bg-primary text-white shadow-2" -->
-    <q-tabs v-model="tab" align="justify" :breakpoint="0" class="text-teal">
-      <q-tab name="favorites" icon="favorite" />
-      <q-tab name="userupload" icon="upload" />
-    </q-tabs>
+  <div class="row justify-center">
+    <q-card class="my-card">
+      <!-- class="bg-primary text-white shadow-2" -->
+      <q-tabs v-model="tab" align="justify" :breakpoint="0" class="text-teal">
+        <q-tab name="favorites" icon="favorite" />
+        <q-tab name="userupload" icon="upload" />
+      </q-tabs>
 
-    <!-- transition-prev="slide-right"
-      transition-next="slide-left" -->
-    <q-tab-panels v-model="tab" animated>
-      <q-tab-panel class="q-pa-none q-pa-md-sm" name="favorites">
-        <div class="row">
-          <div
-            class="col-lg-4 col-md-6 col-sm-6 col-6"
-            v-for="(score, index) in favs"
-            :key="index"
-          >
-            <TabCard
-              class="q-ma-lg-md q-ma-sm"
-              :musicName="score.fav_info.tab_name"
-              :uploader="score.fav_info.uploader"
-              :publishId="score.publish_id"
-              :coverId="score.fav_info.cover_file_id"
+      <!-- transition-prev="slide-right"
+    transition-next="slide-left" -->
+      <q-tab-panels v-model="tab" animated>
+        <q-tab-panel class="q-pa-none q-pa-md-sm" name="favorites">
+          <div class="row">
+            <div
+              class="col-lg-4 col-md-6 col-sm-6 col-6"
+              v-for="(score, index) in favs"
+              :key="index"
+            >
+              <TabCard
+                class="q-ma-lg-md q-ma-sm"
+                :musicName="score.fav_info.tab_name"
+                :uploader="score.fav_info.uploader"
+                :publishId="score.publish_id"
+                :coverId="score.fav_info.cover_file_id"
+              />
+            </div>
+          </div>
+          <div class="q-pa-lg flex flex-center">
+            <q-pagination v-model="currentFavPage" :max="pageCount" input />
+          </div>
+        </q-tab-panel>
+        <q-tab-panel class="q-pa-none q-pa-md-sm" name="userupload">
+          <div class="row">
+            <div
+              class="col-lg-4 col-md-6 col-sm-6 col-6"
+              v-for="(score, index) in uploads"
+              :key="index"
+            >
+              <TabCard
+                class="q-ma-lg-md q-ma-sm"
+                :musicName="score.tab_name"
+                :uploader="score.uploader"
+                :publishId="score.publish_id"
+                :coverId="score.cover_file_id"
+              />
+            </div>
+          </div>
+          <div class="q-pa-lg flex flex-center">
+            <q-pagination
+              v-model="currentuploadPage"
+              :max="uploadPageCount"
+              input
             />
           </div>
-        </div>
-        <div class="q-pa-lg flex flex-center">
-          <q-pagination v-model="currentFavPage" :max="pageCount" input />
-        </div>
-      </q-tab-panel>
-      <q-tab-panel class="q-pa-none q-pa-md-sm" name="userupload">
-        <div class="row">
-          <div
-            class="col-lg-4 col-md-6 col-sm-6 col-6"
-            v-for="(score, index) in uploads"
-            :key="index"
-          >
-            <TabCard
-              class="q-ma-lg-md q-ma-sm"
-              :musicName="score.tab_name"
-              :uploader="score.uploader"
-              :publishId="score.publish_id"
-              :coverId="score.cover_file_id"
-            />
-          </div>
-        </div>
-        <div class="q-pa-lg flex flex-center">
-          <q-pagination
-            v-model="currentuploadPage"
-            :max="uploadPageCount"
-            input
-          />
-        </div>
-      </q-tab-panel>
-    </q-tab-panels>
-  </q-card>
+        </q-tab-panel>
+      </q-tab-panels>
+    </q-card>
+  </div>
 </template>
 
 <script setup>

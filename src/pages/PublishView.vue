@@ -1,115 +1,3 @@
-<script setup>
-import { useQuasar } from "quasar";
-import { axios } from "src/boot/axios";
-import usefav from "src/composables/fav";
-import useHistory from "src/composables/history";
-import useComments from "src/composables/useComments";
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import useSearch from "./../search_input";
-const route = useRoute();
-const { pushToHistory } = useHistory();
-const { searchText, search } = useSearch();
-const { isInfav, removefav, addTofav } = usefav();
-const { comments, sendComment, totalPageNum, currentCommentPage, turnToPage } =
-  useComments(props.publishId);
-const props = defineProps({
-  publishId: String,
-});
-const commentText = ref("");
-const $q = useQuasar();
-const isInMyFav = ref(false);
-async function refreshFavStatus() {
-  const r = await isInfav(props.publishId);
-  isInMyFav.value = r;
-}
-function entersearch(item) {
-  searchText.value = item;
-  search();
-  if (route.path != "/search") {
-    router.push("/search");
-  }
-}
-async function pushToFav() {
-  if (isInMyFav.value) {
-    await removefav(props.publishId);
-    await refreshFavStatus();
-    if (!isInMyFav.value) {
-      $q.notify({
-        color: "blue-5",
-        textColor: "white",
-        icon: "star",
-        message: "已取消收藏",
-      });
-    }
-    return;
-  }
-  const r = await addTofav(props.publishId);
-  if (r) {
-    $q.notify({
-      color: "green-5",
-      textColor: "white",
-      icon: "star",
-      message: "收藏成功！",
-    });
-    refreshFavStatus();
-  }
-}
-const info = ref({});
-const scores = ref([]);
-const finished = ref(false);
-onMounted(async () => {
-  const res = await axios.get(`/api/tabs_publish/${props.publishId}`);
-  const data = res.data;
-  // console.log(data);
-  info.value = data;
-  data["files_id"].forEach(async (file_id) => {
-    const _data = (await axios.get(`/api/tab_files/${file_id}/info`)).data;
-    _data["file_id"] = file_id;
-    scores.value.push(_data);
-  });
-  finished.value = true;
-  pushToHistory(data);
-});
-const router = useRouter();
-const pushToPlay = () => {
-  const gps = scores.value
-    .filter(
-      (x) =>
-        x.file_name.endsWith(".gp") ||
-        x.file_name.endsWith(".gp5") ||
-        x.file_name.endsWith(".gpx") ||
-        x.file_name.endsWith(".gp3") ||
-        x.file_name.endsWith(".gp4") ||
-        x.file_name.endsWith(".gp7")
-    )
-    .map((x) => x.file_id);
-
-  if (gps.length == 0) return;
-  router.push(`/tabs/${gps[0]}`);
-};
-const pushToPlayFile = (x) => {
-  if (
-    !(
-      x.file_name.endsWith(".gp") ||
-      x.file_name.endsWith(".gp5") ||
-      x.file_name.endsWith(".gpx") ||
-      x.file_name.endsWith(".gp3") ||
-      x.file_name.endsWith(".gp4") ||
-      x.file_name.endsWith(".gp7")
-    )
-  )
-    return;
-  router.push(`/tabs/${x.file_id}`);
-};
-const download = (x) => {
-  window.location = `/api/tab_files/${x.file_id}`;
-};
-const tab = ref("简介");
-const splitterModel = ref(12);
-refreshFavStatus();
-</script>
-
 <template>
   <q-page padding>
     <div class="back-div">
@@ -128,7 +16,7 @@ refreshFavStatus();
           </div>
           <div
             v-if="finished"
-            class="col-12 col-md-7 isMobileTextCenter justify-center q-pl-lg row-md justify-md-start flex-wrap items-center"
+            class="col-12 col-md-7 isMobileTextCenter justify-center q-pl-md-lg row-md justify-md-start flex-wrap items-center"
           >
             <div class="text-h4 ellipsis col-md-7">
               {{ info.tab_name }}
@@ -150,6 +38,7 @@ refreshFavStatus();
               </div>
               <br />
               收藏:{{ info.fav_times }} <br />
+
               标签：
               <q-chip
                 clickable
@@ -161,28 +50,34 @@ refreshFavStatus();
               >
             </div>
           </div>
-          <div
-            class="col-12 col-md-2 flex items-center justify-center no-wrap q-gutter-md"
-          >
-            <q-btn
-              round
-              color="primary"
-              size="20px"
-              @click.stop.prevent="pushToPlay"
-            >
-              <q-icon name="play_arrow" />
-            </q-btn>
-            <q-btn
-              round
-              color="primary"
-              size="20px"
-              @click.stop.prevent="pushToFav"
-            >
-              <q-icon name="star" :color="isInMyFav ? 'red' : 'white'" />
-            </q-btn>
-            <q-btn round color="primary" size="20px">
-              <q-icon name="open_in_new" />
-            </q-btn>
+          <div class="col-12 col-md-2 flex items-center justify-center">
+            <div class="row">
+              <div class="col q-mx-sm">
+                <q-btn
+                  round
+                  color="primary"
+                  size="20px"
+                  @click.stop.prevent="pushToPlay"
+                >
+                  <q-icon name="play_arrow" />
+                </q-btn>
+              </div>
+              <div class="col q-mx-sm">
+                <q-btn
+                  round
+                  color="primary"
+                  size="20px"
+                  @click.stop.prevent="pushToFav"
+                >
+                  <q-icon name="star" :color="isInMyFav ? 'red' : 'white'" />
+                </q-btn>
+              </div>
+              <div class="col q-mx-sm">
+                <q-btn round color="primary" size="20px">
+                  <q-icon name="open_in_new" />
+                </q-btn>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -391,6 +286,118 @@ refreshFavStatus();
     </div>
   </q-page>
 </template>
+<script setup>
+import { useQuasar } from "quasar";
+import { axios } from "src/boot/axios";
+import usefav from "src/composables/fav";
+import useHistory from "src/composables/history";
+import useComments from "src/composables/useComments";
+import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import useSearch from "./../search_input";
+const route = useRoute();
+const { pushToHistory } = useHistory();
+const { searchText, search } = useSearch();
+const { isInfav, removefav, addTofav } = usefav();
+const { comments, sendComment, totalPageNum, currentCommentPage, turnToPage } =
+  useComments(props.publishId);
+const props = defineProps({
+  publishId: String,
+});
+const commentText = ref("");
+const $q = useQuasar();
+const isInMyFav = ref(false);
+async function refreshFavStatus() {
+  const r = await isInfav(props.publishId);
+  isInMyFav.value = r;
+}
+function entersearch(item) {
+  searchText.value = item;
+  search();
+  if (route.path != "/search") {
+    router.push("/search");
+  }
+}
+async function pushToFav() {
+  if (isInMyFav.value) {
+    await removefav(props.publishId);
+    await refreshFavStatus();
+    if (!isInMyFav.value) {
+      $q.notify({
+        color: "blue-5",
+        textColor: "white",
+        icon: "star",
+        message: "已取消收藏",
+      });
+    }
+    return;
+  }
+  const r = await addTofav(props.publishId);
+  if (r) {
+    $q.notify({
+      color: "green-5",
+      textColor: "white",
+      icon: "star",
+      message: "收藏成功！",
+    });
+    refreshFavStatus();
+  }
+}
+const info = ref({});
+const scores = ref([]);
+const finished = ref(false);
+onMounted(async () => {
+  const res = await axios.get(`/api/tabs_publish/${props.publishId}`);
+  const data = res.data;
+  // console.log(data);
+  info.value = data;
+  data["files_id"].forEach(async (file_id) => {
+    const _data = (await axios.get(`/api/tab_files/${file_id}/info`)).data;
+    _data["file_id"] = file_id;
+    scores.value.push(_data);
+  });
+  finished.value = true;
+  pushToHistory(data);
+});
+const router = useRouter();
+const pushToPlay = () => {
+  const gps = scores.value
+    .filter(
+      (x) =>
+        x.file_name.endsWith(".gp") ||
+        x.file_name.endsWith(".gp5") ||
+        x.file_name.endsWith(".gpx") ||
+        x.file_name.endsWith(".gp3") ||
+        x.file_name.endsWith(".gp4") ||
+        x.file_name.endsWith(".gp7")
+    )
+    .map((x) => x.file_id);
+
+  if (gps.length == 0) return;
+  router.push(`/tabs/${gps[0]}`);
+};
+const pushToPlayFile = (x) => {
+  if (
+    !(
+      x.file_name.endsWith(".gp") ||
+      x.file_name.endsWith(".gp5") ||
+      x.file_name.endsWith(".gpx") ||
+      x.file_name.endsWith(".gp3") ||
+      x.file_name.endsWith(".gp4") ||
+      x.file_name.endsWith(".gp7")
+    )
+  )
+    return;
+  router.push(`/tabs/${x.file_id}`);
+};
+const download = (x) => {
+  window.location = `/api/tab_files/${x.file_id}`;
+};
+const tab = ref("简介");
+const splitterModel = ref(12);
+refreshFavStatus();
+</script>
+
 <style scoped>
 @media (max-width: 1024px) {
   /* .justify-md-start {

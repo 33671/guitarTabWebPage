@@ -1,14 +1,32 @@
 <script setup>
+import { useRouter } from "vue-router";
+const router = useRouter();
 const props = defineProps({
   musicName: String,
   publishId: String,
   uploader: String,
   coverId: { type: String, required: false, default: "" },
 });
+function pushtoview() {
+  router.push("/publishView/" + props.publishId);
+}
+function waitpush() {
+  setTimeout(() => {
+    pushtoview();
+  }, 250);
+}
 </script>
 
 <template>
-  <q-card class="my-card position-relative" v-ripple>
+  <q-card
+    class="my-card position-relative"
+    v-ripple
+    @click="
+      ($event) => {
+        waitpush();
+      }
+    "
+  >
     <q-img
       :src="
         props.coverId != ''
