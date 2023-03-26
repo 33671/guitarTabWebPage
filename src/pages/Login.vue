@@ -1,6 +1,125 @@
 <template>
   <body>
-    <div class="login-register">
+    <div class="row items-center justify-center" v-if="$q.platform.is.mobile">
+      <div class="q-pa-md" style="max-width: 90vw">
+        <q-tab-panels
+          v-model="panel"
+          animated
+          swipeable
+          infinite
+          class="text-white shadow-2 rounded-borders"
+        >
+          <q-tab-panel name="login" class="bg-blue-8">
+            <div class="text-h5 text-center">登录</div>
+            <div class="text-subtitle-2 text-center">滑动至注册</div>
+            <q-input
+              outlined
+              type="email"
+              standout="bg-blue text-white"
+              v-model="form.name"
+              class="q-my-md"
+              label="邮箱"
+            />
+            <q-input
+              outlined
+              standout="bg-blue text-white"
+              type="password"
+              class="q-my-md"
+              v-model="form.password"
+              label="密码"
+            />
+
+            <div class="row items-center justify-start">
+              <div class="col-7">
+                <q-input
+                  type="Captcha"
+                  standout="bg-blue text-white"
+                  outlined
+                  class="q-mr-md"
+                  v-model="form.captcha"
+                  label="验证码"
+                />
+              </div>
+              <div class="col-5">
+                <img style="max-width: 120px" src="/api/captcha" alt="" />
+              </div>
+            </div>
+            <!-- <span class="errTips" v-if="emailError">* 密码填写错误 *</span> -->
+            <div class="row items-center justify-center q-my-md">
+              <q-btn
+                push=""
+                rounded
+                size="md"
+                color="blue-8"
+                label="登 录"
+                @click="login(form.name, form.password)"
+              />
+            </div>
+          </q-tab-panel>
+
+          <q-tab-panel name="register" class="bg-teal-5">
+            <div class="text-h6 text-center">注册</div>
+            <div class="text-subtitle-2 text-center">滑动至登录</div>
+            <q-input
+              outlined
+              type="text"
+              placeholder="用户名"
+              v-model="form.name"
+              standout="bg-teal text-white"
+              class="q-my-md"
+              label="用户名"
+            />
+            <span class="errTips" v-if="existed">* 用户名已经存在！ *</span>
+            <q-input
+              outlined
+              type="email"
+              standout="bg-teal text-white"
+              v-model="form.useremail"
+              class="q-my-md"
+              label="邮箱"
+            />
+
+            <q-input
+              outlined
+              standout="bg-teal text-white"
+              type="password"
+              placeholder="密码"
+              class="q-my-md"
+              v-model="form.password"
+              label="密码"
+            />
+
+            <div class="row items-center justify-start">
+              <div class="col-7">
+                <q-input
+                  type="Captcha"
+                  standout="bg-teal text-white"
+                  outlined
+                  class="q-mr-md"
+                  v-model="form.captcha"
+                  label="验证码"
+                />
+              </div>
+              <div class="col-5">
+                <img style="max-width: 120px" src="/api/captcha" alt="" />
+              </div>
+            </div>
+            <!-- <span class="errTips" v-if="emailError">* 密码填写错误 *</span> -->
+            <div class="row items-center justify-center q-my-md">
+              <q-btn
+                push=""
+                rounded
+                size="md"
+                color="teal-7"
+                label="注 册"
+                @click="userreg(form.name, form.useremail, form.captcha)"
+              />
+            </div>
+          </q-tab-panel>
+        </q-tab-panels>
+      </div>
+    </div>
+    <div class="login-register" v-else>
       <div class="contain row">
         <div class="small-box col-4" :class="{ active: isLogin }">
           <div class="small-contain" v-if="isLogin">
@@ -83,12 +202,12 @@
       </div>
       <!-- </v-card> -->
     </div>
-    <canvas> </canvas>
+    <!-- <canvas> </canvas> -->
   </body>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { axios } from "boot/axios";
 import { useQuasar } from "quasar";
 import { userlogin, loginStatus, userreg } from "./../composables/login";
@@ -102,6 +221,8 @@ async function login(name, password) {
     router.push("/home");
   }
 }
+const panel = ref("login");
+
 const dialog3 = ref(false);
 const emailError = ref(false);
 const passwordError = ref(false);
