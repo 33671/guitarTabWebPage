@@ -146,6 +146,7 @@ const naviItem = [
   { to: "/about", name: "关于", icon: "info" },
   { to: "/tuner", name: "调音器", icon: "audiotrack" },
   { to: "/metronome", name: "节拍器", icon: "alarm" },
+  { to: "/settings", name: "设置", icon: "settings" },
 ];
 function checkLogin() {
   if (!loginStatus.value) {

@@ -1,94 +1,99 @@
 <template>
   <div class="row justify-center">
-    <div class="col-12 col-lg-4"></div>
-    <div class="col-12 col-lg-4 q-px-sm">
-      <q-card class="my-card my-card-radius-10">
-        <q-card-section class="q-pa-md q-my-lg">
-          <div v-if="avatarPosted" style="width: 100%; height: 500px">
-            <vue-cropper
-              autoCrop
-              fixed
-              img="https://shnhz.github.io/shn-ui/img/Koala.jpg"
-            ></vue-cropper>
-          </div>
-          <div v-if="bannerPosted" style="width: 100%; height: 500px">
-            <vue-cropper
-              autoCrop
-              fixed
-              img="https://shnhz.github.io/shn-ui/img/Koala.jpg"
-            ></vue-cropper>
-          </div>
-          <q-form @submit="onSubmit" class="q-gutter-md">
-            <q-input filled v-model="tab_detail.tab_name" label="乐谱名 *" />
-            <q-input
-              filled
-              v-model="tab_detail.music_name"
-              label="原作歌曲名 *"
-            />
-            <q-select
-              transition-show="jump-up"
-              transition-hide="jump-up"
-              v-model="tab_detail.tab_type"
-              :options="guitaroptions"
-              label="谱类型"
-            /><q-select
-              label="添加标签"
-              filled
-              v-model="tab_detail.tags"
-              use-input
-              use-chips
-              multiple
-              hide-dropdown-icon
-              input-debounce="0"
-              new-value-mode="add-unique"
-            />
-
-            <div class="bg-grey-2 q-pa-sm rounded-borders">
-              Copyright相关
-              <q-option-group
-                name="is_reshiped"
-                v-model="tab_detail.is_reshiped"
-                :options="copyright"
-                color="primary"
-                inline
+    <div class="col-md-3 col-lg-4 col-12"></div>
+    <div class="col-md-6 col-lg-4 col-12">
+      <div class="q-mx-sm">
+        <q-card class="my-card my-card-radius-10">
+          <q-card-section class="q-pa-md q-my-lg">
+            <div v-if="avatarPosted" style="width: 100%; height: 500px">
+              <vue-cropper
+                autoCrop
+                fixed
+                img="https://shnhz.github.io/shn-ui/img/Koala.jpg"
+              ></vue-cropper>
+            </div>
+            <div v-if="bannerPosted" style="width: 100%; height: 500px">
+              <vue-cropper
+                autoCrop
+                fixed
+                img="https://shnhz.github.io/shn-ui/img/Koala.jpg"
+              ></vue-cropper>
+            </div>
+            <q-img
+              src="https://s1.ax1x.com/2023/03/13/ppQnDPS.md.jpg"
+              height="250px"
+            >
+              <!-- 用q-img做背景，在其字幕处显示id和头像等 -->
+              <div class="text-h5 absolute-bottom">
+                <q-item>
+                  <q-item-section avatar>
+                    <q-avatar class="">
+                      <img
+                        :src="'/api/user/avator/' + userInfo.avator_id"
+                        v-if="userInfo.avator_id != undefined"
+                      />
+                      <img
+                        src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
+                        v-else
+                      />
+                    </q-avatar>
+                  </q-item-section>
+                  <q-item-section caption>
+                    <q-item-label class="text-cyan-4">{{
+                      userInfo.nick
+                    }}</q-item-label>
+                    <q-item-label caption class="text-white"
+                      >@{{ userInfo.name }}</q-item-label
+                    >
+                  </q-item-section>
+                </q-item>
+              </div>
+            </q-img>
+            <q-form @submit="onSubmit" class="q-gutter-md q-mt-md">
+              <q-input filled v-model="tab_detail.word" label="留下点什么吧" />
+              <q-select
+                transition-show="jump-up"
+                transition-hide="jump-up"
+                v-model="tab_detail.musicChoice"
+                :options="musicChoice"
+                label="如果要做选择的话？"
               />
-            </div>
-            <q-input
-              filled
-              v-model="tab_detail.original_music_url"
-              label="原歌曲链接(请填写原歌曲任意的第三方链接) *"
-            />
-            <div>
-              <q-checkbox v-model="tab_detail.is_anonymous" label="匿名上传" />
-            </div>
-
-            <div class="flex justify-start">
-              <q-toggle v-model="accept" label="我接受用户协议" />
-            </div>
-            <div class="flex justify-end">
-              <q-btn label="发布" type="submit" color="primary" />
-              <q-btn
-                label="重设"
-                type="reset"
-                color="primary"
-                flat
-                class="q-ml-sm"
+              <q-input
+                filled
+                v-model="tab_detail.location"
+                label="如果想找到同好的话，写上大致活动范围吧"
               />
-            </div>
-          </q-form>
-        </q-card-section>
-      </q-card>
+              <div class="flex justify-start">
+                <q-toggle v-model="accept" label="我接受用户协议" />
+              </div>
+              <div class="flex justify-end">
+                <q-btn label="发布" type="submit" color="primary" />
+                <q-btn
+                  label="重设"
+                  type="reset"
+                  color="primary"
+                  flat
+                  class="q-ml-sm"
+                />
+              </div>
+            </q-form>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
-    <div class="col-12 col-lg-4"></div>
+    <div class="col-md-3 col-lg-4 col-12"></div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { axios } from "src/boot/axios";
+import useUserInfo from "src/composables/userInfo";
+
+const { userInfo, finished, userFollower, userFollowing } = useUserInfo({});
 const accept = ref(false);
 const submitResult = ref([]);
-const guitaroptions = ["吉他谱", "贝斯谱", "乐队总谱"];
+const musicChoice = ["吉他", "贝斯", "鼓", "键盘", "更少见更好的乐器"];
 const copyright = [
   {
     label: "转载",
@@ -101,11 +106,11 @@ const copyright = [
 ];
 const tab_detail = ref({
   files_id: [],
-  tab_name: null,
+  word: null,
   is_anonymous: false,
   original_music_url: null,
-  music_name: null,
-  tab_type: "吉他谱",
+  location: null,
+  musicChoice: "吉他",
   is_reshiped: null,
   description: "详情",
   tags: null,
@@ -153,3 +158,7 @@ const tab_detail = ref({
 const avatarPosted = ref(false);
 const bannerPosted = ref(false);
 </script>
+<style lang="sass" scoped>
+.q-img__content > div
+  padding: 6px
+</style>
