@@ -1,122 +1,133 @@
 <template>
   <body>
-    <div class="row items-center justify-center" v-if="$q.platform.is.mobile">
-      <div class="q-pa-md" style="max-width: 90vw">
-        <q-tab-panels
-          v-model="panel"
-          animated
-          swipeable
-          infinite
-          class="text-white shadow-2 rounded-borders"
-        >
-          <q-tab-panel name="login" class="bg-blue-8">
-            <div class="text-h5 text-center">登录</div>
-            <div class="text-subtitle-2 text-center">滑动至注册</div>
-            <q-input
-              outlined
-              type="email"
-              standout="bg-blue text-white"
-              v-model="form.name"
-              class="q-my-md"
-              label="邮箱"
-            />
-            <q-input
-              outlined
-              standout="bg-blue text-white"
-              type="password"
-              class="q-my-md"
-              v-model="form.password"
-              label="密码"
-            />
+    <div v-if="$q.platform.is.mobile">
+      <div class="row items-center justify-center">
+        <div class="q-pa-md" style="max-width: 90vw">
+          <q-tab-panels
+            v-model="panel"
+            animated
+            swipeable
+            infinite
+            class="text-white shadow-2 rounded-borders"
+          >
+            <q-tab-panel name="login" class="bg-blue-8">
+              <div class="text-h5 text-center">Welcome</div>
+              <div class="text-subtitle-2 text-center">你好</div>
+              <q-input
+                outlined
+                type="email"
+                standout="bg-blue text-white"
+                v-model="form.name"
+                class="q-my-md"
+                label="邮箱"
+              />
+              <q-input
+                outlined
+                standout="bg-blue text-white"
+                type="password"
+                class="q-my-md"
+                v-model="form.password"
+                label="密码"
+              />
 
-            <div class="row items-center justify-start">
-              <div class="col-7">
-                <q-input
-                  type="Captcha"
-                  standout="bg-blue text-white"
-                  outlined
-                  class="q-mr-md"
-                  v-model="form.captcha"
-                  label="验证码"
+              <div class="row items-center justify-start">
+                <div class="col-7">
+                  <q-input
+                    type="Captcha"
+                    standout="bg-blue text-white"
+                    outlined
+                    class="q-mr-md"
+                    v-model="form.captcha"
+                    label="验证码"
+                  />
+                </div>
+                <div class="col-5">
+                  <img style="max-width: 120px" src="/api/captcha" alt="" />
+                </div>
+              </div>
+              <!-- <span class="errTips" v-if="emailError">* 密码填写错误 *</span> -->
+              <div class="row items-center justify-center q-my-md">
+                <q-btn
+                  outline
+                  size="md"
+                  color="blue-1"
+                  label="登 录"
+                  @click="login(form.name, form.password)"
                 />
               </div>
-              <div class="col-5">
-                <img style="max-width: 120px" src="/api/captcha" alt="" />
-              </div>
-            </div>
-            <!-- <span class="errTips" v-if="emailError">* 密码填写错误 *</span> -->
-            <div class="row items-center justify-center q-my-md">
-              <q-btn
-                push=""
-                rounded
-                size="md"
-                color="blue-8"
-                label="登 录"
-                @click="login(form.name, form.password)"
+            </q-tab-panel>
+
+            <q-tab-panel name="register" class="bg-teal-5">
+              <div class="text-h6 text-center">Welcome</div>
+              <div class="text-subtitle-2 text-center">你好，新朋友</div>
+              <q-input
+                outlined
+                type="text"
+                placeholder="用户名"
+                v-model="form.name"
+                standout="bg-teal text-white"
+                class="q-my-md"
+                label="用户名"
               />
-            </div>
-          </q-tab-panel>
+              <span class="errTips" v-if="existed">* 用户名已经存在！ *</span>
+              <q-input
+                outlined
+                type="email"
+                standout="bg-teal text-white"
+                v-model="form.useremail"
+                class="q-my-md"
+                label="邮箱"
+              />
 
-          <q-tab-panel name="register" class="bg-teal-5">
-            <div class="text-h6 text-center">注册</div>
-            <div class="text-subtitle-2 text-center">滑动至登录</div>
-            <q-input
-              outlined
-              type="text"
-              placeholder="用户名"
-              v-model="form.name"
-              standout="bg-teal text-white"
-              class="q-my-md"
-              label="用户名"
-            />
-            <span class="errTips" v-if="existed">* 用户名已经存在！ *</span>
-            <q-input
-              outlined
-              type="email"
-              standout="bg-teal text-white"
-              v-model="form.useremail"
-              class="q-my-md"
-              label="邮箱"
-            />
+              <q-input
+                outlined
+                standout="bg-teal text-white"
+                type="password"
+                placeholder="密码"
+                class="q-my-md"
+                v-model="form.password"
+                label="密码"
+              />
 
-            <q-input
-              outlined
-              standout="bg-teal text-white"
-              type="password"
-              placeholder="密码"
-              class="q-my-md"
-              v-model="form.password"
-              label="密码"
-            />
-
-            <div class="row items-center justify-start">
-              <div class="col-7">
-                <q-input
-                  type="Captcha"
-                  standout="bg-teal text-white"
-                  outlined
-                  class="q-mr-md"
-                  v-model="form.captcha"
-                  label="验证码"
+              <div class="row items-center justify-start">
+                <div class="col-7">
+                  <q-input
+                    type="Captcha"
+                    standout="bg-teal text-white"
+                    outlined
+                    class="q-mr-md"
+                    v-model="form.captcha"
+                    label="验证码"
+                  />
+                </div>
+                <div class="col-5">
+                  <img style="max-width: 120px" src="/api/captcha" alt="" />
+                </div>
+              </div>
+              <!-- <span class="errTips" v-if="emailError">* 密码填写错误 *</span> -->
+              <div class="row items-center justify-center q-my-md">
+                <q-btn
+                  outline
+                  size="md"
+                  color="teal-1"
+                  label="注 册"
+                  @click="userreg(form.name, form.useremail, form.captcha)"
                 />
               </div>
-              <div class="col-5">
-                <img style="max-width: 120px" src="/api/captcha" alt="" />
-              </div>
-            </div>
-            <!-- <span class="errTips" v-if="emailError">* 密码填写错误 *</span> -->
-            <div class="row items-center justify-center q-my-md">
-              <q-btn
-                push=""
-                rounded
-                size="md"
-                color="teal-7"
-                label="注 册"
-                @click="userreg(form.name, form.useremail, form.captcha)"
-              />
-            </div>
-          </q-tab-panel>
-        </q-tab-panels>
+            </q-tab-panel>
+          </q-tab-panels>
+        </div>
+      </div>
+      <div class="row items-center justify-center q-my-md">
+        <q-tabs v-model="panel">
+          <q-tab name="login" class="text-blue-8" icon="login" label="登录" />
+          <q-tab
+            name="register"
+            class="text-cyan-7"
+            icon="person_add_alt"
+            label="注册"
+          />
+        </q-tabs>
       </div>
     </div>
     <div class="login-register" v-else>
@@ -500,7 +511,7 @@ a:hover {
 .btitle {
   font-size: 1.5em;
   font-weight: bold;
-  color: rgb(57, 167, 176);
+  color: rgb(41, 128, 215);
 }
 .bform {
   width: 100%;
@@ -534,14 +545,14 @@ a:hover {
   border-radius: 24px;
   border: none;
   outline: none;
-  background-color: rgb(57, 167, 176);
+  background-color: rgb(25, 118, 210);
   color: #fff;
   font-size: 0.9em;
   cursor: pointer;
 }
 .small-box {
   height: 100%;
-  background: linear-gradient(135deg, rgb(57, 167, 176), rgb(56, 183, 145));
+  background: linear-gradient(135deg, rgb(39, 133, 227), rgb(24, 118, 211));
   transform: translateX(200%);
   transition: all 1s;
   border-top-left-radius: inherit;
