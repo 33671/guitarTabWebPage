@@ -17,6 +17,7 @@
             :data-index="index"
           >
             <div class="newtab" :key="index">
+              <q-separator spaced="lg" color="blue-8" class="q-mb-none" />
               <q-card class="q-mb-md" flat bordered>
                 <q-card-section>
                   <div class="row">
