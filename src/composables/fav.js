@@ -1,10 +1,10 @@
 import { onMounted, ref, unref } from "vue";
 import { axios } from "../boot/axios";
 import { getUserInfo } from "src/utils/user";
-const favs = ref([]);
-const pageCount = ref(1);
 
 const usefav = ({ user = "mine" } = { user: "mine" }) => {
+  const favs = ref([]);
+  const pageCount = ref(1);
   getUserInfo(user).then((info) => {
     console.log(info);
     pageCount.value = Math.ceil(info.favourites_count / 6);
@@ -15,6 +15,14 @@ const usefav = ({ user = "mine" } = { user: "mine" }) => {
       console.log(resp.data);
     });
   });
+  async function turnToPage(num) {
+    console.log("turnToPage: " + num);
+    const name = (await getUserInfo()).name;
+    const resp = await axios.get(`/api/user/${name}/fav?page=${num}`);
+    if (resp.status === 200) {
+      favs.value = resp.data;
+    }
+  }
   return {
     favs,
     pageCount,
@@ -35,14 +43,6 @@ async function addTofav(tab_id) {
 async function removefav(tab_id) {
   const response = await axios.delete(`/api/tabs_publish/${tab_id}/fav`);
   return response.status === 200;
-}
-async function turnToPage(num) {
-  console.log("turnToPage: " + num);
-  const name = (await getUserInfo()).name;
-  const resp = await axios.get(`/api/user/${name}/fav?page=${num}`);
-  if (resp.status === 200) {
-    favs.value = resp.data;
-  }
 }
 
 export default usefav;

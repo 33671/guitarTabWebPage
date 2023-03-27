@@ -1,10 +1,20 @@
 import { onMounted, ref, unref } from "vue";
 import { axios } from "../boot/axios";
 import { getUserInfo } from "src/utils/user";
-const uploads = ref([]);
-const uploadPageCount = ref(1);
-const user_name = ref("mine");
+
 function useUploads({ user = "mine" } = { user: "mine" }) {
+  const uploads = ref([]);
+  const uploadPageCount = ref(1);
+  const user_name = ref("mine");
+  async function turnToUploadPage(page) {
+    console.log("turnToPage: " + page);
+    const resp = await axios.get(
+      `/api/user/${user_name.value}/publishes?page=${page}`
+    );
+    if (resp.status === 200) {
+      uploads.value = resp.data;
+    }
+  }
   onMounted(async () => {
     if (user != "mine") {
       user = (await getUserInfo(user)).name;
@@ -26,13 +36,5 @@ function useUploads({ user = "mine" } = { user: "mine" }) {
     turnToUploadPage,
   };
 }
-async function turnToUploadPage(page) {
-  console.log("turnToPage: " + page);
-  const resp = await axios.get(
-    `/api/user/${user_name.value}/publishes?page=${page}`
-  );
-  if (resp.status === 200) {
-    uploads.value = resp.data;
-  }
-}
+
 export default useUploads;
