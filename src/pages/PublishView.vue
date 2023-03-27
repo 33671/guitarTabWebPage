@@ -108,81 +108,7 @@
                   </q-card-section>
                 </q-tab-panel>
                 <q-tab-panel class="q-pa-none q-pa-md-sm" name="评论">
-                  <q-input
-                    outlined
-                    bottom-slots
-                    v-model="commentText"
-                    label="评论"
-                    counter
-                    maxlength="500"
-                  >
-                    <template v-slot:before>
-                      <q-avatar rounded color="primary" text-color="white">
-                        <!-- <img
-                          v-if="hasAvatar"
-                          src="https://cdn.quasar.dev/img/boy-avatar.png"
-                        /> -->
-                        <span>G</span>
-                      </q-avatar>
-                    </template>
-
-                    <template v-slot:append>
-                      <q-icon
-                        v-if="commentText !== ''"
-                        name="close"
-                        @click="commentText = ''"
-                        class="cursor-pointer"
-                      />
-                    </template>
-
-                    <template v-slot:hint> </template>
-
-                    <template v-slot:after>
-                      <q-btn
-                        round
-                        dense
-                        flat
-                        icon="send"
-                        @click="sendComment(commentText)"
-                      />
-                    </template>
-                  </q-input>
-                  <q-list flat>
-                    <q-item
-                      v-for="(item, index) in comments"
-                      :key="index"
-                      class="q-pl-none"
-                    >
-                      <q-item-section top avatar>
-                        <q-avatar rounded color="primary" text-color="white">
-                          <span>G</span>
-                        </q-avatar>
-                      </q-item-section>
-
-                      <q-item-section>
-                        <q-item-label caption>{{ item.user }} </q-item-label>
-                        <q-item-label>{{ item.text }}</q-item-label>
-                      </q-item-section>
-
-                      <!-- <q-item-section side top>
-                        <q-badge label="10k" />
-                      </q-item-section> -->
-                    </q-item>
-                    <!-- {{ comments }} -->
-                  </q-list>
-                  <div class="q-pa-lg flex flex-center">
-                    <q-pagination
-                      v-model="currentCommentPage"
-                      :max="totalPageNum"
-                      @update:model-value="turnToPage($event)"
-                      direction-links
-                      boundary-links
-                      icon-first="skip_previous"
-                      icon-last="skip_next"
-                      icon-prev="fast_rewind"
-                      icon-next="fast_forward"
-                    />
-                  </div>
+                  <CommentCard :publish-id="props.publishId"></CommentCard>
                 </q-tab-panel>
               </q-tab-panels>
             </template>
@@ -190,57 +116,7 @@
         </q-card>
       </div>
       <div class="col-md-3 col-12">
-        <q-card>
-          <q-card-section>
-            <div class="text-subtitle1">
-              关于
-              <q-icon name="report" size="1em" />
-            </div>
-            <div style="width: 100%">
-              <q-list dense class="rounded-borders" v-if="finished">
-                <q-item>
-                  <q-item-section> ID </q-item-section>
-                  <q-item-section side> {{ props.publishId }} </q-item-section>
-                </q-item>
-
-                <q-item>
-                  <q-item-section> 最后修改 </q-item-section>
-                  <q-item-section side>
-                    {{ info.modified_date }}
-                  </q-item-section>
-                </q-item>
-                <q-item>
-                  <q-item-section> 上传时间 </q-item-section>
-                  <q-item-section side>
-                    {{ info.publish_date }}
-                  </q-item-section>
-                </q-item>
-                <q-item>
-                  <q-item-section> 点击量 </q-item-section>
-                  <q-item-section side> 27232736 </q-item-section>
-                </q-item>
-                <q-item>
-                  <q-item-section>下载量 </q-item-section>
-                  <q-item-section side> 21823 </q-item-section>
-                </q-item>
-                <q-item>
-                  <q-item-section>歌曲名 </q-item-section>
-                  <q-item-section side> {{ info.music_name }} </q-item-section>
-                </q-item>
-                <q-item>
-                  <q-item-section> 原曲地址 </q-item-section>
-                  <q-item-section side>
-                    {{ info.original_music_url }}
-                  </q-item-section>
-                </q-item>
-                <q-item>
-                  <q-item-section> 类型 </q-item-section>
-                  <q-item-section side> {{ info.tab_type }} </q-item-section>
-                </q-item>
-              </q-list>
-            </div>
-          </q-card-section>
-        </q-card>
+        <TabPublishInfoTable :info="info"></TabPublishInfoTable>
         <q-card class="q-mt-sm">
           <q-card-section>
             <div class="text-subtitle1">谱文件</div>
@@ -291,7 +167,8 @@ import { useQuasar } from "quasar";
 import { axios } from "src/boot/axios";
 import usefav from "src/composables/fav";
 import useHistory from "src/composables/history";
-import useComments from "src/composables/useComments";
+import CommentCard from "src/components/CommentCard.vue";
+import TabPublishInfoTable from "src/components/TabPublishInfoTable.vue";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import useSearch from "./../search_input";
@@ -299,12 +176,11 @@ const route = useRoute();
 const { pushToHistory } = useHistory();
 const { searchText, search } = useSearch();
 const { isInfav, removefav, addTofav } = usefav();
-const { comments, sendComment, totalPageNum, currentCommentPage, turnToPage } =
-  useComments(props.publishId);
+
 const props = defineProps({
   publishId: String,
 });
-const commentText = ref("");
+
 const $q = useQuasar();
 const isInMyFav = ref(false);
 async function refreshFavStatus() {
