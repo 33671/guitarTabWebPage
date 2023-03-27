@@ -2,6 +2,17 @@
   <body>
     <div v-if="$q.platform.is.mobile">
       <div class="row items-center justify-center">
+        <q-tabs v-model="panel">
+          <q-tab name="login" class="text-blue-8" icon="login" label="登录" />
+          <q-tab
+            name="register"
+            class="text-cyan-7"
+            icon="person_add_alt"
+            label="注册"
+          />
+        </q-tabs>
+      </div>
+      <div class="row items-center justify-center">
         <div class="q-pa-md" style="max-width: 90vw">
           <q-tab-panels
             v-model="panel"
@@ -117,17 +128,6 @@
             </q-tab-panel>
           </q-tab-panels>
         </div>
-      </div>
-      <div class="row items-center justify-center q-my-md">
-        <q-tabs v-model="panel">
-          <q-tab name="login" class="text-blue-8" icon="login" label="登录" />
-          <q-tab
-            name="register"
-            class="text-cyan-7"
-            icon="person_add_alt"
-            label="注册"
-          />
-        </q-tabs>
       </div>
     </div>
     <div class="login-register" v-else>
