@@ -145,7 +145,7 @@ const naviItem = [
   { to: "/publish", name: "发布", icon: "drafts" },
   { to: "/about", name: "关于", icon: "info" },
   { to: "/tuner", name: "调音器", icon: "audiotrack" },
-  { to: "/metronome", name: "节拍器", icon: "alarm" },
+  { to: "/metronome", name: "节拍器", icon: "mdi-metronome" },
   { to: "/settings", name: "设置", icon: "settings" },
 ];
 function checkLogin() {
