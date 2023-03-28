@@ -25,9 +25,9 @@
             >
               <!-- 用q-img做背景，在其字幕处显示id和头像等 -->
               <div class="text-h5 absolute-bottom">
-                <q-item>
+                <q-item class="">
                   <q-item-section avatar>
-                    <q-avatar class="">
+                    <q-avatar class="hvr-grow" size="50px" font-size="100px">
                       <img
                         :src="'/api/user/avator/' + userInfo.avator_id"
                         v-if="userInfo.avator_id != undefined"
@@ -49,8 +49,8 @@
                 </q-item>
               </div>
             </q-img>
-            <q-form @submit="onSubmit" class="q-gutter-md q-mt-md">
-              <q-input filled v-model="tab_detail.word" label="留下点什么吧" />
+            <q-form @submit="onSubmit" class="q-gutter-lg q-mt-md">
+              <q-input filled v-model="tab_detail.word" label="个人签名" />
               <q-select
                 transition-show="jump-up"
                 transition-hide="jump-up"
@@ -61,8 +61,28 @@
               <q-input
                 filled
                 v-model="tab_detail.location"
-                label="如果想找到同好的话，写上大致活动范围吧"
+                label="大致活动范围"
               />
+              <q-editor
+                v-model="tab_detail.description"
+                ref="editorRef"
+                class="col-10 col-md-11"
+                toolbar-text-color="white"
+                toolbar-toggle-color="yellow-8"
+                toolbar-bg="deep-purple-4"
+                :toolbar="[
+                  ['bold', 'italic', 'underline'],
+                  [
+                    {
+                      label: $q.lang.editor.formatting,
+                      icon: $q.iconSet.editor.formatting,
+                      list: 'no-icons',
+                      options: ['p', 'h3', 'h4', 'h5', 'h6', 'code'],
+                    },
+                  ],
+                ]"
+              >
+              </q-editor>
               <div class="flex justify-start">
                 <q-toggle v-model="accept" label="我接受用户协议" />
               </div>
@@ -92,30 +112,17 @@ import useUserInfo from "src/composables/userInfo";
 
 const { userInfo, finished, userFollower, userFollowing } = useUserInfo({});
 const accept = ref(false);
-const submitResult = ref([]);
 const musicChoice = ["吉他", "贝斯", "鼓", "键盘", "更少见更好的乐器"];
-const copyright = [
-  {
-    label: "转载",
-    value: true,
-  },
-  {
-    label: "自制",
-    value: false,
-  },
-];
+
 const tab_detail = ref({
   files_id: [],
   word: null,
-  is_anonymous: false,
   original_music_url: null,
   location: null,
   musicChoice: "吉他",
-  is_reshiped: null,
-  description: "详情",
+  description: "",
   tags: null,
   cover_file_id: "",
-  themeColor: "blue-8",
 });
 // function uploaded(info) {
 //   tab_detail.value.files_id.push(JSON.parse(info.xhr.response).tab_file_id);
@@ -158,7 +165,25 @@ const tab_detail = ref({
 const avatarPosted = ref(false);
 const bannerPosted = ref(false);
 </script>
-<style lang="sass" scoped>
-.q-img__content > div
-  padding: 6px
+<style lang="scss" scoped>
+.q-img__content > div {
+  padding: 3px;
+}
+.hvr-grow {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+}
+.hvr-grow:hover,
+.hvr-grow:focus,
+.hvr-grow:active {
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}
 </style>

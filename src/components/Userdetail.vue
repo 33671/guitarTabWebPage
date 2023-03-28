@@ -4,9 +4,9 @@
       <q-img src="https://s1.ax1x.com/2023/03/13/ppQnDPS.md.jpg" height="250px">
         <!-- 用q-img做背景，在其字幕处显示id和头像等 -->
         <div class="text-h5 absolute-bottom">
-          <q-item>
+          <q-item class="q-py-xm q-px-sm">
             <q-item-section avatar>
-              <q-avatar class="">
+              <q-avatar class="" size="46px">
                 <img
                   :src="'/api/user/avator/' + userInfo.avator_id"
                   v-if="userInfo.avator_id != undefined"
@@ -26,17 +26,38 @@
               >
             </q-item-section>
             <q-item-section side>
-              <q-item-label>
-                <q-btn color="light-blue-8 " no-wrap>
-                  <div class="">关注</div>
-                </q-btn>
-              </q-item-label>
+              <div class="row q-gutter-md" style="margin-top: 7px">
+                <div class="col self-end hvr-grow">
+                  <a href="https://space.bilibili.com/10819593">
+                    <bilibili-icon style="fill: rgb(251, 114, 153)" size="26"
+                  /></a>
+                </div>
+                <div class="col self-end hvr-grow">
+                  <q-icon
+                    size="26px"
+                    name="mdi-qqchat"
+                    color="blue"
+                    style="margin-bottom: 7px"
+                  />
+                </div>
+                <div class="col self-end hvr-grow">
+                  <a href="https://space.bilibili.com/10819593">
+                    <wechat-icon style="fill: rgb(60, 176, 53)" size="26" />
+                  </a>
+                </div>
+              </div>
             </q-item-section>
           </q-item>
         </div>
       </q-img>
 
-      <div class="q-pa-md" style="max-width: 500px">
+      <div class="q-pa-md" style="max-width: 600px">
+        <div class="row justify-center">
+          <q-btn color="light-blue-8 " no-wrap>
+            <div class="">关注</div>
+          </q-btn>
+        </div>
+
         <q-list>
           <q-item clickable v-ripple>
             <q-item-section avatar>
@@ -168,6 +189,8 @@
 <script setup>
 import useUserInfo from "src/composables/userInfo";
 import { ref } from "vue";
+import { BilibiliIcon, WechatIcon } from "vue3-simple-icons";
+
 const props = defineProps({
   username: String,
 });
@@ -178,9 +201,29 @@ const { userInfo, finished, userFollower, userFollowing } = useUserInfo({
 console.log(userInfo);
 const tab = ref("");
 </script>
-<style lang="sass" scoped>
-.q-img__content > div
-  padding: 6px
-.my-card
-  width: 600px
+<style lang="css" scoped>
+.q-img__content > div {
+  padding: 6px;
+}
+
+.my-card {
+  width: 600px;
+}
+.hvr-grow {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+}
+.hvr-grow:hover,
+.hvr-grow:focus,
+.hvr-grow:active {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
 </style>
