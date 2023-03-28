@@ -17,7 +17,7 @@ const usefav = ({ user = "mine" } = { user: "mine" }) => {
   });
   async function turnToPage(num) {
     console.log("turnToPage: " + num);
-    const name = (await getUserInfo()).name;
+    const name = (await getUserInfo(user)).name;
     const resp = await axios.get(`/api/user/${name}/fav?page=${num}`);
     if (resp.status === 200) {
       favs.value = resp.data;

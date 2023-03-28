@@ -60,8 +60,8 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref, watch } from "vue";
-import { axios } from "boot/axios";
+import { ref, watch } from "vue";
+
 import TabCard from "./TabCard.vue";
 import useSearch from "./../search_input";
 import useHistory from "src/composables/history";
@@ -76,7 +76,9 @@ const { uploads, uploadPageCount, turnToUploadPage } = useUploads({
 });
 const currentuploadPage = ref(1);
 const { history } = useHistory();
-const { favs, turnToPage, pageCount } = usefav({ user: props.username });
+const { favs, turnToPage, pageCount } = usefav({
+  user: props.username ?? "mine",
+});
 watch(currentFavPage, (page, prev) => {
   turnToPage(page);
 });

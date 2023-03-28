@@ -104,13 +104,14 @@
 </template>
 <script setup>
 import useComments from "src/composables/useComments";
-import { ref, reactive } from "vue";
+import { reactive } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const props = defineProps({
   publishId: String,
 });
 function ReplyToComment(id, user) {
+  commentText.value = "";
   document
     .getElementsByClassName("inputFrame")[0]
     .scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
