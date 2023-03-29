@@ -5,29 +5,17 @@
       <div class="q-mx-sm">
         <q-card class="my-card my-card-radius-10">
           <q-card-section class="q-pa-md q-my-lg">
-            <div v-if="avatarPosted" style="width: 100%; height: 500px">
-              <vue-cropper
-                autoCrop
-                fixed
-                img="https://shnhz.github.io/shn-ui/img/Koala.jpg"
-              ></vue-cropper>
-            </div>
-            <div v-if="bannerPosted" style="width: 100%; height: 500px">
-              <vue-cropper
-                autoCrop
-                fixed
-                img="https://shnhz.github.io/shn-ui/img/Koala.jpg"
-              ></vue-cropper>
-            </div>
             <q-img
               src="https://s1.ax1x.com/2023/03/13/ppQnDPS.md.jpg"
               height="250px"
+              class="hvr-grow"
+              @click="avatarBox = true"
             >
               <!-- 用q-img做背景，在其字幕处显示id和头像等 -->
               <div class="text-h5 absolute-bottom">
                 <q-item class="">
                   <q-item-section avatar>
-                    <q-avatar class="hvr-grow" size="50px" font-size="100px">
+                    <q-avatar size="50px" font-size="100px">
                       <img
                         :src="'/api/user/avator/' + userInfo.avator_id"
                         v-if="userInfo.avator_id != undefined"
@@ -49,6 +37,99 @@
                 </q-item>
               </div>
             </q-img>
+            <q-dialog v-model="avatarBox">
+              <q-card style="width: 700px; max-width: 80vw">
+                <q-card-section>
+                  <div class="text-h6">更改头像与背景</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                  <q-file
+                    filled
+                    bottom-slots
+                    v-model="avatarBeforeCutout"
+                    @update:model-value="avatarChooseEvent"
+                    label="上传头像"
+                    counter
+                  >
+                    <template v-slot:prepend>
+                      <q-icon name="cloud_upload" @click.stop />
+                    </template>
+                    <template v-slot:append>
+                      <q-icon
+                        name="close"
+                        @click.stop="avatarBeforeCutout = null"
+                        class="cursor-pointer"
+                      />
+                    </template>
+                    <template v-slot:hint>提示</template>
+                  </q-file>
+                  <div v-if="avatarPosted" style="width: 100%; height: 500px">
+                    <vue-cropper
+                      autoCrop
+                      fixed
+                      maxImgSize="1000"
+                      limitMinSize="100"
+                      centerBox
+                      :img="avatarUrl"
+                    ></vue-cropper>
+                  </div>
+                </q-card-section>
+
+                <q-card-actions align="right" class="bg-white text-teal">
+                  <q-btn flat label="更改背景" @click="bannerBox = true" />
+
+                  <q-btn flat label="上传头像" v-close-popup />
+                </q-card-actions>
+              </q-card>
+            </q-dialog>
+            <q-dialog
+              v-model="bannerBox"
+              transition-show="scale"
+              transition-hide="scale"
+            >
+              <q-card style="width: 700px; max-width: 80vw">
+                <q-card-section>
+                  <div class="text-h6">更改头像与背景</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                  <q-file
+                    filled
+                    bottom-slots
+                    v-model="bannerBeforeCutout"
+                    @update:model-value="bannerChooseEvent"
+                    label="上传背景"
+                    counter
+                  >
+                    <template v-slot:prepend>
+                      <q-icon name="cloud_upload" @click.stop />
+                    </template>
+                    <template v-slot:append>
+                      <q-icon
+                        name="close"
+                        @click.stop="bannerBeforeCutout = null"
+                        class="cursor-pointer"
+                      />
+                    </template>
+                    <template v-slot:hint>提示</template>
+                  </q-file>
+                  <div v-if="bannerPosted" style="width: 100%; height: 500px">
+                    <vue-cropper
+                      autoCrop
+                      maxImgSize="1500"
+                      :limitMinSize="bannerrange"
+                      centerBox
+                      :img="bannerUrl"
+                    ></vue-cropper>
+                  </div>
+                </q-card-section>
+
+                <q-card-actions align="right" class="bg-white text-teal">
+                  <q-btn flat label="上传背景" v-close-popup />
+                </q-card-actions>
+              </q-card>
+            </q-dialog>
             <q-form @submit="onSubmit" class="q-gutter-lg q-mt-md">
               <q-input filled v-model="tab_detail.word" label="个人签名" />
               <q-select
@@ -56,7 +137,7 @@
                 transition-hide="jump-up"
                 v-model="tab_detail.musicChoice"
                 :options="musicChoice"
-                label="如果要做选择的话？"
+                label="使用最多的乐器"
               />
               <q-input
                 filled
@@ -109,11 +190,19 @@
 import { ref } from "vue";
 import { axios } from "src/boot/axios";
 import useUserInfo from "src/composables/userInfo";
-
+const bannerrange = new Array(200, 70);
 const { userInfo, finished, userFollower, userFollowing } = useUserInfo({});
 const accept = ref(false);
-const musicChoice = ["吉他", "贝斯", "鼓", "键盘", "更少见更好的乐器"];
+const musicChoice = ["吉他", "贝斯", "鼓", "键盘", "其他的乐器"];
+const avatarBox = ref(false);
+const avatarPosted = ref(false);
 
+const avatarBeforeCutout = ref(false);
+const avatarUrl = ref(false);
+const bannerBox = ref(false);
+const bannerPosted = ref(false);
+const bannerBeforeCutout = ref(false);
+const bannerUrl = ref(false);
 const tab_detail = ref({
   files_id: [],
   word: null,
@@ -124,6 +213,19 @@ const tab_detail = ref({
   tags: null,
   cover_file_id: "",
 });
+function avatarChooseEvent() {
+  avatarPosted.value = true;
+  console.log(avatarBeforeCutout.value);
+  avatarUrl.value = window.URL.createObjectURL(avatarBeforeCutout.value);
+  console.log(avatarUrl.value);
+}
+function bannerChooseEvent() {
+  bannerPosted.value = true;
+  console.log(bannerBeforeCutout.value);
+  bannerUrl.value = window.URL.createObjectURL(bannerBeforeCutout.value);
+  console.log(bannerUrl.value);
+}
+
 // function uploaded(info) {
 //   tab_detail.value.files_id.push(JSON.parse(info.xhr.response).tab_file_id);
 //   $q.notify({
@@ -161,9 +263,6 @@ const tab_detail = ref({
 //     message: "上传成功！稍后刷新页面",
 //   });
 // }
-
-const avatarPosted = ref(false);
-const bannerPosted = ref(false);
 </script>
 <style lang="scss" scoped>
 .q-img__content > div {
@@ -183,7 +282,7 @@ const bannerPosted = ref(false);
 .hvr-grow:hover,
 .hvr-grow:focus,
 .hvr-grow:active {
-  -webkit-transform: scale(1.2);
-  transform: scale(1.2);
+  -webkit-transform: scale(1.03);
+  transform: scale(1.03);
 }
 </style>
