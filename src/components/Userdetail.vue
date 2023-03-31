@@ -189,7 +189,7 @@
 <script setup>
 import useUserInfo from "src/composables/userInfo";
 import { ref } from "vue";
-import { BilibiliIcon, WechatIcon } from "vue3-simple-icons";
+// import { BilibiliIcon, WechatIcon } from "vue3-simple-icons";
 
 const props = defineProps({
   username: String,
