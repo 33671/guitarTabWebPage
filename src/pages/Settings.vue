@@ -3,10 +3,10 @@
     <div class="col-md-3 col-lg-4 col-12"></div>
     <div class="col-md-6 col-lg-4 col-12">
       <div class="q-mx-sm">
-        <q-card class="my-card my-card-radius-10">
+        <q-card class="my-card my-card-radius-10" v-if="finished">
           <q-card-section class="q-pa-md q-my-lg">
             <q-img
-              src="https://s1.ax1x.com/2023/03/13/ppQnDPS.md.jpg"
+              :src="'/api/user/avator/' + userdetail.reserve_field.banner_id"
               height="250px"
               class="hvr-grow"
               @click="avatarBox = true"
@@ -17,8 +17,8 @@
                   <q-item-section avatar>
                     <q-avatar size="50px" font-size="100px">
                       <img
-                        :src="'/api/user/avator/' + userInfo.avator_id"
-                        v-if="userInfo.avator_id != undefined"
+                        :src="'/api/user/avator/' + userdetail.avator_id"
+                        v-if="userdetail.avator_id != undefined"
                       />
                       <img
                         src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
@@ -28,10 +28,10 @@
                   </q-item-section>
                   <q-item-section caption>
                     <q-item-label class="text-cyan-4">{{
-                      userInfo.nick
+                      userdetail.nick
                     }}</q-item-label>
                     <q-item-label caption class="text-white"
-                      >@{{ userInfo.name }}</q-item-label
+                      >@{{ userdetail.name }}</q-item-label
                     >
                   </q-item-section>
                 </q-item>
@@ -66,10 +66,12 @@
                   </q-file>
                   <div v-if="avatarPosted" style="width: 100%; height: 500px">
                     <vue-cropper
+                      ref="cropper"
                       autoCrop
                       fixed
                       maxImgSize="1000"
                       limitMinSize="100"
+                      outputSize="0.1"
                       centerBox
                       :img="avatarUrl"
                     ></vue-cropper>
@@ -79,7 +81,12 @@
                 <q-card-actions align="right" class="bg-white text-teal">
                   <q-btn flat label="更改背景" @click="bannerBox = true" />
 
-                  <q-btn flat label="上传头像" v-close-popup />
+                  <q-btn
+                    flat
+                    label="上传头像"
+                    v-close-popup
+                    @click="uploadAvator"
+                  />
                 </q-card-actions>
               </q-card>
             </q-dialog>
@@ -116,36 +123,81 @@
                   </q-file>
                   <div v-if="bannerPosted" style="width: 100%; height: 500px">
                     <vue-cropper
+                      ref="cropper_banner"
                       autoCrop
                       maxImgSize="1500"
                       :limitMinSize="bannerrange"
                       centerBox
+                      outputSize="0.5"
                       :img="bannerUrl"
                     ></vue-cropper>
                   </div>
                 </q-card-section>
 
                 <q-card-actions align="right" class="bg-white text-teal">
-                  <q-btn flat label="上传背景" v-close-popup />
+                  <q-btn
+                    flat
+                    label="上传背景"
+                    v-close-popup
+                    @click="uploadBanner"
+                  />
                 </q-card-actions>
               </q-card>
             </q-dialog>
-            <q-form @submit="onSubmit" class="q-gutter-lg q-mt-md">
-              <q-input filled v-model="tab_detail.word" label="个人签名" />
+            <q-form class="q-gutter-lg q-mt-md">
+              <q-input filled v-model="userdetail.nick" label="昵称" />
+
+              <q-input filled v-model="userdetail.bio" label="个人签名" />
               <q-select
                 transition-show="jump-up"
                 transition-hide="jump-up"
-                v-model="tab_detail.musicChoice"
+                v-model="userdetail.reserve_field.musicChoice"
                 :options="musicChoice"
                 label="使用最多的乐器"
               />
               <q-input
                 filled
-                v-model="tab_detail.location"
+                v-model="userdetail.reserve_field.location"
                 label="大致活动范围"
-              />
+              /><q-input
+                filled
+                v-model="userdetail.reserve_field.social.bilibili"
+                label="BiliBili个人空间链接"
+                ><template v-slot:prepend>
+                  <q-icon size="26px">
+                    <img src="/icons/Bilibili.svg" alt="" />
+                  </q-icon>
+                </template> </q-input
+              ><q-input
+                filled
+                v-model="userdetail.reserve_field.social.netease"
+                label="网易云个人页面链接"
+                ><template v-slot:prepend>
+                  <q-icon size="26px">
+                    <img src="/icons/NeteaseMusic.svg" alt="" />
+                  </q-icon>
+                </template> </q-input
+              ><q-input
+                filled
+                v-model="userdetail.reserve_field.social.wechat"
+                label="微信号/手机号"
+                ><template v-slot:prepend>
+                  <q-icon size="26px">
+                    <img src="/icons/Wechat.svg" alt="" />
+                  </q-icon>
+                </template> </q-input
+              ><q-input
+                filled
+                v-model="userdetail.reserve_field.social.qq"
+                label="QQ号"
+                ><template v-slot:prepend>
+                  <q-icon size="26px">
+                    <img src="/icons/qq.svg" alt="" />
+                  </q-icon>
+                </template>
+              </q-input>
               <q-editor
-                v-model="tab_detail.description"
+                v-model="userdetail.reserve_field.description"
                 ref="editorRef"
                 class="col-10 col-md-11"
                 toolbar-text-color="white"
@@ -164,17 +216,13 @@
                 ]"
               >
               </q-editor>
-              <div class="flex justify-start">
-                <q-toggle v-model="accept" label="我接受用户协议" />
-              </div>
+
               <div class="flex justify-end">
-                <q-btn label="发布" type="submit" color="primary" />
                 <q-btn
-                  label="重设"
-                  type="reset"
+                  label="提交更新"
+                  type="submit"
                   color="primary"
-                  flat
-                  class="q-ml-sm"
+                  @click="submit"
                 />
               </div>
             </q-form>
@@ -187,31 +235,46 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { reactive, ref, unref } from "vue";
 import { axios } from "src/boot/axios";
-import useUserInfo from "src/composables/userInfo";
+import { useQuasar } from "quasar";
+const $q = useQuasar();
+
 const bannerrange = new Array(200, 70);
-const { userInfo, finished, userFollower, userFollowing } = useUserInfo({});
-const accept = ref(false);
 const musicChoice = ["吉他", "贝斯", "鼓", "键盘", "其他的乐器"];
 const avatarBox = ref(false);
 const avatarPosted = ref(false);
-
+const finished = ref(false);
 const avatarBeforeCutout = ref(false);
 const avatarUrl = ref(false);
 const bannerBox = ref(false);
 const bannerPosted = ref(false);
 const bannerBeforeCutout = ref(false);
 const bannerUrl = ref(false);
-const tab_detail = ref({
-  files_id: [],
-  word: null,
-  original_music_url: null,
-  location: null,
-  musicChoice: "吉他",
-  description: "",
-  tags: null,
-  cover_file_id: "",
+const cropper = ref(null);
+const cropper_banner = ref(null);
+const userdetail = ref({
+  avator_id: "",
+  bio: "",
+  nick: "",
+  reserve_field: {
+    social: { bilibili: "", netease: "", wechat: "", qq: "" },
+    location: "",
+    musicChoice: "吉他",
+    description: "",
+    banner_id: "",
+  },
+});
+axios.get("/api/user/mine").then(async (resp) => {
+  if (resp.status === 200) {
+    console.log(resp.data);
+    userdetail.value.reserve_field = resp.data.reserve_field;
+    userdetail.value.bio = resp.data.bio;
+    userdetail.value.nick = resp.data.nick;
+    userdetail.value.avator_id = resp.data.avator_id;
+    userdetail.value.name = resp.data.name;
+    finished.value = true;
+  }
 });
 function avatarChooseEvent() {
   avatarPosted.value = true;
@@ -225,7 +288,52 @@ function bannerChooseEvent() {
   bannerUrl.value = window.URL.createObjectURL(bannerBeforeCutout.value);
   console.log(bannerUrl.value);
 }
-
+function uploadAvator(type = "avator") {
+  if (cropper.value != null) {
+    cropper.value.getCropBlob(async (data) => {
+      const fd = new FormData();
+      const file = new File([data], "filename.jpeg");
+      fd.append("image", file);
+      const response = await axios.post("/api/user/avator", fd);
+      if (response.status == 200) {
+        userdetail.value.avator_id = response.data.avator_file_id;
+        $q.notify({
+          type: "positive",
+          message: "上传头像成功，退出前记得保存",
+        });
+      }
+    });
+  }
+}
+function uploadBanner(type = "avator") {
+  if (cropper_banner.value != null) {
+    cropper_banner.value.getCropBlob(async (data) => {
+      const fd = new FormData();
+      const file = new File([data], "filename.jpeg");
+      fd.append("image", file);
+      const response = await axios.post("/api/user/avator", fd);
+      if (response.status == 200) {
+        userdetail.value.reserve_field.banner_id = response.data.avator_file_id;
+        $q.notify({
+          type: "positive",
+          message: "上传背景成功，退出前记得保存",
+        });
+      }
+    });
+  }
+}
+async function submit() {
+  const resp = await axios.put("/api/user/mine", unref(userdetail));
+  if (resp.status == 200) {
+    console.log(resp.data);
+    $q.notify({
+      color: "green-4",
+      textColor: "white",
+      icon: "cloud_done",
+      message: "保存成功！",
+    });
+  }
+}
 // function uploaded(info) {
 //   tab_detail.value.files_id.push(JSON.parse(info.xhr.response).tab_file_id);
 //   $q.notify({
@@ -253,8 +361,8 @@ function bannerChooseEvent() {
 //     message: "封面上传成功！",
 //   });
 // }
-// const upload_object = unref(tab_detail);
-// const resp = await axios.post("/api/tabs_publish", upload_object);
+// const upload_object = unref(userdetail);
+// const resp = await axios.put("/api/user/mine", upload_object);
 // if (resp.status == 200) {
 //   $q.notify({
 //     color: "green-4",

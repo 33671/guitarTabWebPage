@@ -29,20 +29,34 @@
               <div class="row q-gutter-md" style="margin-top: 7px">
                 <div class="col self-end hvr-grow">
                   <a href="https://space.bilibili.com/10819593">
-                    <bilibili-icon style="fill: rgb(251, 114, 153)" size="26"
-                  /></a>
-                </div>
-                <div class="col self-end hvr-grow">
-                  <q-icon
-                    size="26px"
-                    name="mdi-qqchat"
-                    color="blue"
-                    style="margin-bottom: 7px"
-                  />
+                    <q-icon size="26px">
+                      <img src="/icons/Bilibili.svg" alt="" />
+                    </q-icon>
+                    <!-- <bilibili-icon style="fill: rgb(251, 114, 153)" size="26" -->
+                  </a>
                 </div>
                 <div class="col self-end hvr-grow">
                   <a href="https://space.bilibili.com/10819593">
-                    <wechat-icon style="fill: rgb(60, 176, 53)" size="26" />
+                    <q-icon size="26px">
+                      <img src="/icons/qq.svg" alt="" />
+                    </q-icon>
+                    <!-- <bilibili-icon style="fill: rgb(251, 114, 153)" size="26" -->
+                  </a>
+                </div>
+                <div class="col self-end hvr-grow">
+                  <a href="https://space.bilibili.com/10819593">
+                    <q-icon size="26px">
+                      <img src="/icons/NeteaseMusic.svg" alt="" />
+                    </q-icon>
+                    <!-- <bilibili-icon style="fill: rgb(251, 114, 153)" size="26" -->
+                  </a>
+                </div>
+                <div class="col self-end hvr-grow">
+                  <a href="https://space.bilibili.com/10819593">
+                    <q-icon size="26px">
+                      <img src="/icons/Wechat.svg" alt="" />
+                    </q-icon>
+                    <!-- <bilibili-icon style="fill: rgb(251, 114, 153)" size="26" -->
                   </a>
                 </div>
               </div>
@@ -53,7 +67,13 @@
 
       <div class="q-pa-md" style="max-width: 600px">
         <div class="row justify-center">
-          <q-btn color="light-blue-8 " no-wrap>
+          <q-btn
+            color="light-blue-8 "
+            outline
+            rounded
+            class="full-width"
+            no-wrap
+          >
             <div class="">关注</div>
           </q-btn>
         </div>
