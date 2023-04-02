@@ -1,7 +1,10 @@
 <template>
   <div class="row justify-center">
     <q-card class="my-card" v-if="finished">
-      <q-img src="https://s1.ax1x.com/2023/03/13/ppQnDPS.md.jpg" height="250px">
+      <q-img
+        :src="'/api/user/avator/' + userInfo.reserve_field.banner_id"
+        v-if="userInfo.reserve_field.banner_id != null"
+      >
         <!-- 用q-img做背景，在其字幕处显示id和头像等 -->
         <div class="text-h5 absolute-bottom">
           <q-item class="q-py-xm q-px-sm">
@@ -9,7 +12,7 @@
               <q-avatar class="" size="46px">
                 <img
                   :src="'/api/user/avator/' + userInfo.avator_id"
-                  v-if="userInfo.avator_id != undefined"
+                  v-if="userInfo.avator_id != null"
                 />
                 <img
                   src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
@@ -21,38 +24,50 @@
               <q-item-label class="text-cyan-4 text-no-wrap">
                 {{ userInfo.nick }}
               </q-item-label>
-              <q-item-label caption class="text-white"
+              <q-item-label caption class="text-white text-no-wrap"
                 >@{{ userInfo.name }}</q-item-label
               >
             </q-item-section>
             <q-item-section side>
               <div class="row q-gutter-md" style="margin-top: 7px">
-                <div class="col self-end hvr-grow">
-                  <a href="https://space.bilibili.com/10819593">
+                <div
+                  class="col self-end hvr-grow"
+                  v-if="userInfo.reserve_field.social.bilibili != ''"
+                >
+                  <a :href="userInfo.reserve_field.social.bilibili">
                     <q-icon size="26px">
                       <img src="/icons/Bilibili.svg" alt="" />
                     </q-icon>
                     <!-- <bilibili-icon style="fill: rgb(251, 114, 153)" size="26" -->
                   </a>
                 </div>
-                <div class="col self-end hvr-grow">
-                  <a href="https://space.bilibili.com/10819593">
+                <div
+                  class="col self-end hvr-grow"
+                  v-if="userInfo.reserve_field.social.qq != ''"
+                >
+                  <a :href="userInfo.reserve_field.social.qq">
                     <q-icon size="26px">
                       <img src="/icons/qq.svg" alt="" />
                     </q-icon>
                     <!-- <bilibili-icon style="fill: rgb(251, 114, 153)" size="26" -->
                   </a>
                 </div>
-                <div class="col self-end hvr-grow">
-                  <a href="https://space.bilibili.com/10819593">
+                <div
+                  class="col self-end hvr-grow"
+                  v-if="userInfo.reserve_field.social.netease != ''"
+                >
+                  <a :href="userInfo.reserve_field.social.netease">
                     <q-icon size="26px">
                       <img src="/icons/NeteaseMusic.svg" alt="" />
                     </q-icon>
                     <!-- <bilibili-icon style="fill: rgb(251, 114, 153)" size="26" -->
                   </a>
                 </div>
-                <div class="col self-end hvr-grow">
-                  <a href="https://space.bilibili.com/10819593">
+                <div
+                  class="col self-end hvr-grow"
+                  v-if="userInfo.reserve_field.social.wechat != ''"
+                >
+                  <a :href="userInfo.reserve_field.social.wechat">
                     <q-icon size="26px">
                       <img src="/icons/Wechat.svg" alt="" />
                     </q-icon>
@@ -65,8 +80,12 @@
         </div>
       </q-img>
 
-      <div class="q-pa-md" style="max-width: 600px">
-        <div class="row justify-center">
+      <div class="q-pt-sm q-px-md q-pb-md" style="max-width: 600px">
+        <!-- <div class="row justify-center text-cyan-8 text-no-wrap text-h5">
+          {{ userInfo.bio }}
+        </div> -->
+
+        <div class="row justify-center q-mt-sm">
           <q-btn
             color="light-blue-8 "
             outline
@@ -81,61 +100,108 @@
         <q-list>
           <q-item clickable v-ripple>
             <q-item-section avatar>
-              <q-avatar color="teal" text-color="white" icon="bluetooth" />
+              <q-avatar color="teal" text-color="white">
+                <q-icon size="29px"
+                  ><img
+                    :src="`icons/${userInfo.reserve_field.musicChoice}.svg`" /></q-icon
+              ></q-avatar>
             </q-item-section>
 
-            <q-item-section>Avatar-type icon</q-item-section>
+            <q-item-section>
+              <div class="row">
+                最近常用
+                <div class="text-cyan-8">
+                  {{ userInfo.reserve_field.musicChoice }}
+                </div>
+              </div></q-item-section
+            >
           </q-item>
 
-          <q-item clickable v-ripple>
+          <q-item
+            clickable
+            v-ripple
+            v-if="userInfo.reserve_field.location != ''"
+          >
             <q-item-section avatar>
-              <q-avatar
-                rounded
-                color="purple"
-                text-color="white"
-                icon="bluetooth"
-              />
+              <q-avatar color="primary" text-color="white"
+                ><q-icon name="place" size="25px"
+              /></q-avatar>
             </q-item-section>
 
-            <q-item-section>Rounded avatar-type icon</q-item-section>
+            <q-item-section>
+              {{ userInfo.reserve_field.location }}
+            </q-item-section>
           </q-item>
-
-          <q-item clickable v-ripple>
+          <q-item
+            clickable
+            v-ripple
+            v-if="userInfo.reserve_field.social.bilibili != ''"
+          >
             <q-item-section avatar>
-              <q-avatar color="primary" text-color="white"> R </q-avatar>
+              <q-avatar color="" text-color="white">
+                <q-icon size="32px">
+                  <img src="/icons/Bilibili.svg" alt="" />
+                </q-icon>
+              </q-avatar>
             </q-item-section>
 
-            <q-item-section>Letter avatar-type</q-item-section>
+            <q-item-section>
+              {{ userInfo.reserve_field.social.bilibili }}
+            </q-item-section>
           </q-item>
+          <q-item
+            clickable
+            v-ripple
+            v-if="userInfo.reserve_field.social.netease != ''"
+          >
+            <q-item-section avatar>
+              <q-avatar color="" text-color="white">
+                <q-icon size="34px">
+                  <img src="/icons/NeteaseMusic.svg" alt="" />
+                </q-icon>
+              </q-avatar>
+            </q-item-section>
 
+            <q-item-section>
+              {{ userInfo.reserve_field.social.netease }}
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-ripple
+            v-if="userInfo.reserve_field.social.wechat != ''"
+          >
+            <q-item-section avatar>
+              <q-avatar color="" text-color="white">
+                <q-icon size="30px">
+                  <img src="/icons/Wechat.svg" alt="" />
+                </q-icon>
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section>
+              {{ userInfo.reserve_field.social.wechat }}
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-ripple
+            v-if="userInfo.reserve_field.social.qq != ''"
+          >
+            <q-item-section avatar>
+              <q-avatar color="" text-color="white">
+                <q-icon size="32px">
+                  <img src="/icons/qq.svg" alt="" />
+                </q-icon>
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section>
+              {{ userInfo.reserve_field.social.qq }}
+            </q-item-section>
+          </q-item>
           <q-separator />
-
-          <q-item clickable v-ripple>
-            <q-item-section avatar>
-              <q-avatar>
-                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-              </q-avatar>
-            </q-item-section>
-            <q-item-section>Image avatar</q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple>
-            <q-item-section avatar>
-              <q-avatar square>
-                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-              </q-avatar>
-            </q-item-section>
-            <q-item-section>Image square avatar</q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple>
-            <q-item-section avatar>
-              <q-avatar rounded>
-                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-              </q-avatar>
-            </q-item-section>
-            <q-item-section>Image rounded avatar</q-item-section>
-          </q-item>
+          <div v-html="userInfo.reserve_field.description"></div>
 
           <!-- <q-separator color="dark" /> -->
         </q-list>
