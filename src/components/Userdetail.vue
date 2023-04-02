@@ -18,9 +18,9 @@
               </q-avatar>
             </q-item-section>
             <q-item-section caption>
-              <q-item-label class="text-cyan-4">{{
-                userInfo.nick
-              }}</q-item-label>
+              <q-item-label class="text-cyan-4 text-no-wrap">
+                {{ userInfo.nick }}
+              </q-item-label>
               <q-item-label caption class="text-white"
                 >@{{ userInfo.name }}</q-item-label
               >

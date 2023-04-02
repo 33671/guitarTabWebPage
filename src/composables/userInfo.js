@@ -18,8 +18,8 @@ function useUserInfo({ user = "mine" } = { user: "mine" }) {
     console.log(userInfo.value.name);
     userFollowing.value = await getUserFollowing(userInfo.value.name);
     userFollower.value = await getUserFollower(userInfo.value.name);
-    console.log(userFollower.value);
-    console.log(userFollowing.value);
+    // console.log(userFollower.value);
+    // console.log(userFollowing.value);
     finished.value = true;
   });
   return {

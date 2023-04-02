@@ -145,9 +145,25 @@
               </q-card>
             </q-dialog>
             <q-form class="q-gutter-lg q-mt-md">
-              <q-input filled v-model="userdetail.nick" label="昵称" />
+              <q-input
+                filled
+                ref="nickRef"
+                v-model="userdetail.nick"
+                lazy-rules
+                :rules="[(val) => !!val || '昵称不能为空']"
+                label="昵称"
+              />
 
-              <q-input filled v-model="userdetail.bio" label="个人签名" />
+              <q-input
+                filled
+                v-model="userdetail.bio"
+                ref="bioRef"
+                lazy-rules
+                :rules="[
+                  (val) => val == null || val.length < 100 || '签名过长。。',
+                ]"
+                label="个人签名"
+              />
               <q-select
                 transition-show="jump-up"
                 transition-hide="jump-up"
@@ -158,10 +174,22 @@
               <q-input
                 filled
                 v-model="userdetail.reserve_field.location"
+                lazy-rules
+                ref="locationRef"
+                :rules="[
+                  (val) => val == null || val.length < 20 || '太长了。。。',
+                ]"
                 label="大致活动范围"
               /><q-input
                 filled
                 v-model="userdetail.reserve_field.social.bilibili"
+                ref="bilibiliRef"
+                :rules="[
+                  (val) =>
+                    val == null ||
+                    val.length < 120 ||
+                    '链接过长，请检验是否正确',
+                ]"
                 label="BiliBili个人空间链接"
                 ><template v-slot:prepend>
                   <q-icon size="26px">
@@ -171,6 +199,10 @@
               ><q-input
                 filled
                 v-model="userdetail.reserve_field.social.netease"
+                ref="neteaseRef"
+                :rules="[
+                  (val) => val == null || val.length < 120 || '昵称不能为空',
+                ]"
                 label="网易云个人页面链接"
                 ><template v-slot:prepend>
                   <q-icon size="26px">
@@ -180,6 +212,10 @@
               ><q-input
                 filled
                 v-model="userdetail.reserve_field.social.wechat"
+                ref="wechatRef"
+                :rules="[
+                  (val) => val == null || val.length < 120 || '昵称不能为空',
+                ]"
                 label="微信号/手机号"
                 ><template v-slot:prepend>
                   <q-icon size="26px">
@@ -189,6 +225,10 @@
               ><q-input
                 filled
                 v-model="userdetail.reserve_field.social.qq"
+                ref="qqRef"
+                :rules="[
+                  (val) => val == null || val.length < 120 || '昵称不能为空',
+                ]"
                 label="QQ号"
                 ><template v-slot:prepend>
                   <q-icon size="26px">
@@ -253,6 +293,7 @@ const bannerBeforeCutout = ref(false);
 const bannerUrl = ref(false);
 const cropper = ref(null);
 const cropper_banner = ref(null);
+
 const userdetail = ref({
   avator_id: "",
   bio: "",
@@ -288,7 +329,7 @@ function bannerChooseEvent() {
   bannerUrl.value = window.URL.createObjectURL(bannerBeforeCutout.value);
   console.log(bannerUrl.value);
 }
-function uploadAvator(type = "avator") {
+function uploadAvator() {
   if (cropper.value != null) {
     cropper.value.getCropBlob(async (data) => {
       const fd = new FormData();
@@ -305,7 +346,7 @@ function uploadAvator(type = "avator") {
     });
   }
 }
-function uploadBanner(type = "avator") {
+function uploadBanner() {
   if (cropper_banner.value != null) {
     cropper_banner.value.getCropBlob(async (data) => {
       const fd = new FormData();
@@ -322,18 +363,46 @@ function uploadBanner(type = "avator") {
     });
   }
 }
+const nickRef = ref(null);
+const bioRef = ref(null);
+const locationRef = ref(null);
+const bilibiliRef = ref(null);
+const neteaseRef = ref(null);
+const wechatRef = ref(null);
+const qqRef = ref(null);
+
 async function submit() {
-  const resp = await axios.put("/api/user/mine", unref(userdetail));
-  if (resp.status == 200) {
-    console.log(resp.data);
-    $q.notify({
-      color: "green-4",
-      textColor: "white",
-      icon: "cloud_done",
-      message: "保存成功！",
-    });
+  nickRef.value.validate();
+  bioRef.value.validate();
+  locationRef.value.validate();
+  bilibiliRef.value.validate();
+  neteaseRef.value.validate();
+  wechatRef.value.validate();
+  qqRef.value.validate();
+  if (
+    nickRef.value.hasError ||
+    bioRef.value.hasError ||
+    locationRef.value.hasError ||
+    bilibiliRef.value.hasError ||
+    neteaseRef.value.hasError ||
+    wechatRef.value.hasError ||
+    qqRef.value.hasError
+  ) {
+    console.log("error");
+  } else {
+    const resp = await axios.put("/api/user/mine", unref(userdetail));
+    if (resp.status == 200) {
+      console.log(resp.data);
+      $q.notify({
+        color: "green-4",
+        textColor: "white",
+        icon: "cloud_done",
+        message: "保存成功！",
+      });
+    }
   }
 }
+
 // function uploaded(info) {
 //   tab_detail.value.files_id.push(JSON.parse(info.xhr.response).tab_file_id);
 //   $q.notify({
