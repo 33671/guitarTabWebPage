@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, reactive } from "vue";
 import { axios } from "boot/axios";
 import { useQuasar } from "quasar";
 import TabCard from "./TabCard.vue";
@@ -59,18 +59,18 @@ export default {
   setup() {
     const $q = useQuasar();
     const ismobel = $q.platform.is.mobile;
-    let scores = ref({
+    let scores = reactive({
       吉他谱: [],
       贝斯谱: [],
       乐队总谱: [],
     });
     onMounted(async () => {
       for (let i of ["吉他谱", "贝斯谱", "乐队总谱"]) {
-        scores.value[i] = (
+        scores[i] = (
           await axios.get("/api/tabs_publish?random=true&tab_type=" + i)
         ).data.slice(0, 12);
       }
-      console.log(scores.value);
+      console.log(scores);
     });
     return {
       scores,

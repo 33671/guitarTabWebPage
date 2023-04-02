@@ -3,7 +3,12 @@ import { getUserInfo } from "src/utils/user";
 import { getUserFollower } from "src/utils/userfollower";
 import { getUserFollowing } from "src/utils/userfollowing";
 
-function useUserInfo({ user = "mine" } = { user: "mine" }) {
+function useUserInfo(
+  { user = "mine", withFollowers = true } = {
+    user: "mine",
+    withFollowers: true,
+  }
+) {
   const finished = ref(false);
   const userInfo = ref({});
   const userFollowing = ref([]);
@@ -15,13 +20,21 @@ function useUserInfo({ user = "mine" } = { user: "mine" }) {
     // }
     // debugger;
     userInfo.value = info;
+
     console.log(userInfo.value.name);
-    userFollowing.value = await getUserFollowing(userInfo.value.name);
-    userFollower.value = await getUserFollower(userInfo.value.name);
+    if (withFollowers) {
+      userFollowing.value = await getUserFollowing(userInfo.value.name);
+      userFollower.value = await getUserFollower(userInfo.value.name);
+    }
     // console.log(userFollower.value);
     // console.log(userFollowing.value);
     finished.value = true;
   });
+  if (!withFollowers)
+    return {
+      finished,
+      userInfo,
+    };
   return {
     finished,
     userInfo,

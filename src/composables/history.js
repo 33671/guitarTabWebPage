@@ -1,12 +1,9 @@
-import { onMounted, ref, unref } from "vue";
-import { axios } from "../boot/axios";
+import { reactive } from "vue";
 import indexdb from "../utils/indexdb";
-window.indexdb = indexdb;
-const history = ref([]);
+const history = reactive([]);
 let historyData = [];
 function useHistory() {
-  onMounted(async () => {
-    const data = await indexdb.get("history");
+  indexdb.get("history").then((data) => {
     if (data) {
       historyData = data.data;
       history.value = data.data;
@@ -26,7 +23,7 @@ async function pushToHistory(tab) {
     return;
   historyData.push(tab);
   historyData = historyData.slice(-100);
-  history.value = historyData;
+  history = historyData;
   console.log(historyData);
   await indexdb.set("history", historyData);
 }

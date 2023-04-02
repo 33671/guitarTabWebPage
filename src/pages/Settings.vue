@@ -275,7 +275,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, unref } from "vue";
+import { ref, unref } from "vue";
 import { axios } from "src/boot/axios";
 import { useQuasar } from "quasar";
 const $q = useQuasar();
@@ -309,7 +309,9 @@ const userdetail = ref({
 axios.get("/api/user/mine").then(async (resp) => {
   if (resp.status === 200) {
     console.log(resp.data);
-    userdetail.value.reserve_field = resp.data.reserve_field;
+    if (typeof resp.data.reserve_field != undefined) {
+      userdetail.value.reserve_field = resp.data.reserve_field;
+    }
     userdetail.value.bio = resp.data.bio;
     userdetail.value.nick = resp.data.nick;
     userdetail.value.avator_id = resp.data.avator_id;
