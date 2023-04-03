@@ -1,7 +1,8 @@
 import { ref, customRef } from "vue";
 import { axios } from "boot/axios";
 const searchText = ref("");
-const searchResult = ref([]);
+const searchScoreResult = ref([]);
+const searchUserResult = ref([]);
 
 const options = ref([]);
 let last_input = "";
@@ -23,10 +24,30 @@ async function filterFn(val, update, abort) {
 }
 
 async function search(e) {
-  const res = await axios.get("/api/tabs_search?s=" + searchText.value);
-  searchResult.value = res.data;
+  const resScore = await axios.get("/api/tabs_search?s=" + searchText.value);
+  searchScoreResult.value = resScore.data;
+  const resUser = await axios.get("/api/user/search?s=" + searchText.value);
+  searchUserResult.value = resUser.data;
+  if (searchUserResult.value !== []) {
+    for (let i in searchUserResult.value) {
+      const avatarRes = await axios.get(
+        "/api/user/" + searchUserResult.value[i].name
+      );
+      if (avatarRes.status === 200) {
+        searchUserResult.value[i].avatar_id = await avatarRes.data.avator_id;
+        avatarfinished.value = true;
+      }
+    }
+  }
 }
 function useSearch() {
-  return { options, searchResult, searchText, search, filterFn };
+  return {
+    options,
+    searchScoreResult,
+    searchUserResult,
+    searchText,
+    search,
+    filterFn,
+  };
 }
 export default useSearch;

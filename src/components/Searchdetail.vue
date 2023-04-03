@@ -32,19 +32,42 @@
 
         <q-tab-panel name="accounts" class="q-px-none">
           <div class="row bg-white rounded-border">
-            <div
-              class="col-md-2 col-sm-3"
-              v-for="score in scores"
-              :key="score.url"
-            >
-              <TabCardVue
+            <q-list class="col-12">
+              <div class="col-12" v-for="user in users" :key="user.url">
+                <q-item clickable v-ripple :to="'/user/' + user.name">
+                  <q-item-section top avatar>
+                    <q-avatar rounded>
+                      <img
+                        :src="'/api/user/avator/' + user.avatar_id"
+                        v-if="user.avatar_id != null"
+                      />
+                      <img
+                        src="https://imgs.aixifan.com/content/2019_02_18/1550493987633.JPG"
+                        v-else
+                      />
+                    </q-avatar>
+                  </q-item-section>
+
+                  <q-item-section>
+                    <q-item-label> {{ user.nick }}</q-item-label>
+                    <q-item-label caption>@{{ user.name }}</q-item-label>
+                  </q-item-section>
+
+                  <q-item-section side top>
+                    <q-item-label caption>meta</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-separator spaced />
+              </div>
+            </q-list>
+
+            <!-- <TabCardVue
                 class="q-ma-lg-md q-ma-sm"
                 :uploader="score.uploader"
                 :music-name="score.tab_name"
                 :publishId="score.publish_id"
                 :coverId="score.cover_file_id"
-              ></TabCardVue>
-            </div>
+              ></TabCardVue> -->
           </div>
         </q-tab-panel>
       </q-tab-panels>
@@ -58,11 +81,11 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from "vue";
+import { ref } from "vue";
 import { axios } from "boot/axios";
 import TabCardVue from "./TabCard.vue";
 import useSearch from "./../search_input";
-const { searchResult: scores } = useSearch();
+const { searchScoreResult: scores, searchUserResult: users } = useSearch();
 const tab = ref("tabs");
 const current = ref(1);
 </script>
