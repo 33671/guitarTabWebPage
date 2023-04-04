@@ -1,5 +1,6 @@
 <template>
-  <router-view v-if="isMobile"></router-view>
+  <router-view></router-view>
+  <!-- <router-view v-if="isMobile"></router-view>
   <q-scroll-area
     v-else
     :thumb-style="thumbStyle"
@@ -7,7 +8,7 @@
     style="height: 100vh; width: 100vw"
   >
     <router-view />
-  </q-scroll-area>
+  </q-scroll-area> -->
 </template>
 
 <script>

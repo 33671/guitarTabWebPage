@@ -204,7 +204,7 @@
             </div>
             <button
               class="bbutton"
-              @click="userreg(form.name, form.useremail, form.captcha)"
+              @click="userreg(form.name, form.useremail, form.password, '111')"
             >
               注册
             </button>
@@ -219,7 +219,6 @@
 
 <script setup>
 import { ref } from "vue";
-import { axios } from "boot/axios";
 import { useQuasar } from "quasar";
 import { userlogin, loginStatus, userreg } from "./../composables/login";
 import { useRouter } from "vue-router";

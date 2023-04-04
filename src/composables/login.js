@@ -15,12 +15,12 @@ async function userlogin(name, password) {
   } else loginStatus.value = false;
   console.log(aa.data);
 }
-async function userreg(name, useremail, password) {
+async function userreg(name, useremail, password, captcha) {
   var regform = new FormData();
   regform.append("name", name);
   regform.append("email", useremail);
   regform.append("password", password);
-  regform.append("captcha", "111");
+  regform.append("captcha", captcha);
   const aa = await axios.post("/api/register", regform);
   console.log(aa);
 }

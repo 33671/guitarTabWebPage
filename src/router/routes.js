@@ -39,6 +39,10 @@ const routes = [
         component: () => import("pages/Search.vue"),
       },
       {
+        path: "/lib",
+        component: () => import("pages/TabLib.vue"),
+      },
+      {
         path: "/tuner",
         component: () => import("pages/Tuner.vue"),
       },

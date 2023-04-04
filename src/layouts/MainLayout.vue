@@ -140,6 +140,7 @@ const route = useRoute();
 const router = useRouter();
 const naviItem = [
   { to: "/home", name: "首页", icon: "inbox" },
+  { to: "/lib", name: "曲库", icon: "library_music" },
   { to: "/news", name: "动态", icon: "circle_notifications" },
   { to: "/user", name: "我的", icon: "send" },
   { to: "/publish", name: "发布", icon: "drafts" },
