@@ -80,14 +80,16 @@
                               round
                               color="primary"
                               size="15px"
+                              @click="pushToPlay(item.result.files_id)"
                             >
-                              <q-icon name="star" /> </q-btn
+                              <q-icon name="play_arrow" /> </q-btn
                             ><q-btn
                               flat
                               bordered
                               round
                               color="primary"
                               size="15px"
+                              @click="shareClick(item.result._id)"
                             >
                               <q-icon name="share" /> </q-btn
                             ><q-btn
@@ -96,6 +98,7 @@
                               round
                               color="primary"
                               size="15px"
+                              @click="pushToDetail(item.result._id)"
                             >
                               <q-icon name="list" />
                             </q-btn>
@@ -113,7 +116,7 @@
                           bordered
                         >
                           <!-- 谱详情card -->
-                          <q-card-section>
+                          <q-card-section style="overflow: hidden">
                             <div v-html="item.result.description"></div>
                           </q-card-section>
                         </q-card>
@@ -136,11 +139,12 @@
 import { axios } from "src/boot/axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useQuasar } from "quasar";
+import { useQuasar, copyToClipboard } from "quasar";
 import "core-js/actual/array/group-by";
 
 const $q = useQuasar();
 const router = useRouter();
+
 const items = ref([]);
 const user_infos = ref(new Map());
 axios.get("/api/user/dynamics/mine").then((response) => {
@@ -157,6 +161,33 @@ axios.get("/api/user/dynamics/mine").then((response) => {
     });
   }
 });
+function pushToPlay(taburl) {
+  // console.log(taburl);
+  router.push(`/tabs/${taburl[0]}`);
+}
+function pushToDetail(pageurl) {
+  // console.log(taburl);
+  router.push(`/publishView/${pageurl}`);
+}
+function shareClick(url) {
+  copyToClipboard(url)
+    .then(() => {
+      $q.notify({
+        color: "blue-5",
+        textColor: "white",
+        icon: "accessible_forward",
+        message: "已复制链接",
+      }); // 成功!
+    })
+    .catch(() => {
+      $q.notify({
+        color: "blue-5",
+        textColor: "white",
+        icon: "sentiment_very_dissatisfied",
+        message: "复制链接失败，似乎是浏览器不兼容",
+      });
+    });
+}
 window.user_infos = user_infos;
 function share() {
   $q.notify({

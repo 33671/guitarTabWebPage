@@ -33,7 +33,7 @@ function waitpush() {
           ? '/api/cover_files/' + props.coverId
           : 'https://z3.ax1x.com/2021/09/30/4ououj.png'
       "
-      class="white--text align-end"
+      class="white--text align-end tabimg"
       ratio="1"
     />
     <!-- crossorigin="anonymous" -->
@@ -57,5 +57,16 @@ function waitpush() {
 }
 .text-hover {
   text-decoration: none;
+}
+.tabimg:hover {
+  animation: fade-away 0.5s forwards;
+}
+@keyframes fade-away {
+  10% {
+    filter: brightness(1);
+  }
+  100% {
+    filter: brightness(0.6);
+  }
 }
 </style>

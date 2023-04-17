@@ -73,8 +73,8 @@
                 </q-btn>
               </div>
               <div class="col q-mx-sm">
-                <q-btn round color="primary" size="20px">
-                  <q-icon name="open_in_new" />
+                <q-btn round color="primary" size="20px" @click="shareClick">
+                  <q-icon name="share" />
                 </q-btn>
               </div>
             </div>
@@ -163,7 +163,7 @@
   </q-page>
 </template>
 <script setup>
-import { useQuasar } from "quasar";
+import { useQuasar, copyToClipboard } from "quasar";
 import { axios } from "src/boot/axios";
 import usefav from "src/composables/fav";
 import useHistory from "src/composables/history";
@@ -172,6 +172,7 @@ import TabPublishInfoTable from "src/components/TabPublishInfoTable.vue";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import useSearch from "./../search_input";
+
 const route = useRoute();
 const { pushToHistory } = useHistory();
 const { searchText, search } = useSearch();
@@ -183,6 +184,7 @@ const props = defineProps({
 
 const $q = useQuasar();
 const isInMyFav = ref(false);
+
 async function refreshFavStatus() {
   const r = await isInfav(props.publishId);
   isInMyFav.value = r;
@@ -235,6 +237,25 @@ onMounted(async () => {
   finished.value = true;
   pushToHistory(data);
 });
+function shareClick() {
+  copyToClipboard(info.value.tab_name)
+    .then(() => {
+      $q.notify({
+        color: "blue-5",
+        textColor: "white",
+        icon: "accessible_forward",
+        message: "已复制链接",
+      }); // 成功!
+    })
+    .catch(() => {
+      $q.notify({
+        color: "blue-5",
+        textColor: "white",
+        icon: "sentiment_very_dissatisfied",
+        message: "复制链接失败，似乎是浏览器不兼容",
+      });
+    });
+}
 const router = useRouter();
 const pushToPlay = () => {
   const gps = scores.value

@@ -6,7 +6,7 @@
     class="scroll"
   >
     <q-infinite-scroll @load="onLoad">
-      <div class="q-gutter-md row no-wrap">
+      <div class="row no-wrap q-px-sm-sm q-px-lg-md q-px-sm q-gutter-md">
         <q-select
           outlined
           v-model="selectModel.tabType"
