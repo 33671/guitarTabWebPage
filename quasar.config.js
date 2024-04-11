@@ -81,30 +81,33 @@ module.exports = configure(function (ctx) {
       open: true, // opens browser window automatically
       proxy: {
         "/api": {
-          target: "http://106.52.146.180:8081/",
+          target: "http://localhost:5000/",
           changeOrigin: true,
-          // pathRewrite: {
-          //   "^/api": "",
-          // },
+          pathRewrite: {
+            "^/api": "",
+          },
         },
         "/static": {
-          target: "http://106.52.146.180:8081/",
+          target: "http://localhost:8081/",
+          secure: false,
           changeOrigin: true,
-          // pathRewrite: {
-          //   "^/api": "",
-          // },
+          pathRewrite: {
+            "^/static": "",
+          },
         },
       },
-      // proxy: {
-      //   "/api": {
-      //     target: "http://127.0.0.1:5000/",
-      //     changeOrigin: true,
-      //     pathRewrite: {
-      //       "^/api": "",
-      //     },
-      //   },
-      // },
     },
+
+    //   proxy: {
+    //     "/api": {
+    //       target: "http://127.0.0.1:5000/",
+    //       changeOrigin: true,
+    //       pathRewrite: {
+    //         "^/api": "",
+    //       },
+    //     },
+    //   },
+    // },
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
     framework: {
