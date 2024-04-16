@@ -1,7 +1,15 @@
 <template>
-  <div class="row justify-center">
+  <div
+    class="row justify-center"
+    style="
+      background-image: url('/static/sakiko.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+    "
+  >
     <div class="col-12 col-sm-11 col-md-10 col-lg-8">
-      <q-card class="my-card my-card-radius-10">
+      <!-- <div v-show="sakiko">我是要显示的图片</div> -->
+      <q-card class="my-card my-card-radius-10" style="opacity: 0.5">
         <q-card-section class="q-pa-none q-my-lg">
           <div class="q-pa-none" style="height: 100%">
             <iframe
@@ -22,15 +30,19 @@
 
 <script>
 import { onMounted } from "@vue/runtime-core";
-
+import { ref } from "vue";
 // import { RenderingResources } from "@coderline/alphatab";
 export default {
   props: ["id"],
   setup(props) {
     let TabLocation = "/api/tab_files/" + props.id;
+    const sakiko = ref(true);
 
     localStorage.setItem("file", TabLocation);
     onMounted(() => {
+      if (props.id == "a405ff85-369e-46ff-ad75-5bb3cce54d85") {
+        sakiko.value = true;
+      }
       // function setIframeHeight(iframe) {
       //   if (iframe) {
       //     var iframeWin =

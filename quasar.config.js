@@ -75,10 +75,24 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-devServer
     devServer: {
       server: {
-        type: "http",
+        // type: "https",
+        options: {
+          // Use ABSOLUTE paths or path.join(__dirname, 'root/relative/path')
+          // key: "/path/to/server.key",
+          // pfx: "/path/to/server.pfx",
+          // cert: "/path/to/server.crt",
+          // ca: "/path/to/ca.pem",
+          // passphrase: "webpack-dev-server", // do you need it?
+        },
       },
       port: 8080,
       open: false, // opens browser window automatically
+      client: {
+        webSocketURL: "wss://animeguitartab.site/",
+      },
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       proxy: {
         "/api": {
           target: "http://localhost:5000/",
@@ -88,12 +102,12 @@ module.exports = configure(function (ctx) {
           },
         },
         "/static": {
-          target: "http://localhost:8081/",
+          target: "https://localhost:8081/",
           secure: false,
           changeOrigin: true,
-          pathRewrite: {
-            "^/static": "",
-          },
+          // pathRewrite: {
+          //   "^/static": "",
+          // },
         },
       },
     },

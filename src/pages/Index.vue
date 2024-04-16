@@ -10,6 +10,7 @@
       </q-card-section>
     </q-card>
     <div style="height: 30px"></div>
+    <CopyrightIcp></CopyrightIcp>
   </q-page>
 </template>
 <script>
@@ -21,6 +22,8 @@ export default {
 import carousel from "../components/carousel.vue";
 import tabs from "../components/tabs.vue";
 import { useQuasar } from "quasar";
+import CopyrightIcp from "../components/copyright-icp.vue";
+
 const $q = useQuasar();
 $q.addressbarColor.set();
 </script>

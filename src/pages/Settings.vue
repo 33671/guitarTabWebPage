@@ -5,8 +5,13 @@
       <div class="q-mx-sm">
         <q-card class="my-card my-card-radius-10" v-if="finished">
           <q-card-section class="q-pa-md q-my-lg">
-            <q-img
+            <!-- <q-img
               :src="'/api/user/avator/' + userdetail.reserve_field.banner_id"
+              height="250px"
+              class="hvr-grow"
+              @click="avatarBox = true"
+            > --><q-img
+              src="https://img2.imgtp.com/2024/04/12/4eJ6LLBL.jpg"
               height="250px"
               class="hvr-grow"
               @click="avatarBox = true"
